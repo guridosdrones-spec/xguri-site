@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XGuri &middot; mapeamento para drone agrícola</title>
+<meta name="description" content="O XGuri transforma as fotos do voo em mapa HD, mapa de aplicação, taxa variável e rota pronta para o drone. Roda no seu computador, sem depender da internet na lavoura. 15 dias de avaliação com tudo liberado.">
+<meta name="theme-color" content="#0E1A14">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/xguri-icone.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/xguri-icone.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XGuri · mapeamento para drone agrícola">
+<meta property="og:description" content="Da foto do drone ao mapa de aplicação, no seu computador. 15 dias de avaliação com tudo liberado.">
+<meta property="og:image" content="assets/xguri-hero.jpg">
+<meta property="og:locale" content="pt_BR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Asap:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca-link" href="index.html">
+      <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+      xguri<i aria-hidden="true"></i>
+    </a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="#programa">O programa</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#licenca">Licença</a>
+      <a href="#planos">Planos</a>
+      <a href="download.html">Baixar</a>
+      <a href="comprar.html">Comprar</a>
+      <a href="treinamento/index.html">Treinamento</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ------------------------------------------------------------- hero --- -->
+<section class="hero">
+  <div class="hero__foto" role="img" aria-label="Drone pulverizador XAG voando sobre lavoura de soja no fim da tarde"></div>
+  <div class="hero__veu" aria-hidden="true"></div>
+
+  <div class="hero__interno">
+    <p class="olho">Sistema de mapeamento para drone agrícola</p>
+    <h1>Da foto do drone ao mapa de aplicação, <em>no seu computador</em>.</h1>
+
+    <p class="hero__linha">
+      O XGuri processa as fotos do voo, monta o mapa HD do talhão, desenha o mapa de
+      aplicação e a taxa variável e manda a rota direto para o XAG One. Tudo em
+      português, tudo rodando na sua máquina.
+    </p>
+
+    <div class="botoes">
+      <a class="botao botao--acento" href="download.html">Baixar e testar 15 dias</a>
+      <a class="botao botao--linha" href="#planos">Ver planos e preços</a>
+    </div>
+
+    <p class="hero__nota">
+      Windows 10 ou 11, 64 bits &middot; versão <span data-cfg="versao">1.0.0</span>
+      &middot; <span data-cfg="tamanho">480 MB</span> &middot; sem mensalidade de nuvem
+    </p>
+
+    <div class="selos">
+      <div>
+        <div class="selo__valor"><span data-cfg="diasAvaliacao">15</span> dias grátis</div>
+        <div class="selo__rotulo">Avaliação com todos os módulos liberados</div>
+      </div>
+      <div>
+        <div class="selo__valor">5 módulos</div>
+        <div class="selo__rotulo">Compre a licença inteira ou só o que você usa</div>
+      </div>
+      <div>
+        <div class="selo__valor">Roda offline</div>
+        <div class="selo__rotulo">A licença não precisa de internet para abrir</div>
+      </div>
+      <div>
+        <div class="selo__valor">XAG One</div>
+        <div class="selo__rotulo">Rota enviada direto para o drone, ou .kml</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- o programa -- -->
+<section class="faixa faixa--clara" id="programa">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">O que o XGuri faz</p>
+      <h2>Você voa, o XGuri resolve o resto do serviço.</h2>
+      <p class="sub">
+        Você descarrega o cartão do drone na pasta do computador e aponta essa pasta
+        para o XGuri. Ele lê o posicionamento gravado em cada foto, costura o
+        ortomosaico do talhão e abre o mapa na tela, com zoom, medição e desenho.
+      </p>
+      <p class="sub">
+        Desse mapa saem as duas coisas que interessam na hora da pulverização: onde
+        aplicar e quanto aplicar. Você marca as manchas de daninha, define a taxa de
+        cada zona e o XGuri gera a rota. O voo sai pelo XAG One ou por arquivo .kml.
+      </p>
+      <p class="sub">
+        Antes de começar, o programa olha a memória, o processador e o disco do seu
+        computador e avisa quantas fotos ele aguenta naquele serviço. Nada de deixar
+        um processamento de duas horas travar no meio.
+      </p>
+    </div>
+
+    <div class="grade grade--3">
+      <div class="cartao pilha pilha--12">
+        <h3>Em português, do começo ao fim</h3>
+        <p class="sub">
+          Interface, manual e mensagens de erro em português — e também em inglês e
+          espanhol, se você atender fora do Brasil.
+        </p>
+      </div>
+      <div class="cartao pilha pilha--12">
+        <h3>Sem nuvem, sem mensalidade</h3>
+        <p class="sub">
+          O processamento é todo no seu computador. Suas fotos e os mapas dos seus
+          clientes não sobem para servidor nenhum.
+        </p>
+      </div>
+      <div class="cartao pilha pilha--12">
+        <h3>Feito por quem voa</h3>
+        <p class="sub">
+          O XGuri nasceu da operação do Guri dos Drones, na lavoura, resolvendo os
+          problemas que aparecem no talhão e não no escritório.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------- módulos -- -->
+<section class="faixa faixa--fundo" id="modulos">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">Os cinco módulos</p>
+      <h2>Cada tela do XGuri é um módulo, e você compra os que usa.</h2>
+      <p class="sub">
+        O código ao lado do nome é o que fica gravado dentro da sua licença. Se
+        você comprar só dois módulos, é só esses dois que aparecem liberados no
+        programa — o resto continua visível, mas pedindo licença.
+      </p>
+    </div>
+
+    <div class="modulos">
+      <div class="modulo">
+        <div class="modulo__marca" aria-hidden="true">1</div>
+        <div class="modulo__nome">Gerar mapa HD <code>mapa_hd</code></div>
+        <div class="modulo__texto">
+          Processa as fotos do voo e monta o ortomosaico em alta resolução do talhão,
+          com modelo de superfície e nuvem de pontos. É a base de todo o resto.
+        </div>
+      </div>
+      <div class="modulo">
+        <div class="modulo__marca" aria-hidden="true">2</div>
+        <div class="modulo__nome">Criar mapa de aplicação <code>mapa_aplicacao</code></div>
+        <div class="modulo__texto">
+          Desenha o contorno da área, tira as ilhas e os obstáculos e gera a rota de
+          pulverização com a faixa e a sobreposição que você trabalha.
+        </div>
+      </div>
+      <div class="modulo">
+        <div class="modulo__marca" aria-hidden="true">3</div>
+        <div class="modulo__nome">Criar mapa de taxa variável <code>taxa_variavel</code></div>
+        <div class="modulo__texto">
+          Divide o talhão em zonas e define a taxa de cada uma, para o drone aplicar
+          mais onde precisa e economizar onde não precisa.
+        </div>
+      </div>
+      <div class="modulo">
+        <div class="modulo__marca" aria-hidden="true">4</div>
+        <div class="modulo__nome">Criar rota personalizada <code>rota_personalizada</code></div>
+        <div class="modulo__texto">
+          Monta a rota na mão, do jeito que o talhão pede: sentido das linhas, entrada,
+          saída e desvio dos obstáculos que você conhece.
+        </div>
+      </div>
+      <div class="modulo">
+        <div class="modulo__marca" aria-hidden="true">5</div>
+        <div class="modulo__nome">Aplicação localizada <code>aplicacao_localizada</code></div>
+        <div class="modulo__texto">
+          Marca as manchas de daninha sobre o mapa HD e gera a aplicação só nelas —
+          o serviço que mais economiza produto na safra.
+        </div>
+      </div>
+    </div>
+
+    <div class="aviso">
+      <strong>Integração com o XAG One.</strong>
+      A rota pronta vai direto para o aplicativo do drone, sem passar pen drive de
+      mão em mão. Para outras marcas, o XGuri exporta o desenho em .kml.
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------- licença -- -->
+<section class="faixa faixa--clara" id="licenca">
+  <div class="envelope grade grade--2" style="gap: 36px;">
+    <div class="pilha pilha--12">
+      <p class="olho">Como funciona a licença</p>
+      <h2>A chave é presa ao seu computador, não ao sinal de internet.</h2>
+      <p class="sub">
+        Quem instala o XGuri pela primeira vez ganha
+        <strong><span data-cfg="diasAvaliacao">15</span> dias de avaliação</strong> com
+        todos os módulos liberados. Depois disso o programa pede uma licença.
+      </p>
+      <p class="sub">
+        A licença é um arquivo <span class="mono">.lic</span> assinado digitalmente e
+        emitido para o código do seu computador. Você recebe pelo WhatsApp, abre uma
+        vez no XGuri e pronto: dali para frente o programa abre no meio do talhão,
+        sem sinal, sem login, sem nada para renovar todo mês.
+      </p>
+      <p class="sub">
+        Formatar o Windows ou trocar o disco do sistema muda o código e pede uma
+        reemissão. Trocar placa-mãe, memória ou placa de vídeo não muda nada — isso foi
+        pensado para ninguém ficar sem o programa no meio da safra.
+      </p>
+    </div>
+
+    <div class="pilha pilha--20">
+      <div class="cartao pilha pilha--12">
+        <h3>O código que você vai me mandar</h3>
+        <p class="sub" style="font-size:.95rem;">
+          Ele aparece no XGuri em <strong>Configurações &rsaquo; Licença</strong>, com um
+          botão para copiar. Tem esta cara:
+        </p>
+        <div class="codigo-maquina">XG-4K7P-9WQ2-M3ZF-H8TA</div>
+        <p class="sub" style="font-size:.95rem;">
+          Ele não expõe nada do seu computador: é um resumo embaralhado, que não dá
+          para desfazer.
+        </p>
+      </div>
+      <a class="botao botao--escuro" href="comprar.html">Montar meu pedido de licença</a>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ planos -- -->
+<section class="faixa faixa--fundo" id="planos">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">Planos</p>
+      <h2>Escolha pelo tamanho do seu serviço.</h2>
+      <p class="sub">
+        Uma licença vale para um computador. Se você tem o notebook do campo e o
+        computador do escritório, são duas licenças.
+      </p>
+    </div>
+
+    <div class="planos">
+      <div class="plano">
+        <div class="plano__nome">Avaliação</div>
+        <div class="plano__preco">Grátis
+          <small><span data-cfg="diasAvaliacao">15</span> dias, uma vez por computador</small>
+        </div>
+        <ul class="plano__itens">
+          <li>Todos os módulos liberados</li>
+          <li>Sem cartão, sem cadastro</li>
+          <li>Começa a contar na instalação</li>
+        </ul>
+        <a class="botao botao--linha" href="download.html">Baixar agora</a>
+      </div>
+
+      <div class="plano plano--destaque">
+        <div class="plano__faixa">Mais procurado</div>
+        <div class="plano__nome">Assinatura anual</div>
+        <div class="plano__preco"><span data-preco="assinatura">Sob consulta</span>
+          <small>1 ano, todos os cinco módulos</small>
+        </div>
+        <ul class="plano__itens">
+          <li>Todos os módulos liberados</li>
+          <li>Atualizações do ano inclusas</li>
+          <li>Suporte no WhatsApp</li>
+        </ul>
+        <a class="botao botao--acento" href="comprar.html?plano=assinatura">Pedir assinatura</a>
+      </div>
+
+      <div class="plano">
+        <div class="plano__nome">Vitalícia</div>
+        <div class="plano__preco"><span data-preco="vitalicia">Sob consulta</span>
+          <small>Pagamento único, sem validade</small>
+        </div>
+        <ul class="plano__itens">
+          <li>Todos os módulos, sem data de vencimento</li>
+          <li>Para quem trabalha com drone todo dia</li>
+          <li>Vale para o computador da licença</li>
+        </ul>
+        <a class="botao botao--escuro" href="comprar.html?plano=vitalicia">Pedir vitalícia</a>
+      </div>
+
+      <div class="plano">
+        <div class="plano__nome">Módulo avulso</div>
+        <div class="plano__preco"><span data-preco="modulo">Sob consulta</span>
+          <small>Por módulo, 1 ano</small>
+        </div>
+        <ul class="plano__itens">
+          <li>Só a tela que você usa</li>
+          <li>Dá para somar módulos depois</li>
+          <li>Ideal para quem só faz mapa HD</li>
+        </ul>
+        <a class="botao botao--linha" href="comprar.html?plano=modulos">Escolher módulos</a>
+      </div>
+    </div>
+
+    <p class="sub" style="font-size:.93rem;">
+      O pagamento é combinado direto comigo, por Pix ou transferência. Nota fiscal sob
+      pedido.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------- como comprar -- -->
+<section class="faixa faixa--escura" id="como-comprar">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">Do download à ativação</p>
+      <h2>Quatro passos, e o XGuri está liberado na sua máquina.</h2>
+    </div>
+
+    <ol class="passos">
+      <li class="passo">
+        <h3>Baixe e instale</h3>
+        <p>
+          O instalador é um arquivo só. Ele pede permissão de administrador, instala o
+          XGuri e cria o atalho na área de trabalho.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Teste <span data-cfg="diasAvaliacao">15</span> dias e pegue seu código</h3>
+        <p>
+          Use o programa inteiro sem pagar nada. Quando decidir comprar, abra
+          Configurações &rsaquo; Licença e copie o código XG-XXXX-XXXX-XXXX-XXXX.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Monte o pedido no site</h3>
+        <p>
+          Na página de compra você preenche nome, cidade e o código, escolhe o plano e
+          o site abre o WhatsApp com o pedido já escrito e conferido. Aí combinamos o
+          pagamento.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Receba o .lic e ative</h3>
+        <p>
+          Eu emito sua licença e te mando o arquivo. No XGuri você clica em
+          &ldquo;Abrir arquivo .lic&rdquo;, escolhe o arquivo, e o programa já abre
+          liberado — inclusive sem internet, daí para frente.
+        </p>
+      </li>
+    </ol>
+
+    <div class="botoes">
+      <a class="botao botao--acento" href="comprar.html">Montar meu pedido</a>
+      <a class="botao botao--linha" href="download.html">Ver requisitos e baixar</a>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- perguntas -- -->
+<section class="faixa faixa--clara" id="perguntas">
+  <div class="envelope envelope--estreito pilha pilha--20">
+    <div class="pilha pilha--12">
+      <p class="olho">Perguntas frequentes</p>
+      <h2>O que todo mundo pergunta antes de comprar.</h2>
+    </div>
+
+    <div class="perguntas">
+      <details class="pergunta">
+        <summary>Preciso de internet para usar o XGuri?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            Só para duas coisas: baixar o instalador e receber o arquivo de licença.
+            Depois de ativado, o programa processa as fotos e abre normalmente sem
+            nenhuma conexão. Para mandar a rota pelo XAG One, aí sim é preciso estar
+            conectado naquele momento.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>Funciona com drone DJI, ou só XAG?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            O processamento das fotos e todos os mapas funcionam com fotos de qualquer
+            drone que grave a posição na imagem. O envio automático da rota é pelo XAG
+            One. Para as outras marcas, o XGuri exporta o desenho em .kml, que você
+            importa no aplicativo do seu drone.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>Que computador eu preciso ter?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            Windows 10 ou 11 de 64 bits, 8 GB de memória para os serviços do dia a dia
+            e 16 GB ou mais se você for gerar mapa HD de área grande. Deixe uns 10 GB
+            livres no disco para o processamento.
+          </p>
+          <p>
+            O próprio XGuri mede a sua máquina e avisa, antes de começar, quantas fotos
+            ela aguenta naquele serviço.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>Formatei o Windows / troquei o computador. E a licença?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            Formatar o Windows ou trocar o disco do sistema muda o código da máquina, e
+            a licença antiga deixa de valer nele. Me mande o código novo pelo WhatsApp
+            que a gente resolve a reemissão.
+          </p>
+          <p>
+            Trocar placa-mãe, memória, placa de vídeo ou o nome do computador não muda
+            o código — sua licença continua funcionando.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>Uma licença serve para dois computadores?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            Não. Cada licença é emitida para um código de máquina. Para usar no
+            notebook do campo e no computador do escritório, são duas licenças — me
+            chame no WhatsApp que a gente combina o valor das duas.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>Minhas fotos e os mapas dos meus clientes vão para a nuvem?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            Não. Todo o processamento acontece no seu computador, e os arquivos ficam
+            nas suas pastas. O site também não guarda nada: o pedido de licença sai
+            pelo seu próprio WhatsApp, direto para mim.
+          </p>
+        </div>
+      </details>
+
+      <details class="pergunta">
+        <summary>O antivírus reclamou do instalador. É problema?</summary>
+        <div class="pergunta__corpo">
+          <p>
+            O Windows costuma avisar sobre programas de desenvolvedor pequeno, que
+            ainda não têm assinatura de código comprada. Em
+            &ldquo;Mais informações &rsaquo; Executar assim mesmo&rdquo; a instalação
+            segue. Baixe sempre pelo link deste site, para ter certeza de que é o
+            arquivo original.
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- chamada ---- -->
+<section class="faixa faixa--fundo">
+  <div class="envelope envelope--estreito pilha pilha--20" style="text-align:center; align-items:center;">
+    <h2>Baixe, use <span data-cfg="diasAvaliacao">15</span> dias e decida depois.</h2>
+    <p class="sub">
+      Sem cadastro e sem cartão. Se fizer sentido para o seu serviço, a gente conversa
+      sobre a licença.
+    </p>
+    <div class="botoes" style="justify-content:center;">
+      <a class="botao botao--acento" href="download.html">Baixar o XGuri</a>
+      <a class="botao botao--linha" data-wa data-wa-texto="Olá! Vi o site do XGuri e queria tirar uma dúvida." href="#">Falar no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <div>
+      <a class="marca-link" href="index.html" style="margin-bottom:12px;">
+        <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+        xguri<i aria-hidden="true"></i>
+      </a>
+      <p>Sistema de mapeamento para drone agrícola.<br>Guri dos Drones.</p>
+    </div>
+
+    <div>
+      <h4>O programa</h4>
+      <ul>
+        <li><a href="#modulos">Módulos</a></li>
+        <li><a href="#planos">Planos e preços</a></li>
+        <li><a href="download.html">Baixar</a></li>
+        <li><a href="manual.html">Manual</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Licença</h4>
+      <ul>
+        <li><a href="#licenca">Como funciona</a></li>
+        <li><a href="comprar.html">Montar pedido</a></li>
+        <li><a href="#perguntas">Perguntas frequentes</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li><a data-wa href="#">WhatsApp <span data-wa-numero></span></a></li>
+        <li data-some-sem-email><a data-email data-email-texto href="#">E-mail</a></li>
+        <li><a data-instagram data-instagram-texto href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rodape__fim">
+    XGuri versão <span data-cfg="versao">1.0.0</span> &middot; &copy; <span data-ano>2026</span>
+    Guri dos Drones &middot; XAG é marca da XAG Co., Ltd., sem vínculo com este produto.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

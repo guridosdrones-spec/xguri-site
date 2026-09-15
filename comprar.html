@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedir licença do XGuri</title>
+<meta name="description" content="Monte seu pedido de licença do XGuri: informe o código da sua máquina, escolha o plano e envie pelo WhatsApp. A licença é emitida para o seu computador.">
+<meta name="theme-color" content="#0E1A14">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/xguri-icone.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/xguri-icone.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Asap:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca-link" href="index.html">
+      <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+      xguri<i aria-hidden="true"></i>
+    </a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="index.html#programa">O programa</a>
+      <a href="index.html#modulos">Módulos</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="download.html">Baixar</a>
+      <a href="comprar.html" aria-current="page">Comprar</a>
+      <a href="treinamento/index.html">Treinamento</a>
+    </nav>
+  </div>
+</header>
+
+<section class="faixa faixa--escura" style="padding-block:clamp(40px,7vw,64px);">
+  <div class="envelope pilha pilha--12">
+    <p class="olho">Pedido de licença</p>
+    <h1 style="font-size:clamp(1.8rem,5vw,2.5rem);">Monte seu pedido em um minuto.</h1>
+    <p class="sub" style="max-width:60ch;">
+      Preencha aqui e o site abre o WhatsApp com o pedido já escrito e com o código da
+      sua máquina conferido. Nada é enviado para servidor nenhum: a mensagem sai do seu
+      próprio WhatsApp, direto para mim.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------ onde achar o código -- -->
+<section class="faixa faixa--clara" style="padding-block:clamp(36px,6vw,56px);">
+  <div class="envelope pilha pilha--20">
+    <div class="pilha pilha--12">
+      <p class="olho">Antes de começar</p>
+      <h2>Pegue o código da sua máquina.</h2>
+    </div>
+
+    <div class="grade grade--2">
+      <div class="pilha pilha--12 prosa">
+        <p class="sub">
+          Abra o XGuri no computador em que você vai usar a licença e vá em
+          <strong>Configurações &rsaquo; Licença</strong>. O código aparece na tela, com
+          um botão para copiar. Se a avaliação já venceu, ele aparece na própria tela de
+          licença que bloqueia o programa.
+        </p>
+        <p class="sub">
+          A licença é emitida para esse código. Por isso, precisa ser o código do
+          computador que vai rodar o XGuri — não do celular, nem de outra máquina.
+        </p>
+      </div>
+      <div class="cartao pilha pilha--12">
+        <p class="sub" style="font-size:.93rem;">É assim que ele aparece:</p>
+        <div class="codigo-maquina">XG-4K7P-9WQ2-M3ZF-H8TA</div>
+        <p class="sub" style="font-size:.9rem;">
+          Dezesseis letras e números, em quatro grupos. Sem as letras I, L, O e U, para
+          ninguém confundir com 1 e 0 ao ditar pelo telefone.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ pedido -- -->
+<section class="faixa faixa--fundo">
+  <div class="envelope grade grade--2" style="gap:34px; align-items:start;">
+
+    <form class="form" id="form-pedido" novalidate>
+      <div class="campo">
+        <label for="nome">Seu nome ou o nome da fazenda</label>
+        <input type="text" id="nome" name="nome" autocomplete="name" placeholder="Ex.: Fazenda Santa Clara">
+      </div>
+
+      <div class="campo">
+        <label for="cidade">Cidade e estado</label>
+        <input type="text" id="cidade" name="cidade" placeholder="Ex.: Santa Maria / RS">
+      </div>
+
+      <div class="campo">
+        <label for="fone">Seu WhatsApp</label>
+        <input type="tel" id="fone" name="fone" autocomplete="tel" placeholder="Ex.: (55) 99999-8888">
+        <span class="dica">É por aqui que eu te mando o arquivo da licença.</span>
+      </div>
+
+      <div class="campo">
+        <label for="codigo">Código da máquina</label>
+        <input type="text" id="codigo" name="codigo" class="mono" inputmode="text"
+               spellcheck="false" autocapitalize="characters" autocomplete="off"
+               placeholder="XG-0000-0000-0000-0000"
+               aria-describedby="estado-codigo">
+        <span class="estado" id="estado-codigo" role="status"></span>
+        <span class="dica">Você pode colar com ou sem os traços — eu confiro aqui na hora.</span>
+      </div>
+
+      <fieldset class="campo" style="border:0; padding:0; margin:0;">
+        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">Plano</legend>
+        <div class="opcoes">
+          <label class="opcao" for="plano-assinatura">
+            <input type="radio" name="plano" id="plano-assinatura" value="assinatura" checked>
+            <span>
+              <span class="opcao__nome">Assinatura de 1 ano &middot; <span data-preco="assinatura">Sob consulta</span></span>
+              <span class="opcao__texto">Todos os cinco módulos liberados por doze meses.</span>
+            </span>
+          </label>
+
+          <label class="opcao" for="plano-vitalicia">
+            <input type="radio" name="plano" id="plano-vitalicia" value="vitalicia">
+            <span>
+              <span class="opcao__nome">Vitalícia &middot; <span data-preco="vitalicia">Sob consulta</span></span>
+              <span class="opcao__texto">Pagamento único, sem data de vencimento, para este computador.</span>
+            </span>
+          </label>
+
+          <label class="opcao" for="plano-modulos">
+            <input type="radio" name="plano" id="plano-modulos" value="modulos">
+            <span>
+              <span class="opcao__nome">Módulos avulsos &middot; <span data-preco="modulo">Sob consulta</span> cada</span>
+              <span class="opcao__texto">Só as telas que você usa, por um ano. Dá para somar mais depois.</span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="campo oculto" id="bloco-modulos" style="border:0; padding:0; margin:0;">
+        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">Quais módulos</legend>
+        <div class="opcoes">
+          <label class="opcao" for="mod-hd">
+            <input type="checkbox" name="modulo" id="mod-hd" value="mapa_hd" data-nome="Gerar mapa HD">
+            <span>
+              <span class="opcao__nome">Gerar mapa HD</span>
+              <span class="opcao__texto">Processa as fotos e monta o ortomosaico do talhão.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-aplicacao">
+            <input type="checkbox" name="modulo" id="mod-aplicacao" value="mapa_aplicacao" data-nome="Criar mapa de aplicação">
+            <span>
+              <span class="opcao__nome">Criar mapa de aplicação</span>
+              <span class="opcao__texto">Contorno, obstáculos e rota de pulverização.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-taxa">
+            <input type="checkbox" name="modulo" id="mod-taxa" value="taxa_variavel" data-nome="Criar mapa de taxa variável">
+            <span>
+              <span class="opcao__nome">Criar mapa de taxa variável</span>
+              <span class="opcao__texto">Zonas com taxa diferente dentro do mesmo talhão.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-rota">
+            <input type="checkbox" name="modulo" id="mod-rota" value="rota_personalizada" data-nome="Criar rota personalizada">
+            <span>
+              <span class="opcao__nome">Criar rota personalizada</span>
+              <span class="opcao__texto">Rota desenhada na mão, do jeito que o talhão pede.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-localizada">
+            <input type="checkbox" name="modulo" id="mod-localizada" value="aplicacao_localizada" data-nome="Aplicação localizada">
+            <span>
+              <span class="opcao__nome">Aplicação localizada</span>
+              <span class="opcao__texto">Aplicação só nas manchas marcadas sobre o mapa.</span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="campo">
+        <label for="obs">Alguma observação? (opcional)</label>
+        <textarea id="obs" name="obs" placeholder="Ex.: preciso de nota fiscal no CNPJ da empresa"></textarea>
+      </div>
+
+      <p class="estado estado--erro oculto" id="aviso-falta" role="status"></p>
+
+      <button type="submit" class="botao botao--acento" style="width:100%;">
+        Enviar o pedido pelo WhatsApp
+      </button>
+    </form>
+
+    <div class="pilha pilha--20">
+      <div class="resumo oculto" id="resumo-pedido">
+        <h3>Assim vai chegar para mim</h3>
+        <pre id="previa-pedido"></pre>
+        <div class="botoes">
+          <a class="botao botao--acento" id="botao-whatsapp" href="#" target="_blank" rel="noopener">Enviar no WhatsApp</a>
+          <button type="button" class="botao botao--linha" id="botao-copiar">Copiar pedido</button>
+          <a class="botao botao--linha" id="botao-email" href="#">Mandar por e-mail</a>
+        </div>
+      </div>
+
+      <div class="cartao pilha pilha--12 oculto" data-pix-bloco>
+        <h3>Pagamento</h3>
+        <p class="sub" style="font-size:.95rem;">Chave Pix:</p>
+        <div class="codigo-maquina" style="font-size:1rem;" data-pix></div>
+        <p class="sub" style="font-size:.92rem;">
+          Em nome de <span data-pix-nome></span>. Mande o comprovante no WhatsApp junto
+          com o pedido e eu emito a licença.
+        </p>
+      </div>
+
+      <div class="cartao pilha pilha--12">
+        <h3>O que acontece depois</h3>
+        <ol class="plano__itens plano__itens--num">
+          <li>Eu confiro o pedido e confirmo o valor com você.</li>
+          <li>Você paga por Pix ou transferência.</li>
+          <li>Eu emito a licença para o código da sua máquina.</li>
+          <li>Você recebe o arquivo .lic no WhatsApp e ativa em dois cliques.</li>
+        </ol>
+        <p class="sub" style="font-size:.92rem;">
+          Emissão manual, feita por mim: se você mandar de noite, sai na manhã
+          seguinte.
+        </p>
+      </div>
+
+      <div class="aviso">
+        <strong>Uma licença, um computador.</strong>
+        Precisa rodar no notebook do campo e no computador do escritório? Marque no
+        campo de observação que são duas licenças.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <div>
+      <a class="marca-link" href="index.html" style="margin-bottom:12px;">
+        <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+        xguri<i aria-hidden="true"></i>
+      </a>
+      <p>Sistema de mapeamento para drone agrícola.<br>Guri dos Drones.</p>
+    </div>
+    <div>
+      <h4>O programa</h4>
+      <ul>
+        <li><a href="index.html#modulos">Módulos</a></li>
+        <li><a href="index.html#planos">Planos e preços</a></li>
+        <li><a href="download.html">Baixar</a></li>
+        <li><a href="manual.html">Manual</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Licença</h4>
+      <ul>
+        <li><a href="index.html#licenca">Como funciona</a></li>
+        <li><a href="download.html#ativar">Como ativar</a></li>
+        <li><a href="index.html#perguntas">Perguntas frequentes</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li><a data-wa href="#">WhatsApp <span data-wa-numero></span></a></li>
+        <li data-some-sem-email><a data-email data-email-texto href="#">E-mail</a></li>
+        <li><a data-instagram data-instagram-texto href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape__fim">
+    XGuri versão <span data-cfg="versao">1.0.0</span> &middot; &copy; <span data-ano>2026</span>
+    Guri dos Drones &middot; XAG é marca da XAG Co., Ltd., sem vínculo com este produto.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

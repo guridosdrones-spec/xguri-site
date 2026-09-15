@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Quiz de treinamento sobre preparo de calda, EPI e operacao com drone pulverizador.">
+<meta name="robots" content="noindex">
+<title>Tira-duvida ao vivo · XGuri</title>
+<style>
+:root{color-scheme:light dark}
+body{margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:14px}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{
+  --chao:#0E1310; --painel:#18211B; --painel-2:#212C23; --linha:#31402F;
+  --texto:#ECF1E4; --texto-2:#A7B49E; --texto-3:#77856F;
+  --a:#C8452F; --b:#2E7BA6; --c:#E0A400; --d:#4E8C3A;
+  --ouro:#E8C34A; --prata:#B9C2B2; --bronze:#B57A47;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--chao); color:var(--texto);
+  font-family:"Barlow",system-ui,sans-serif; font-size:16px; line-height:1.5;
+  background-image:radial-gradient(circle at 50% -10%, rgba(78,140,58,.16), transparent 55%)}
+h1,h2,h3,.cond{font-family:"Barlow Condensed",sans-serif; font-weight:700; letter-spacing:.01em; margin:0}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--c); outline-offset:3px}
+.wrap{max-width:1080px; margin:0 auto; padding-inline:16px; padding-block:0 40px}
+
+.topo{border-bottom:1px solid var(--linha); background:var(--painel)}
+.topo-in{max-width:1080px; margin:0 auto; padding:11px 16px; display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.marca b{font-family:"Barlow Condensed",sans-serif; font-size:22px; display:block; line-height:1}
+.marca span{font-size:10px; text-transform:uppercase; letter-spacing:.17em; color:var(--texto-3); font-weight:600}
+.sala-chip{margin-left:auto; display:flex; gap:10px; align-items:center; font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--texto-2)}
+.sala-chip b{color:var(--texto); font-size:19px; letter-spacing:.22em}
+
+.cartao{background:var(--painel); border:1px solid var(--linha); border-radius:4px; padding:22px}
+.eyebrow{font-family:"Barlow Condensed",sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.18em; color:var(--texto-3); margin:0 0 6px}
+.btn{background:var(--d); color:#0B1109; border:0; border-radius:3px; padding:12px 22px;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:17px;
+  box-shadow:0 3px 0 rgba(0,0,0,.45); transition:transform .08s}
+.btn:active{transform:translateY(3px); box-shadow:none}
+.btn[disabled]{opacity:.4; cursor:not-allowed; transform:none}
+.btn.sec{background:transparent; color:var(--texto-2); border:1.5px solid var(--linha); box-shadow:none}
+.btn.sec:hover{color:var(--texto); border-color:var(--texto-3)}
+.btn.grande{font-size:22px; padding:16px 34px}
+input{background:var(--painel-2); border:1.5px solid var(--linha); color:var(--texto); border-radius:3px; padding:11px 13px; font:inherit; width:100%}
+input::placeholder{color:var(--texto-3)}
+label{display:block; font-size:13px; color:var(--texto-2); margin:0 0 5px}
+
+/* entrada */
+.portas{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:20px}
+.porta{background:var(--painel); border:1.5px solid var(--linha); border-radius:4px; padding:22px; text-align:left; display:grid; gap:7px}
+.porta:hover{border-color:var(--d)}
+.porta h2{font-size:26px; text-transform:uppercase; letter-spacing:.03em}
+.porta p{margin:0; color:var(--texto-2); font-size:14.5px}
+.abertura h1{font-size:44px; line-height:1; text-wrap:balance; margin-bottom:8px}
+.abertura .sub{color:var(--texto-2); max-width:58ch; font-size:17px}
+
+/* lobby do instrutor */
+.lobby{display:grid; grid-template-columns:minmax(260px,340px) 1fr; gap:22px; align-items:start}
+@media (max-width:760px){ .lobby{grid-template-columns:1fr} }
+.pin{background:var(--painel); border:1px solid var(--linha); border-radius:4px; padding:20px; text-align:center}
+.pin .codigo{font-family:"Barlow Condensed",sans-serif; font-size:66px; letter-spacing:.14em; line-height:1; color:var(--c)}
+.pin .qr{background:#fff; padding:10px; border-radius:3px; display:inline-block; margin:14px 0 6px}
+.pin .qr img, .pin .qr canvas, .pin .qr table{display:block; width:190px; height:190px}
+.pin .url{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--texto-3); word-break:break-all}
+.jogadores{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px; min-height:60px}
+.ficha{background:var(--painel-2); border:1px solid var(--linha); border-radius:30px; padding:6px 14px 6px 8px; display:flex; gap:8px; align-items:center;
+  animation:entra .35s ease-out}
+@keyframes entra{from{opacity:0; transform:scale(.8)}}
+.ficha .ic{font-size:21px; line-height:1}
+.ficha b{font-family:"Barlow Condensed",sans-serif; font-size:17px; font-weight:600}
+
+/* pergunta */
+.pergunta-caixa{background:var(--painel); border:1px solid var(--linha); border-radius:4px; padding:26px; text-align:center}
+.pergunta-caixa h2{font-size:clamp(24px,3.6vw,42px); line-height:1.12; text-wrap:balance}
+.meta-pergunta{display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:14px; color:var(--texto-3);
+  font-family:"IBM Plex Mono",monospace; font-size:13px}
+.relogio{font-family:"Barlow Condensed",sans-serif; font-size:40px; color:var(--c); line-height:1; min-width:56px}
+.barra-tempo{height:8px; background:var(--painel-2); border-radius:4px; overflow:hidden; margin:16px 0 22px}
+.barra-tempo i{display:block; height:100%; background:var(--c); transition:width 1s linear}
+.opcoes{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:620px){ .opcoes{grid-template-columns:1fr} }
+.op{border:0; border-radius:4px; padding:18px 18px; text-align:left; display:flex; gap:13px; align-items:center;
+  font-family:"Barlow Condensed",sans-serif; font-size:clamp(18px,2.2vw,25px); font-weight:600; color:#0B1109;
+  box-shadow:0 4px 0 rgba(0,0,0,.42); transition:transform .08s, filter .15s; line-height:1.1}
+.op:active{transform:translateY(4px); box-shadow:none}
+.op:hover{filter:brightness(1.08)}
+.op0{background:var(--a); color:#FFF2EE} .op1{background:var(--b); color:#EAF5FB}
+.op2{background:var(--c)} .op3{background:var(--d); color:#F0F7EC}
+.op .forma{width:26px; height:26px; flex:none}
+.op[disabled]{opacity:.45}
+.op.certa{outline:4px solid #7DE07A; outline-offset:2px}
+.op.errada{opacity:.3}
+.op .qtd{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:17px; opacity:.85}
+
+/* resultado */
+.explica{background:var(--painel-2); border-left:4px solid var(--d); padding:14px 18px; margin-top:18px; font-size:16px}
+.explica b{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; display:block; font-size:13px; color:var(--texto-3)}
+.ranking{list-style:none; margin:18px 0 0; padding:0; display:grid; gap:7px}
+.ranking li{display:flex; align-items:center; gap:12px; background:var(--painel-2); border-radius:3px; padding:10px 14px}
+.ranking li b{font-family:"Barlow Condensed",sans-serif; font-size:19px; flex:1}
+.ranking li .pos{font-family:"Barlow Condensed",sans-serif; font-size:20px; color:var(--texto-3); width:28px}
+.ranking li .pts{font-family:"IBM Plex Mono",monospace; font-size:17px; color:var(--c)}
+.ranking li .ic{font-size:22px}
+.ranking li.p1{background:linear-gradient(90deg, rgba(232,195,74,.22), var(--painel-2))}
+.ranking li.p1 .pos{color:var(--ouro)}
+.ranking li.p2 .pos{color:var(--prata)} .ranking li.p3 .pos{color:var(--bronze)}
+
+/* podio */
+.podio{display:flex; align-items:flex-end; justify-content:center; gap:14px; margin:26px 0}
+.degrau{background:var(--painel-2); border:1px solid var(--linha); border-radius:4px 4px 0 0; width:132px; text-align:center; padding:14px 8px 10px}
+.degrau .ic{font-size:38px; display:block}
+.degrau b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:19px; margin-top:4px}
+.degrau span{font-family:"IBM Plex Mono",monospace; font-size:14px; color:var(--c)}
+.degrau.d1{height:200px; border-color:var(--ouro)} .degrau.d2{height:160px} .degrau.d3{height:130px}
+
+.status{color:var(--texto-2); font-size:15px; margin-top:12px}
+.aviso{background:rgba(200,69,47,.14); border-left:4px solid var(--a); padding:12px 16px; border-radius:3px; margin-top:16px; font-size:14.5px}
+.icones{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.ic-op{background:var(--painel-2); border:1.5px solid var(--linha); border-radius:6px; font-size:24px; width:46px; height:46px; display:grid; place-items:center; padding:0}
+.ic-op.on{border-color:var(--c); background:rgba(224,164,0,.16)}
+.espera{display:grid; place-items:center; text-align:center; padding:40px 20px; gap:10px}
+.espera .grande{font-family:"Barlow Condensed",sans-serif; font-size:46px; line-height:1}
+.pulso{animation:pulsa 1.6s ease-in-out infinite}
+@keyframes pulsa{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ===== portaria de acesso ===== */
+html.travado body > *:not(#portaria){display:none!important}
+#portaria{position:fixed; inset:0; z-index:9999; display:grid; place-items:center; padding:20px;
+  background:#1B2018; background-image:radial-gradient(circle at 50% 8%, rgba(224,168,0,.14), transparent 55%);
+  font-family:"Barlow",system-ui,sans-serif; color:#ECF1E4}
+#portaria .caixa{width:100%; max-width:430px; background:#232A20; border:1px solid #39422E; border-radius:5px; padding:26px}
+#portaria .selo{font-family:"Barlow Condensed",sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#8B9681}
+#portaria h2{font-family:"Barlow Condensed",sans-serif; font-size:30px; margin:4px 0 6px; line-height:1.05; color:#ECF1E4}
+#portaria p{margin:0 0 18px; font-size:14.5px; color:#A7B49E; line-height:1.45}
+#portaria label{display:block; font-size:12.5px; color:#A7B49E; margin-bottom:5px}
+#portaria input{width:100%; box-sizing:border-box; background:#1A2017; border:1.5px solid #39422E; color:#ECF1E4;
+  border-radius:3px; padding:12px 13px; font:inherit; font-size:17px; letter-spacing:.04em}
+#portaria input:focus{outline:2px solid #E0A800; outline-offset:1px}
+#portaria button{width:100%; margin-top:12px; background:#4F7A3C; color:#0B1109; border:0; border-radius:3px; padding:13px;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.09em; font-size:17px; cursor:pointer}
+#portaria button:disabled{opacity:.5; cursor:wait}
+#portaria .erro{color:#E4664A; font-size:13.5px; margin:10px 0 0; min-height:19px}
+#portaria .rodape{margin-top:18px; padding-top:14px; border-top:1px solid #39422E; font-size:11.5px; color:#7E8873}
+#portaria .chave{width:54px; height:54px; margin-bottom:12px}
+</style>
+</head>
+<body>
+<div id="portaria">
+  <div class="caixa">
+    <svg class="chave" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="17" cy="17" r="11" fill="none" stroke="#E0A800" stroke-width="4"/>
+      <path d="M25 25 L41 41 M35 35 l5 -5 M30 30 l4 -4" stroke="#E0A800" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
+    <p class="selo">XGuri · Treinamento de campo</p>
+    <h2>Tira-dúvida ao vivo</h2>
+    <p>Este material é liberado por senha. Use a senha que o instrutor passou para a sua turma.</p>
+    <label for="portaSenha">Senha de acesso</label>
+    <input id="portaSenha" type="password" autocomplete="current-password" placeholder="••••••••" autofocus>
+    <button id="portaBtn">Entrar</button>
+    <p class="erro" id="portaErro"></p>
+    <p class="rodape">Se você não tem a senha, fale com o instrutor responsável pelo curso.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var ACESSO = {
+    iter: 200000,
+    chaves: [
+      {nome: "Senha geral", sal: "4b7a8dbbef93f0ee96ee67a26643355e",
+       hash: "dfadde86a724aead7438dd73e4b7068280499fe9200ea5dac3f4eea49a886d33"}
+    ]
+  };
+  var LEMBRAR = "xguri_acesso_v1";
+  var raiz = document.documentElement;
+  raiz.classList.add("travado");
+
+  function liberar(nome){
+    try{ localStorage.setItem(LEMBRAR, nome); }catch(e){}
+    raiz.classList.remove("travado");
+    var p = document.getElementById("portaria");
+    if(p) p.remove();
+    window.dispatchEvent(new Event("acesso-liberado"));
+  }
+  try{ if(localStorage.getItem(LEMBRAR)) { liberar(localStorage.getItem(LEMBRAR)); return; } }catch(e){}
+
+  function hex(buf){
+    return Array.prototype.map.call(new Uint8Array(buf), function(b){
+      return ("0" + b.toString(16)).slice(-2); }).join("");
+  }
+  function bytes(h){
+    var a = new Uint8Array(h.length/2);
+    for(var i=0;i<a.length;i++) a[i] = parseInt(h.substr(i*2,2),16);
+    return a;
+  }
+  async function conferir(senha){
+    var enc = new TextEncoder();
+    var base = await crypto.subtle.importKey("raw", enc.encode(senha), "PBKDF2", false, ["deriveBits"]);
+    for(var i=0;i<ACESSO.chaves.length;i++){
+      var k = ACESSO.chaves[i];
+      var bits = await crypto.subtle.deriveBits(
+        {name:"PBKDF2", salt:bytes(k.sal), iterations:ACESSO.iter, hash:"SHA-256"}, base, 256);
+      if(hex(bits) === k.hash) return k.nome;
+    }
+    return null;
+  }
+
+  var btn = document.getElementById("portaBtn");
+  var campo = document.getElementById("portaSenha");
+  var erro = document.getElementById("portaErro");
+  var tentando = false;
+
+  async function tentar(){
+    if(tentando) return;
+    var s = campo.value.trim();
+    if(!s){ erro.textContent = "Digite a senha."; return; }
+    tentando = true; btn.disabled = true; btn.textContent = "Conferindo…"; erro.textContent = "";
+    try{
+      var nome = await conferir(s);
+      if(nome){ liberar(nome); return; }
+      erro.textContent = "Senha incorreta.";
+    }catch(e){
+      erro.textContent = "Não consegui conferir a senha neste navegador.";
+    }
+    tentando = false; btn.disabled = false; btn.textContent = "Entrar"; campo.select();
+  }
+  btn.addEventListener("click", tentar);
+  campo.addEventListener("keydown", function(e){ if(e.key === "Enter") tentar(); });
+})();
+</script>
+
+
+<header class="topo">
+  <div class="topo-in">
+    <div class="marca"><span>XGuri · Treinamento de campo</span><b>Tira-Dúvida ao Vivo</b></div>
+    <div class="sala-chip" id="chipSala" hidden><span>SALA</span><b id="chipCodigo">····</b><span id="chipQtd"></span></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ENTRADA -->
+  <section id="entrada">
+    <div class="cartao abertura" style="margin-top:20px">
+      <p class="eyebrow">Quiz de sala de aula</p>
+      <h1>Todo mundo responde ao mesmo tempo, do próprio celular</h1>
+      <p class="sub">O instrutor abre a sala e projeta a pergunta. Cada aluno entra pelo código, escolhe um ícone e responde — quem acerta mais rápido faz mais ponto. No fim de cada pergunta o placar aparece na tela e a resposta é explicada.</p>
+      <div class="portas">
+        <button class="porta" id="portaHost">
+          <h2>Abrir uma sala</h2>
+          <p>Para o instrutor. Gera o código e o QR Code, controla o ritmo das perguntas e mostra o placar no projetor.</p>
+        </button>
+        <button class="porta" id="portaAluno">
+          <h2>Entrar numa sala</h2>
+          <p>Para o aluno. Digite o código que está na tela, escolha seu ícone e o nome.</p>
+        </button>
+        <button class="porta" id="portaSolo">
+          <h2>Treinar sozinho</h2>
+          <p>Sem sala e sem internet compartilhada: as mesmas perguntas, no seu ritmo, com a explicação a cada resposta.</p>
+        </button>
+      </div>
+      <div class="aviso" id="avisoDb" hidden></div>
+    </div>
+  </section>
+
+  <!-- HOST: LOBBY -->
+  <section id="hostLobby" hidden style="margin-top:20px">
+    <div class="lobby">
+      <div class="pin">
+        <p class="eyebrow">Código da sala</p>
+        <div class="codigo" id="codigoSala">····</div>
+        <div class="qr" id="qrBox"></div>
+        <div class="url" id="urlSala"></div>
+      </div>
+      <div class="cartao">
+        <p class="eyebrow">Na sala agora</p>
+        <h2 style="font-size:30px" id="contaJogadores">Ninguém entrou ainda</h2>
+        <div class="jogadores" id="listaJogadores"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px">
+          <button class="btn grande" id="btnComecar" disabled>Começar o jogo</button>
+          <button class="btn sec" id="btnFecharSala">Cancelar</button>
+        </div>
+        <p class="status">Peça para o pessoal abrir o link, tocar em <b>Entrar numa sala</b> e digitar o código acima.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERGUNTA (host, aluno e solo) -->
+  <section id="telaPergunta" hidden style="margin-top:20px">
+    <div class="pergunta-caixa">
+      <div class="meta-pergunta">
+        <span id="contadorQ">Pergunta 1 de 10</span>
+        <span id="respondidas"></span>
+        <span class="relogio" id="relogio">20</span>
+      </div>
+      <h2 id="textoPergunta">—</h2>
+      <div class="barra-tempo"><i id="barraTempo" style="width:100%"></i></div>
+      <div class="opcoes" id="opcoes"></div>
+      <div class="explica" id="explica" hidden><b>Por quê</b><span id="textoExplica"></span></div>
+      <ol class="ranking" id="ranking" hidden></ol>
+      <div style="margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+        <button class="btn" id="btnEncerrarQ" hidden>Encerrar e mostrar a resposta</button>
+        <button class="btn" id="btnProxima" hidden>Próxima pergunta</button>
+      </div>
+      <p class="status" id="statusAluno" hidden></p>
+    </div>
+  </section>
+
+  <!-- ALUNO: ENTRAR -->
+  <section id="alunoEntrar" hidden style="margin-top:20px">
+    <div class="cartao" style="max-width:520px; margin:0 auto">
+      <p class="eyebrow">Entrar na sala</p>
+      <h2 style="font-size:30px; margin-bottom:14px">Qual é o código na tela?</h2>
+      <div style="display:grid; gap:14px">
+        <div>
+          <label for="inCodigo">Código da sala</label>
+          <input id="inCodigo" maxlength="4" placeholder="ABCD" autocomplete="off"
+                 style="font-family:'Barlow Condensed',sans-serif; font-size:34px; letter-spacing:.3em; text-align:center; text-transform:uppercase">
+        </div>
+        <div>
+          <label for="inNome">Seu nome</label>
+          <input id="inNome" maxlength="18" placeholder="como vão te chamar no placar" autocomplete="off">
+        </div>
+        <div>
+          <label>Seu ícone</label>
+          <div class="icones" id="icones"></div>
+        </div>
+        <p class="status" id="erroEntrar" style="color:var(--a)" hidden></p>
+        <button class="btn grande" id="btnEntrar">Entrar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALUNO: ESPERA -->
+  <section id="alunoEspera" hidden style="margin-top:20px">
+    <div class="cartao espera">
+      <span class="grande" id="espIcone">🚜</span>
+      <span class="grande" id="espNome">—</span>
+      <p class="status pulso" id="espTexto">Você está na sala. Olhe para o telão e aguarde o instrutor começar.</p>
+      <div id="espPlacar"></div>
+    </div>
+  </section>
+
+  <!-- FIM -->
+  <section id="telaFim" hidden style="margin-top:20px">
+    <div class="cartao" style="text-align:center">
+      <p class="eyebrow">Fim do tira-dúvida</p>
+      <h1 style="font-size:38px" id="tituloFim">Pódio</h1>
+      <div class="podio" id="podio"></div>
+      <ol class="ranking" id="rankingFinal"></ol>
+      <div style="margin-top:22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+        <button class="btn" id="btnNovoJogo">Nova rodada</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="status" style="margin-top:26px; border-top:1px solid var(--linha); padding-top:14px">
+    Perguntas de preparo de calda, EPI e operação com drone pulverizador. Material de treinamento — não substitui a bula nem a capacitação obrigatória.
+  </p>
+</div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const URL_SALA = "https://claude.ai/artifact/6K5hxUFSU7z3eMpr3maefu";
+const SEGUNDOS = 20;
+
+/* ================= banco de perguntas ================= */
+const PERGUNTAS = [
+  {p:'Na ordem de mistura, qual formulação entra PRIMEIRO no tanque?', o:['Pós e granulados (WG/WP)','Concentrados emulsionáveis (EC)','Adjuvantes e óleos','Concentrados solúveis (SL)'], c:0,
+   e:'A sequência é pós (WG/WP) → suspensões (SC) → solúveis (SL) → emulsionáveis (EC) → adjuvantes e óleos. Fora dela a calda empedra ou quebra a emulsão.'},
+  {p:'Quanto de água entra no tanque ANTES do primeiro produto?', o:['O tanque cheio','Metade do volume de calda','Só o fundo do tanque','Nenhuma — produto primeiro'], c:1,
+   e:'Começa-se com cerca de 50% do volume de calda. Produto em tanque seco empedra e não dispersa.'},
+  {p:'Qual é o ÚLTIMO item a ser vestido na paramentação do EPI?', o:['A viseira facial','O chapéu árabe','As luvas','O avental'], c:2,
+   e:'A luva é sempre a última: com ela na mão, qualquer ajuste em outra peça já contamina.'},
+  {p:'A barra da calça do EPI deve ficar como, em relação à bota?', o:['Por dentro da bota','Por fora da bota','Dobrada na canela','Tanto faz'], c:1,
+   e:'Por fora. Barra por dentro da bota vira funil: o líquido escorre direto para dentro do calçado.'},
+  {p:'Que tipo de luva NÃO pode ser usado com defensivos?', o:['Nitrílica','Neoprene','Couro ou algodão','Nitrílica de 0,4 mm'], c:2,
+   e:'Couro e algodão absorvem o produto e o mantêm encostado na pele. Só nitrílica ou neoprene, no mínimo 0,4 mm.'},
+  {p:'Um receituário cobre 20 ha a 10 L/ha. Quantos litros de calda para voar 18 ha?', o:['200 L','180 L','160 L','190 L'], c:1,
+   e:'Volume de calda = área do voo × volume por hectare. 18 × 10 = 180 L. A conta é pela área real, não pela do receituário.'},
+  {p:'Dose de 0,25 kg/ha de um produto líquido com densidade 1,25 g/mL, para 12 ha. Quantos mL?', o:['3.000 mL','2.400 mL','3.750 mL','240 mL'], c:1,
+   e:'0,25 × 12 = 3 kg. Dividido pela densidade 1,25 g/mL = 2.400 mL. Dose em kg só vira mL passando pela densidade.'},
+  {p:'Um adjuvante a 0,5% v/v numa calda de 200 L corresponde a quanto?', o:['500 mL','1.000 mL','100 mL','2.000 mL'], c:1,
+   e:'Percentual v/v é sobre o volume de calda: 0,5% de 200 L = 1 L = 1.000 mL.'},
+  {p:'Você precisa de 1,8 L de um produto. O produtor tem embalagens de 1, 5, 10 e 20 L. O certo é pegar:', o:['Uma de 5 L','Duas de 1 L','Uma de 20 L','Uma de 10 L'], c:1,
+   e:'Duas de 1 L cobrem com a menor sobra. Embalagem grande aberta à toa vira resíduo que ninguém pode devolver à prateleira.'},
+  {p:'O piloto informa a área real do voo. Você deve preparar calda para:', o:['A área do receituário, sempre','A área informada pelo piloto','A maior das duas','A média das duas'], c:1,
+   e:'A calda é feita para a área que vai ser voada — nunca acima do que o receituário autoriza, mas ajustada para baixo conforme o voo.'},
+  {p:'O gerador gira na partida mas não pega, e tem combustível no tanque. O primeiro lugar a olhar é:', o:['A vela','O registro de combustível','O nível de óleo','A bateria'], c:1,
+   e:'Motor que gira e não pega, com combustível no tanque, é alimentação. O registro fechado é a causa mais comum e a mais rápida de verificar.'},
+  {p:'O gerador pega e morre engasgando poucos segundos depois. Provável causa:', o:['Filtro entupido','Falta de óleo','Tomada solta','Bateria fraca'], c:0,
+   e:'Motor que sufoca assim está sem ar ou com combustível sujo. Numa lavoura empoeirada, o filtro é o primeiro suspeito.'},
+  {p:'O misturador não faz barulho nenhum ao ser ligado. Antes de tudo, verifique:', o:['A mangueira','O nível de água','A tomada e a energia','A hélice do agitador'], c:2,
+   e:'Sem nenhum sinal de vida o problema é energia: tomada fora do encaixe, disjuntor ou o gerador desligado.'},
+  {p:'A torneira do misturador abre e vem só um fio de água. Isso indica:', o:['Bomba queimada','Obstrução na mangueira ou no filtro de linha','Falta de energia','Tanque cheio'], c:1,
+   e:'Vazão parcial é obstrução. Bomba desligada não dá vazão nenhuma; obstrução dá pouca.'},
+  {p:'As baterias do drone só carregam se:', o:['Estiverem acima de 50%','O gerador estiver ligado','O drone estiver montado','A calda estiver pronta'], c:1,
+   e:'O carregador puxa do gerador. Por isso o gerador é resolvido cedo: a bateria carrega enquanto o resto do serviço anda.'},
+  {p:'Por que o drone deve sair da carretinha antes de abrir os braços?', o:['Para pesar menos','Porque no chão há espaço e a hélice não bate na estrutura','Por causa do vento','Para economizar bateria'], c:1,
+   e:'Em cima da carretinha falta espaço: o braço não abre inteiro e a hélice bate na grade.'},
+  {p:'A tríplice lavagem da embalagem vazia consiste em:', o:['Lavar uma vez com bastante água','Três enxágues, jogando a água no tanque de calda','Deixar de molho','Enxaguar na beira do rio'], c:1,
+   e:'São três enxágues com cerca de 1/4 do volume da embalagem, e a água de lavagem vai para o tanque de calda — é produto, não resíduo.'},
+  {p:'Depois da tríplice lavagem, a embalagem vazia deve:', o:['Ser queimada','Ser inutilizada e devolvida ao posto de recebimento','Ir no lixo comum','Ser reutilizada para água'], c:1,
+   e:'Inutilizada (furada) e devolvida ao posto de recebimento no prazo legal, com o comprovante guardado.'},
+  {p:'A água de lavagem do drone e do misturador deve ser calculada:', o:['Na hora, se sobrar','No dia anterior, junto com a água de calda','Só se o produtor pedir','Não precisa de cálculo'], c:1,
+   e:'Entra no planejamento da véspera: água que falta em campo é viagem perdida no meio da operação.'},
+  {p:'Quando o filtro do respirador deve ser trocado?', o:['Uma vez por ano','Ao sentir cheiro do produto ou dificuldade para respirar','Só quando rasgar','A cada aplicação'], c:1,
+   e:'Cheiro do produto ou resistência ao respirar significa filtro saturado — a proteção acabou.'},
+  {p:'A roupa do EPI deve ser lavada:', o:['Junto com a roupa da família','Separada, com sabão neutro e sem esfregar forte','Com água sanitária','Só com água corrente'], c:1,
+   e:'Separada das roupas da família, sabão neutro e sem esfregar: a fricção forte tira a camada hidrorrepelente.'},
+  {p:'No preparo da calda, o avental impermeável vai:', o:['Nas costas','Na frente','Não se usa avental','Por baixo do jaleco'], c:1,
+   e:'No preparo o respingo vem da frente. Em aplicação costal é que o avental vai nas costas, por causa de vazamento do tanque.'},
+  {p:'Terminado o agitador ligado e a calda homogênea, o que indica que ela está pronta?', o:['A cor mudou','Volume completado até a marca e mistura uniforme','O tanque esquentou','O tempo de 1 hora'], c:1,
+   e:'Volume completado até a marca do volume total e calda uniforme, sem grumos nem separação.'},
+  {p:'Quem responde tecnicamente pela recomendação do produto aplicado?', o:['O piloto do drone','O auxiliar','O engenheiro agrônomo que assina o receituário','O produtor'], c:2,
+   e:'O receituário agronômico é assinado por profissional habilitado, com CREA. Quem aplica segue o que está nele.'}
+];
+
+const ICONES = ['🚜','🌱','🐛','💧','🛩️','🧪','🌽','☀️','🐝','🥾','🧤','🍃'];
+const FORMAS = [
+  '<svg class="forma" viewBox="0 0 24 24"><path d="M12 3 22 21H2z" fill="currentColor"/></svg>',
+  '<svg class="forma" viewBox="0 0 24 24"><path d="M12 2 22 12 12 22 2 12z" fill="currentColor"/></svg>',
+  '<svg class="forma" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>',
+  '<svg class="forma" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor"/></svg>'
+];
+
+/* ================= estado ================= */
+let db = null, papel = null, sala = null, meuId = null, meuNome = '', meuIcone = ICONES[0];
+let qs = [], idx = 0, cronT = null, unsubSala = null, unsubJog = null;
+let respondi = false, meusPontos = 0, soloAcertos = 0;
+
+try{
+  meuId = sessionStorage.getItem('tdId');
+  if(!meuId){ meuId = 'j' + Math.random().toString(36).slice(2,9); sessionStorage.setItem('tdId', meuId); }
+}catch(e){ meuId = 'j' + Math.random().toString(36).slice(2,9); }
+
+(async () => {
+  try{ db = await claude.use('db'); }catch(e){ db = null; }
+  if(!db){
+    $('#avisoDb').hidden = false;
+    $('#avisoDb').innerHTML = 'A sala ao vivo não está disponível nesta visualização — só funciona na página publicada, para quem abre com a própria conta. <b>Treinar sozinho</b> funciona sempre.';
+  }
+})();
+
+const mostrar = id => {
+  ['#entrada','#hostLobby','#telaPergunta','#alunoEntrar','#alunoEspera','#telaFim'].forEach(s => $(s).hidden = true);
+  $(id).hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+/* ================= entrada ================= */
+$('#portaHost').addEventListener('click', abrirSala);
+$('#portaAluno').addEventListener('click', () => { papel = 'aluno'; montarIcones(); mostrar('#alunoEntrar'); $('#inCodigo').focus(); });
+$('#portaSolo').addEventListener('click', () => {
+  papel = 'solo'; qs = sorteioPerguntas(10); idx = 0; soloAcertos = 0;
+  mostrar('#telaPergunta'); renderPergunta();
+});
+
+function sorteioPerguntas(n){
+  const ids = PERGUNTAS.map((_,i) => i);
+  for(let i = ids.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ids[i],ids[j]] = [ids[j],ids[i]]; }
+  return ids.slice(0, Math.min(n, ids.length));
+}
+
+/* ================= instrutor ================= */
+async function abrirSala(){
+  if(!db){ alert('A sala ao vivo precisa da página publicada e de acesso de cada aluno. Use "Treinar sozinho" enquanto isso.'); return; }
+  papel = 'host';
+  const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  sala = Array.from({length:4}, () => letras[Math.floor(Math.random()*letras.length)]).join('');
+  qs = sorteioPerguntas(10);
+  try{
+    await db.doc('salas/' + sala).set({fase:'lobby', q:-1, qs, inicio:0, criado:Date.now()});
+  }catch(e){ alert('Não consegui abrir a sala agora. Tente de novo.'); return; }
+  $('#codigoSala').textContent = sala;
+  $('#chipSala').hidden = false; $('#chipCodigo').textContent = sala;
+  $('#urlSala').textContent = URL_SALA;
+  desenharQr();
+  ouvirJogadores();
+  mostrar('#hostLobby');
+}
+
+function desenharQr(){
+  try{
+    const qr = qrcode(0, 'M');
+    qr.addData(URL_SALA);
+    qr.make();
+    $('#qrBox').innerHTML = qr.createImgTag(5, 8);
+  }catch(e){ $('#qrBox').textContent = 'QR indisponível'; }
+}
+
+function ouvirJogadores(){
+  if(unsubJog) unsubJog();
+  unsubJog = db.collection('salas/' + sala + '/jogadores').onSnapshot(snap => {
+    const js = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    $('#chipQtd').textContent = js.length + (js.length === 1 ? ' aluno' : ' alunos');
+    if(papel === 'host'){
+      $('#contaJogadores').textContent = js.length === 0 ? 'Ninguém entrou ainda'
+        : js.length + (js.length === 1 ? ' pessoa na sala' : ' pessoas na sala');
+      $('#listaJogadores').innerHTML = js.map(j =>
+        `<span class="ficha"><span class="ic">${j.icone || '🚜'}</span><b>${esc(j.nome)}</b></span>`).join('');
+      $('#btnComecar').disabled = js.length === 0;
+      if($('#telaPergunta').hidden === false) atualizaHostPergunta(js);
+      if($('#telaFim').hidden === false) renderFim(js);
+    }
+  }, () => {});
+}
+
+const esc = t => String(t == null ? '' : t).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+
+$('#btnFecharSala').addEventListener('click', () => location.reload());
+
+$('#btnComecar').addEventListener('click', () => { idx = 0; irParaPergunta(); });
+
+async function irParaPergunta(){
+  await db.doc('salas/' + sala).update({fase:'pergunta', q:idx, inicio:Date.now()});
+  mostrar('#telaPergunta');
+  renderPergunta();
+}
+
+$('#btnEncerrarQ').addEventListener('click', async () => {
+  if(papel !== 'host') return;
+  clearInterval(cronT);
+  await db.doc('salas/' + sala).update({fase:'resultado'});
+});
+$('#btnProxima').addEventListener('click', async () => {
+  if(papel !== 'host') return;
+  idx++;
+  if(idx >= qs.length){ await db.doc('salas/' + sala).update({fase:'fim'}); return; }
+  irParaPergunta();
+});
+
+/* ================= aluno ================= */
+function montarIcones(){
+  $('#icones').innerHTML = ICONES.map((ic,i) =>
+    `<button class="ic-op ${i === 0 ? 'on' : ''}" data-ic="${ic}">${ic}</button>`).join('');
+}
+$('#icones').addEventListener('click', e => {
+  const b = e.target.closest('[data-ic]'); if(!b) return;
+  meuIcone = b.dataset.ic;
+  document.querySelectorAll('.ic-op').forEach(x => x.classList.toggle('on', x === b));
+});
+
+$('#btnEntrar').addEventListener('click', entrarNaSala);
+$('#inNome').addEventListener('keydown', e => { if(e.key === 'Enter') entrarNaSala(); });
+
+async function entrarNaSala(){
+  const erro = $('#erroEntrar');
+  const cod = ($('#inCodigo').value || '').trim().toUpperCase();
+  meuNome = ($('#inNome').value || '').trim();
+  if(cod.length !== 4){ erro.hidden = false; erro.textContent = 'O código tem 4 letras.'; return; }
+  if(meuNome.length < 2){ erro.hidden = false; erro.textContent = 'Escreva seu nome.'; return; }
+  if(!db){ erro.hidden = false; erro.textContent = 'Sala ao vivo indisponível aqui. Use "Treinar sozinho".'; return; }
+  const doc = await db.doc('salas/' + cod).get();
+  if(!doc.exists){ erro.hidden = false; erro.textContent = 'Não achei essa sala. Confira o código na tela.'; return; }
+  sala = cod; papel = 'aluno'; qs = doc.data().qs || [];
+  await db.doc('salas/' + sala + '/jogadores/' + meuId).set({nome:meuNome, icone:meuIcone, pontos:0, q:-1});
+  $('#chipSala').hidden = false; $('#chipCodigo').textContent = sala;
+  $('#espIcone').textContent = meuIcone; $('#espNome').textContent = meuNome;
+  ouvirSala();
+  mostrar('#alunoEspera');
+}
+
+function ouvirSala(){
+  if(unsubSala) unsubSala();
+  unsubSala = db.doc('salas/' + sala).onSnapshot(snap => {
+    if(!snap.exists) return;
+    const d = snap.data();
+    qs = d.qs || qs;
+    if(d.fase === 'pergunta'){
+      if(idx !== d.q || $('#telaPergunta').hidden){
+        idx = d.q; respondi = false;
+        mostrar('#telaPergunta'); renderPergunta(d.inicio);
+      }
+    } else if(d.fase === 'resultado'){
+      if($('#explica').hidden) mostrarResposta();
+    } else if(d.fase === 'fim'){
+      renderFimAluno();
+    }
+  }, () => {});
+}
+
+/* ================= pergunta (todos) ================= */
+function perguntaAtual(){ return PERGUNTAS[qs[idx]]; }
+
+function renderPergunta(inicioServidor){
+  const q = perguntaAtual();
+  respondi = false;
+  $('#contadorQ').textContent = `Pergunta ${idx+1} de ${qs.length}`;
+  $('#textoPergunta').textContent = q.p;
+  $('#explica').hidden = true;
+  $('#ranking').hidden = true;
+  $('#btnProxima').hidden = true;
+  $('#statusAluno').hidden = true;
+  $('#btnEncerrarQ').hidden = papel !== 'host';
+  $('#respondidas').textContent = '';
+  $('#opcoes').innerHTML = q.o.map((t,i) =>
+    `<button class="op op${i}" data-op="${i}" ${papel === 'host' ? 'disabled' : ''}>
+       <span style="display:flex">${FORMAS[i]}</span><span>${esc(t)}</span><span class="qtd" hidden></span>
+     </button>`).join('');
+  const t0 = inicioServidor || Date.now();
+  iniciarCrono(t0);
+}
+
+function iniciarCrono(t0){
+  clearInterval(cronT);
+  const tick = () => {
+    const resta = Math.max(0, SEGUNDOS - Math.floor((Date.now() - t0)/1000));
+    $('#relogio').textContent = resta;
+    $('#barraTempo').style.width = (resta/SEGUNDOS*100) + '%';
+    if(resta <= 0){
+      clearInterval(cronT);
+      if(papel === 'solo') mostrarResposta();
+      else if(papel === 'host') $('#btnEncerrarQ').click();
+      else if(!respondi){ respondi = true; $('#statusAluno').hidden = false; $('#statusAluno').textContent = 'Tempo esgotado.'; travarOpcoes(); }
+    }
+  };
+  tick();
+  cronT = setInterval(tick, 1000);
+}
+function travarOpcoes(){ document.querySelectorAll('.op').forEach(b => b.disabled = true); }
+
+$('#opcoes').addEventListener('click', async e => {
+  const b = e.target.closest('[data-op]'); if(!b || respondi || papel === 'host') return;
+  const escolha = +b.dataset.op, q = perguntaAtual();
+  respondi = true; travarOpcoes();
+  const decorrido = (SEGUNDOS - (+$('#relogio').textContent)) * 1000;
+  const certo = escolha === q.c;
+  const ganho = certo ? Math.max(200, Math.round(1000 * (1 - (decorrido/(SEGUNDOS*1000)) * 0.5))) : 0;
+  if(papel === 'solo'){
+    if(certo) soloAcertos++;
+    meusPontos += ganho;
+    mostrarResposta(escolha);
+    return;
+  }
+  meusPontos += ganho;
+  $('#statusAluno').hidden = false;
+  $('#statusAluno').textContent = 'Resposta enviada. Aguarde o resultado no telão.';
+  try{
+    await db.doc('salas/' + sala + '/jogadores/' + meuId).update({pontos:meusPontos, q:idx, op:escolha, ganho, certo});
+  }catch(err){}
+});
+
+function atualizaHostPergunta(js){
+  const responderam = js.filter(j => j.q === idx).length;
+  $('#respondidas').textContent = `${responderam} de ${js.length} responderam`;
+  if($('#explica').hidden) return;
+  const q = perguntaAtual();
+  document.querySelectorAll('.op').forEach((b,i) => {
+    const n = js.filter(j => j.q === idx && j.op === i).length;
+    const el = b.querySelector('.qtd'); el.hidden = false; el.textContent = n;
+    b.classList.toggle('certa', i === q.c);
+    b.classList.toggle('errada', i !== q.c);
+  });
+  renderRanking(js);
+}
+
+function mostrarResposta(escolha){
+  clearInterval(cronT);
+  const q = perguntaAtual();
+  travarOpcoes();
+  document.querySelectorAll('.op').forEach((b,i) => {
+    b.classList.toggle('certa', i === q.c);
+    b.classList.toggle('errada', i !== q.c);
+  });
+  $('#textoExplica').textContent = q.e;
+  $('#explica').hidden = false;
+  $('#btnEncerrarQ').hidden = true;
+  if(papel === 'host'){ $('#btnProxima').hidden = false; $('#btnProxima').textContent = idx+1 >= qs.length ? 'Ver o pódio' : 'Próxima pergunta'; }
+  if(papel === 'solo'){
+    $('#btnProxima').hidden = false;
+    $('#btnProxima').textContent = idx+1 >= qs.length ? 'Ver o resultado' : 'Próxima pergunta';
+    $('#statusAluno').hidden = false;
+    $('#statusAluno').textContent = escolha === undefined ? 'Tempo esgotado.' : (escolha === q.c ? 'Acertou.' : 'Errou essa.');
+  }
+  if(papel === 'aluno'){
+    $('#statusAluno').hidden = false;
+    $('#statusAluno').textContent = `Seus pontos: ${meusPontos}`;
+  }
+}
+
+function renderRanking(js){
+  const ord = [...js].sort((a,b) => (b.pontos||0) - (a.pontos||0)).slice(0,5);
+  $('#ranking').hidden = false;
+  $('#ranking').innerHTML = ord.map((j,i) =>
+    `<li class="p${i+1}"><span class="pos">${i+1}º</span><span class="ic">${j.icone||'🚜'}</span><b>${esc(j.nome)}</b><span class="pts">${j.pontos||0}</span></li>`).join('');
+}
+
+/* solo: próxima */
+$('#btnProxima').addEventListener('click', () => {
+  if(papel !== 'solo') return;
+  idx++;
+  if(idx >= qs.length){
+    $('#tituloFim').textContent = `Você acertou ${soloAcertos} de ${qs.length}`;
+    $('#podio').innerHTML = '';
+    $('#rankingFinal').innerHTML = `<li class="p1"><span class="pos">•</span><span class="ic">🎯</span><b>Sua pontuação</b><span class="pts">${meusPontos}</span></li>`;
+    mostrar('#telaFim');
+    return;
+  }
+  renderPergunta();
+});
+
+/* ================= fim ================= */
+function renderFim(js){
+  const ord = [...js].sort((a,b) => (b.pontos||0) - (a.pontos||0));
+  const p = ord.slice(0,3);
+  const ordemVisual = [p[1], p[0], p[2]].filter(Boolean);
+  $('#podio').innerHTML = ordemVisual.map(j => {
+    const pos = ord.indexOf(j) + 1;
+    return `<div class="degrau d${pos}"><span class="ic">${j.icone||'🚜'}</span><b>${esc(j.nome)}</b><span>${j.pontos||0}</span>
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:26px; color:var(--texto-3); margin-top:6px">${pos}º</div></div>`;
+  }).join('');
+  $('#rankingFinal').innerHTML = ord.slice(0,10).map((j,i) =>
+    `<li class="p${i+1}"><span class="pos">${i+1}º</span><span class="ic">${j.icone||'🚜'}</span><b>${esc(j.nome)}</b><span class="pts">${j.pontos||0}</span></li>`).join('');
+  mostrar('#telaFim');
+}
+function renderFimAluno(){
+  $('#tituloFim').textContent = 'Acabou!';
+  $('#podio').innerHTML = '';
+  $('#rankingFinal').innerHTML = `<li class="p1"><span class="pos">•</span><span class="ic">${meuIcone}</span><b>${esc(meuNome)}</b><span class="pts">${meusPontos}</span></li>`;
+  mostrar('#telaFim');
+}
+$('#btnNovoJogo').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>

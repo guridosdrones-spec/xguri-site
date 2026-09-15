@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>XGuri - Manual do Operador</title>
+<style>
+@page { size: A4; margin: 17mm 15mm 16mm 15mm; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
+
+html, body { margin:0; padding:0; }
+body {
+  font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+  color: #141A21;
+  font-size: 10.5pt;
+  line-height: 1.55;
+}
+
+/* ---------- CAPA ---------- */
+.capa {
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #0F1319;
+  color: #fff;
+  margin: -17mm -15mm 0 -15mm;
+  padding: 28mm 20mm 18mm 20mm;
+  height: 267mm;
+}
+.capa .marca { display:flex; align-items:center; gap:10px; }
+.capa .marca img { width: 46px; height: 46px; }
+.capa .marca span { font-size: 15pt; letter-spacing: 3px; color:#98A1AC; text-transform: uppercase; }
+.capa h1 { font-size: 46pt; margin: 0 0 6px 0; line-height: 1.05; font-weight: 700; }
+.capa .barra { width: 90px; height: 6px; background: #E31B23; margin: 14px 0 18px 0; }
+.capa h2 { font-size: 17pt; font-weight: 500; color:#E2E6EC; margin: 0 0 4px 0; }
+.capa .sub { color:#98A1AC; font-size: 11pt; }
+.capa .rodape { font-size: 9.5pt; color:#68717D; border-top: 1px solid #2A323C; padding-top: 10px; }
+.capa .rodape strong { color:#E2E6EC; }
+
+/* ---------- TITULOS ---------- */
+h1.cap {
+  page-break-before: always;
+  font-size: 20pt;
+  color:#0F1319;
+  margin: 0 0 4px 0;
+  padding: 0 0 8px 0;
+  border-bottom: 3px solid #E31B23;
+}
+h1.cap .num { color:#E31B23; margin-right: 10px; }
+h2 { font-size: 13pt; color:#0F1319; margin: 20px 0 6px 0; border-left: 4px solid #E31B23; padding-left: 9px; page-break-after: avoid; }
+h3 { font-size: 11pt; color:#2A323C; margin: 14px 0 4px 0; page-break-after: avoid; }
+p { margin: 0 0 8px 0; }
+ul, ol { margin: 0 0 10px 0; padding-left: 20px; }
+li { margin-bottom: 4px; }
+
+/* ---------- SUMARIO ---------- */
+.sumario { page-break-after: always; }
+.sumario h1 { font-size: 22pt; border-bottom: 3px solid #E31B23; padding-bottom: 8px; margin-bottom: 18px; }
+.toc { list-style:none; padding:0; margin:0; }
+.toc > li { margin-bottom: 9px; font-size: 11.5pt; font-weight: 600; }
+.toc .n { display:inline-block; width: 26px; color:#E31B23; }
+.toc ul { list-style:none; padding-left: 26px; margin: 4px 0 0 0; }
+.toc ul li { font-size: 10pt; font-weight: 400; color:#4A535F; margin-bottom: 2px; }
+
+/* ---------- CAIXAS ---------- */
+.passo { margin: 0 0 10px 0; padding-left: 34px; position: relative; }
+.passo .n {
+  position:absolute; left:0; top:1px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background:#E31B23; color:#fff; font-size: 10pt; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.passo b { color:#0F1319; }
+
+.nota, .aviso, .dica {
+  border-radius: 6px; padding: 9px 12px; margin: 10px 0;
+  page-break-inside: avoid; font-size: 10pt;
+}
+.nota  { background:#EDF0F4; border-left: 4px solid #68717D; }
+.aviso { background:#FFF8EB; border-left: 4px solid #E08700; }
+.dica  { background:#ECFBF2; border-left: 4px solid #149B54; }
+.nota .rot, .aviso .rot, .dica .rot {
+  display:block; font-weight:700; font-size:8.5pt; letter-spacing:1.2px;
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.nota .rot{color:#4A535F;} .aviso .rot{color:#8A5300;} .dica .rot{color:#0B5C31;}
+
+table { width:100%; border-collapse: collapse; margin: 10px 0 14px 0; font-size: 9.7pt; page-break-inside: avoid; }
+th { background:#0F1319; color:#fff; text-align:left; padding: 7px 9px; font-size: 9.5pt; }
+td { border-bottom: 1px solid #E2E6EC; padding: 7px 9px; vertical-align: top; }
+tr:nth-child(even) td { background:#F7F9FB; }
+td.b { font-weight:600; color:#0F1319; }
+
+.btn {
+  display:inline-block; background:#1B222B; color:#fff; border-radius:4px;
+  padding: 1px 7px; font-size: 9pt; font-weight:600; white-space:nowrap;
+}
+.btn.v { background:#E31B23; }
+.campo { background:#EDF0F4; border:1px solid #CBD2DB; border-radius:3px; padding:0 5px; font-size:9.5pt; }
+
+/* ---------- FLUXO ---------- */
+.fluxo { display:flex; align-items:stretch; gap:6px; margin: 14px 0 18px 0; page-break-inside: avoid; }
+.fluxo .et {
+  flex:1; background:#fff; border:1px solid #E2E6EC; border-top:4px solid #E31B23;
+  border-radius:6px; padding:9px 8px; text-align:center;
+}
+.fluxo .et .t { font-weight:700; font-size:9.5pt; color:#0F1319; display:block; margin-bottom:2px; }
+.fluxo .et .d { font-size:8.5pt; color:#68717D; line-height:1.35; }
+.fluxo .seta { display:flex; align-items:center; color:#CBD2DB; font-size:15pt; }
+
+.cards { page-break-inside: avoid; }
+.card {
+  border:1px solid #E2E6EC; border-left:5px solid #E31B23; border-radius:6px;
+  padding:10px 12px; margin-bottom:8px; page-break-inside: avoid;
+}
+.card .tit { font-weight:700; color:#0F1319; font-size:11pt; }
+.card .des { color:#4A535F; font-size:9.8pt; }
+
+.tela { background:#F7F9FB; border:1px solid #E2E6EC; border-radius:6px; padding:10px 12px; margin:10px 0; page-break-inside:avoid; }
+.tela .cab { font-size:8.5pt; letter-spacing:1.2px; text-transform:uppercase; color:#68717D; font-weight:700; margin-bottom:6px; }
+.tela ul { margin-bottom:0; }
+.fim { margin-top: 26px; border-top: 3px solid #E31B23; padding-top: 10px; color:#68717D; font-size: 9.5pt; }
+</style>
+</head>
+<body>
+
+<!-- ================= CAPA ================= -->
+<div class="capa">
+  <div>
+    <div class="marca"><img src="data:image/png;base64,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" alt=""><span>XGuri</span></div>
+  </div>
+  <div>
+    <h1>Manual do<br>Operador</h1>
+    <div class="barra"></div>
+    <h2>XGuri &mdash; Sistema de mapeamento para drones XAG</h2>
+    <div class="sub">Do voo at&eacute; a rota pronta no drone, passo a passo.</div>
+  </div>
+  <div class="rodape">
+    <strong>Para quem usa o programa no dia a dia.</strong><br>
+    Processamento de fotos &middot; Mapa HD &middot; Mapa de aplica&ccedil;&atilde;o &middot; Taxa vari&aacute;vel &middot; Rota personalizada &middot; Envio para a XAG One
+  </div>
+</div>
+
+<!-- ================= SUMARIO ================= -->
+<div class="sumario">
+<h1>Sumário</h1>
+<ul class="toc">
+  <li><span class="n">1</span>Sobre o XGuri
+    <ul><li>O que o programa faz &middot; O fluxo completo de trabalho</li></ul></li>
+  <li><span class="n">2</span>Antes de começar
+    <ul><li>O que você precisa &middot; Como abrir o programa &middot; A tela inicial</li></ul></li>
+  <li><span class="n">3</span>Processar e gerar mapa HD
+    <ul><li>Escolher as fotos &middot; Conferir o voo &middot; Ajustes &middot; Acompanhar &middot; O que fazer no final</li></ul></li>
+  <li><span class="n">4</span>Gerar mapa HD (arquivos já processados)
+    <ul><li>Quando usar &middot; Preencher os campos &middot; Calibrar com ponto conhecido &middot; Visualizar</li></ul></li>
+  <li><span class="n">5</span>Criar mapa de aplicação
+    <ul><li>Importar &middot; Ferramentas de desenho &middot; Corrigir &middot; Dividir área &middot; Exportar e enviar</li></ul></li>
+  <li><span class="n">6</span>Criar mapa de taxa variável
+    <ul><li>Análise de solo &middot; Coloração RGB &middot; Pintura manual &middot; Exportar JSON XAG</li></ul></li>
+  <li><span class="n">7</span>Aplicação localizada
+    <ul><li>Pintar só onde vai aplicar &middot; Grade e pincel &middot; Exportar</li></ul></li>
+  <li><span class="n">8</span>Criar rota personalizada
+    <ul><li>Área e obstáculos &middot; Margens de segurança &middot; Multiplicador de rota &middot; Exportar</li></ul></li>
+  <li><span class="n">9</span>Enviar para a XAG One
+    <ul><li>Login &middot; Nome do mapa &middot; Acompanhar o envio &middot; Cancelar</li></ul></li>
+  <li><span class="n">10</span>Configurações
+    <ul><li>Idioma &middot; Pasta de saída &middot; Arquivos temporários &middot; Espaço em disco</li></ul></li>
+  <li><span class="n">11</span>Soluções para problemas comuns</li>
+  <li><span class="n">12</span>Boas práticas de campo</li>
+  <li><span class="n">13</span>Glossário</li>
+</ul>
+</div>
+
+<!-- ================= 1 ================= -->
+<h1 class="cap"><span class="num">1</span>Sobre o XGuri</h1>
+
+<h2>O que o programa faz</h2>
+<p>O XGuri transforma as fotos de um voo de mapeamento em mapas prontos para o drone
+pulverizador XAG. Com ele você consegue, em um único programa:</p>
+<ul>
+  <li>juntar as fotos do voo em uma única imagem da lavoura (o <b>ortomosaico</b>);</li>
+  <li>gerar o <b>Mapa HD</b> (arquivo <span class="campo">.tar</span>) que entra no controle XAG;</li>
+  <li>desenhar o <b>mapa de aplicação</b> — borda da área, obstáculos e zonas onde não se pulveriza;</li>
+  <li>criar mapas de <b>taxa variável</b> e de <b>aplicação localizada</b>;</li>
+  <li>desenhar <b>rotas personalizadas</b> para o drone seguir;</li>
+  <li>enviar tudo direto para a sua conta <b>XAG One</b>, sem passar arquivo por pendrive.</li>
+</ul>
+
+<h2>O fluxo completo de trabalho</h2>
+<div class="fluxo">
+  <div class="et"><span class="t">1. Voar</span><span class="d">Fotos do mapeamento com GPS</span></div>
+  <div class="seta">&rsaquo;</div>
+  <div class="et"><span class="t">2. Processar</span><span class="d">XGuri junta as fotos</span></div>
+  <div class="seta">&rsaquo;</div>
+  <div class="et"><span class="t">3. Desenhar</span><span class="d">Área, obstáculos e taxas</span></div>
+  <div class="seta">&rsaquo;</div>
+  <div class="et"><span class="t">4. Enviar</span><span class="d">XAG One ou arquivo</span></div>
+  <div class="seta">&rsaquo;</div>
+  <div class="et"><span class="t">5. Aplicar</span><span class="d">Drone executa no campo</span></div>
+</div>
+
+<div class="nota"><span class="rot">Em resumo</span>
+Se você acabou de voar e tem as fotos na mão, o caminho normal é:
+<b>Processar e gerar mapa HD</b> &rarr; <b>Criar mapa de aplicação</b> &rarr; <b>Enviar para XAG One</b>.
+Todo o resto do manual detalha essas etapas.</div>
+
+<!-- ================= 2 ================= -->
+<h1 class="cap"><span class="num">2</span>Antes de começar</h1>
+
+<h2>O que você precisa</h2>
+<table>
+  <tr><th style="width:30%">Item</th><th>Observação</th></tr>
+  <tr><td class="b">Computador</td><td>Windows. Quanto mais memória RAM e espaço livre em disco, mais rápido o processamento e maior a área que dá para processar de uma vez.</td></tr>
+  <tr><td class="b">Fotos do voo</td><td>Fotos do mapeamento <b>com GPS gravado</b> na própria foto. Formatos aceitos: JPG, JPEG, PNG, TIF e TIFF.</td></tr>
+  <tr><td class="b">Espaço em disco</td><td>O processamento cria arquivos temporários grandes. Deixe espaço livre antes de começar (veja o capítulo 10).</td></tr>
+  <tr><td class="b">Conta XAG One</td><td>Só é necessária se você for enviar os mapas direto para a nuvem da XAG.</td></tr>
+</table>
+
+<div class="aviso"><span class="rot">Atenção</span>
+Fotos sem GPS não servem para o mapeamento. O XGuri avisa na tela quando encontra fotos sem
+coordenada e as separa automaticamente como <b>fotos excluídas</b>.</div>
+
+<h2>Como abrir o programa</h2>
+<div class="passo"><span class="n">1</span>Abra a pasta do XGuri no computador.</div>
+<div class="passo"><span class="n">2</span>Dê dois cliques em <span class="btn">Iniciar_XGuri</span>.</div>
+<div class="passo"><span class="n">3</span>Aguarde a animação de abertura. A tela inicial aparece em seguida.</div>
+
+<h2>A tela inicial</h2>
+<p>A tela inicial tem cinco cartões. Cada um abre uma parte do programa:</p>
+
+<div class="cards">
+  <div class="card"><span class="tit">Gerar mapa HD</span><br><span class="des">Criar o arquivo <span class="campo">.tar</span> usando arquivos que <b>já foram processados</b> antes (ortomosaico, DSM e nuvem de pontos).</span></div>
+  <div class="card"><span class="tit">Processar e gerar mapa HD</span><br><span class="des">O caminho mais usado: parte das fotos do voo e faz tudo, do zero até o mapa.</span></div>
+  <div class="card"><span class="tit">Criar mapa de aplicação</span><br><span class="des">Desenhar a borda da área, obstáculos, zonas sem pulverização e o ponto de calibração.</span></div>
+  <div class="card"><span class="tit">Criar mapa de taxa variável</span><br><span class="des">Prescrição por análise de solo, por coloração RGB da lavoura ou pintada manualmente.</span></div>
+  <div class="card"><span class="tit">Criar rota personalizada</span><br><span class="des">Desenhar linha por linha o caminho que o drone deve executar.</span></div>
+</div>
+
+<div class="dica"><span class="rot">Dica</span>
+Em qualquer tela, o botão <span class="btn">Voltar</span>, no canto superior esquerdo, traz você
+de volta para a tela inicial sem perder o que já foi processado nesta sessão.</div>
+
+<!-- ================= 3 ================= -->
+<h1 class="cap"><span class="num">3</span>Processar e gerar mapa HD</h1>
+<p>Esta é a tela usada logo depois do voo. Ela lê as fotos, analisa o mapeamento e monta o
+ortomosaico — e, se você quiser, já gera também o Mapa HD para o controle XAG.</p>
+
+<h2>3.1 Escolher as fotos</h2>
+<div class="passo"><span class="n">1</span>Na tela inicial, clique em <b>Processar e gerar mapa HD</b>.</div>
+<div class="passo"><span class="n">2</span>Digite um nome em <span class="campo">Nome do projeto</span>. Use um nome que identifique a lavoura e a data, por exemplo <i>Talhao3_15-09</i>.</div>
+<div class="passo"><span class="n">3</span>Clique em <span class="btn v">ESCOLHER PASTA</span> para carregar a pasta inteira do voo, ou em <span class="btn v">ESCOLHER FOTOS</span> para selecionar imagens específicas.</div>
+<div class="passo"><span class="n">4</span>Aguarde o aviso <b>ANALISANDO FOTOS...</b> terminar. Quando ele mudar para <b>FOTOS PRONTAS</b>, o XGuri já leu o GPS de todas as imagens.</div>
+
+<div class="nota"><span class="rot">O que o XGuri faz sozinho nessa etapa</span>
+Ele lê o GPS de cada foto, descarta as que estão fora da cobertura útil do voo e mostra quantas
+imagens sobraram. Fotos sem GPS aparecem em <b>FOTOS EXCLUÍDAS AUTOMATICAMENTE</b> — isso é normal,
+geralmente são as fotos de decolagem e pouso.</div>
+
+<h2>3.2 Conferir as informações do voo</h2>
+<p>O painel <b>Estatísticas do voo de mapeamento</b> mostra, antes de processar:</p>
+<table>
+  <tr><th style="width:28%">Informação</th><th>Como ler</th></tr>
+  <tr><td class="b">Fotos selecionadas</td><td>Quantas imagens realmente entram no processamento.</td></tr>
+  <tr><td class="b">Fotos com GPS</td><td>Quantas têm coordenada. Se esse número for muito menor que o total, revise o voo.</td></tr>
+  <tr><td class="b">Excluídas</td><td>Fotos descartadas por não fazerem parte da cobertura útil.</td></tr>
+  <tr><td class="b">Altitude média</td><td>Altura média do voo. Quanto mais alto, menor o detalhe.</td></tr>
+  <tr><td class="b">GSD</td><td>Quantos centímetros de terreno cabem em cada ponto da imagem. Quanto menor o número, mais detalhado o mapa.</td></tr>
+  <tr><td class="b">Sobreposição frontal</td><td>O quanto uma foto cobre a seguinte. Sobreposição baixa é a causa mais comum de falhas no ortomosaico.</td></tr>
+</table>
+
+<div class="aviso"><span class="rot">Se aparecer &ldquo;GPS INSUFICIENTE&rdquo;</span>
+O XGuri não conseguiu validar a distribuição das fotos. Ainda é possível processar, mas o
+resultado pode ficar torto ou com falhas. Na maioria das vezes vale mais a pena refazer o voo.</div>
+
+<h2>3.3 Configurar o processamento</h2>
+<p>Em <b>Configurar processamento</b> você escolhe o que será gerado:</p>
+
+<div class="tela"><div class="cab">Opções da tela</div>
+<ul>
+  <li><b>Gerar Mapa HD (arquivo .tar para o controle XAG)</b> — marcado, o XGuri produz
+      ortomosaico + DSM + nuvem de pontos (LAZ) + o pacote <span class="campo">.tar</span> da XAG.
+      Desmarcado, ele fica no <b>modo rápido</b>: só o ortomosaico, bem mais rápido.</li>
+  <li><b>AJUSTES HD</b> — abre a janela <b>Ajustes do Mapa HD</b>, com duas escolhas:
+    <ul>
+      <li><span class="campo">Resolução do DSM</span>: Rápida, Média, Alta ou Máxima.
+          <i>Média</i> é o equilíbrio recomendado para a maioria das lavouras; <i>Alta</i> e
+          <i>Máxima</i> dão mais detalhe em árvores, postes e construções, e demoram mais.</li>
+      <li><span class="campo">Nuvem de pontos</span>: Mínima, Intermediária ou Máxima.
+          <i>Mínima</i> é uma nuvem mais leve, suficiente em terreno simples e plano.</li>
+    </ul>
+  </li>
+</ul></div>
+
+<div class="dica"><span class="rot">Dica</span>
+Se você só precisa desenhar a área de aplicação, desmarque o Mapa HD e use o modo rápido.
+O Mapa HD só é necessário quando o arquivo <span class="campo">.tar</span> vai ser carregado no controle XAG.</div>
+
+<h2>3.4 Iniciar e acompanhar</h2>
+<div class="passo"><span class="n">1</span>Clique em <span class="btn v">INICIAR PROCESSAMENTO</span>.</div>
+<div class="passo"><span class="n">2</span>Acompanhe pelo painel <b>Acompanhamento do processamento</b>: ele mostra a etapa atual e o andamento.</div>
+<div class="passo"><span class="n">3</span>Não feche o programa durante o processamento. Se precisar parar, use <span class="btn">CANCELAR PROCESSAMENTO</span>.</div>
+
+<div class="nota"><span class="rot">Bom saber</span>
+O alinhamento das fotos usa a placa de vídeo automaticamente, quando o computador tem uma.
+O botão <span class="btn">LIMPAR TUDO</span> só pode ser usado com o processamento parado — ele
+apaga as fotos, a análise e o ortomosaico carregado naquela tela.</div>
+
+<h2>3.5 Quando o processamento termina</h2>
+<p>Ao aparecer <b>Ortomosaico concluído</b>, o XGuri pergunta
+<b>&ldquo;Escolha onde deseja utilizar o ortomosaico&rdquo;</b>. As opções são:</p>
+<table>
+  <tr><th style="width:34%">Botão</th><th>Para quê</th></tr>
+  <tr><td class="b">CRIAR MAPA DE APLICAÇÃO</td><td>Desenhar borda, obstáculos e áreas sem pulverização (capítulo 5).</td></tr>
+  <tr><td class="b">CRIAR MAPA DE TAXA VARIÁVEL</td><td>Montar a prescrição com taxas diferentes por região (capítulo 6).</td></tr>
+  <tr><td class="b">APLICAÇÃO LOCALIZADA</td><td>Aplicar só em manchas específicas da lavoura (capítulo 7).</td></tr>
+  <tr><td class="b">CRIAR ROTA PERSONALIZADA</td><td>Desenhar as passadas do drone manualmente (capítulo 8).</td></tr>
+  <tr><td class="b">Decidir depois</td><td>Fecha a pergunta. O ortomosaico continua salvo na pasta de resultados.</td></tr>
+</table>
+
+<div class="nota"><span class="rot">Mapa HD em segundo plano</span>
+Se o Mapa HD estiver marcado, o ortomosaico fica pronto primeiro e o <span class="campo">.tar</span>
+continua sendo criado em segundo plano. Você pode escolher <b>Gerar Mapa HD em segundo plano</b> e
+já ir desenhando o mapa de aplicação, ou <b>ESPERAR FINALIZAR MAPA HD</b>. Quando o pacote termina,
+aparece o aviso <b>Mapa HD concluído</b>.</div>
+
+<!-- ================= 4 ================= -->
+<h1 class="cap"><span class="num">4</span>Gerar mapa HD (arquivos já processados)</h1>
+
+<h2>4.1 Quando usar esta tela</h2>
+<p>Use quando o processamento <b>já foi feito antes</b> e você tem em mãos o ortomosaico, o DSM e a
+nuvem de pontos — por exemplo para refazer o pacote <span class="campo">.tar</span> com um nome
+diferente, ou para aplicar uma calibração em um mapa antigo.</p>
+
+<h2>4.2 Preencher os campos</h2>
+<div class="tela"><div class="cab">Arquivos do mapa</div>
+<ul>
+  <li><span class="campo">Nome do projeto</span> — o nome do pacote que será criado.</li>
+  <li><span class="campo">Ortomosaico</span> — arquivo <span class="campo">.tif</span> ou <span class="campo">.tiff</span>.</li>
+  <li><span class="campo">DSM (TIF)</span> — o modelo de elevação, também <span class="campo">.tif</span>.</li>
+  <li><span class="campo">Nuvem (LAS/LAZ)</span> — a nuvem de pontos do voo.</li>
+  <li><span class="campo">Destino</span> — a pasta onde o arquivo final será gravado.</li>
+</ul></div>
+<p>Com tudo preenchido, clique em <span class="btn v">GERAR MAPA HD (.TAR)</span> e acompanhe as
+mensagens até aparecer <b>Mapa HD concluído</b>.</p>
+
+<div class="aviso"><span class="rot">Nome repetido</span>
+Se já existir uma pasta de projeto ou um arquivo final com o mesmo nome, o XGuri avisa e não
+sobrescreve nada. Escolha outro nome, ou apague/mova o arquivo antigo antes de gerar.</div>
+
+<h2>4.3 Calibrar o mapa com um ponto conhecido</h2>
+<p>A calibração corrige um deslocamento do mapa em relação ao terreno real. Ela é útil quando você
+coletou, com um rover/RTK, a coordenada exata de um ponto que também aparece na imagem
+(um poste, um canto de cerca, uma marca no chão).</p>
+
+<div class="passo"><span class="n">1</span>Marque a opção <b>Calibrar mapa - ponto conhecido</b>.</div>
+<div class="passo"><span class="n">2</span>Informe a <span class="campo">Latitude WGS84 do rover</span>, a <span class="campo">Longitude WGS84 do rover</span> e a <span class="campo">Altitude do rover</span>.</div>
+<div class="passo"><span class="n">3</span>Clique em gerar. O ortomosaico abre em uma janela: clique <b>exatamente</b> sobre o mesmo ponto na imagem.</div>
+<div class="passo"><span class="n">4</span>O XGuri mostra a correção encontrada (horizontal e vertical). Confira e clique em <b>Confirmar calibração</b>.</div>
+
+<div class="nota"><span class="rot">Seus arquivos originais não são alterados</span>
+A correção é aplicada em <b>cópias temporárias</b> do ortomosaico, do DSM e da nuvem. Os arquivos
+originais continuam intactos no computador. Se preferir seguir sem corrigir nada, use
+<b>Gerar sem calibração</b>.</div>
+
+<h2>4.4 Visualizar um mapa HD já gerado</h2>
+<p>O botão <span class="btn">VISUALIZAR MAPA HD</span> abre um pacote <span class="campo">.tar</span>
+já pronto para conferência, sem precisar carregá-lo no controle do drone.</p>
+
+<!-- ================= 5 ================= -->
+<h1 class="cap"><span class="num">5</span>Criar mapa de aplicação</h1>
+<p>Aqui você desenha, por cima da imagem da lavoura, tudo o que o drone precisa saber:
+onde aplicar, onde desviar e onde não pulverizar.</p>
+
+<h2>5.1 Carregar a imagem da lavoura</h2>
+<table>
+  <tr><th style="width:38%">Botão</th><th>O que faz</th></tr>
+  <tr><td class="b">IMPORTAR DO PROGRAMA</td><td>Usa o ortomosaico que acabou de ser processado nesta sessão. É o caminho mais rápido.</td></tr>
+  <tr><td class="b">IMPORTAR DO COMPUTADOR</td><td>Abre um GeoTIFF (<span class="campo">.tif</span>) salvo em qualquer pasta.</td></tr>
+</table>
+<p>Com a imagem carregada, a mensagem muda para <b>Ortomosaico carregado. Escolha uma ferramenta
+para desenhar</b>.</p>
+
+<h2>5.2 As ferramentas de desenho</h2>
+<table>
+  <tr><th style="width:30%">Ferramenta</th><th>Para que serve</th></tr>
+  <tr><td class="b">Demarcar borda<br>(Área de aplicação)</td><td>O contorno do talhão. É o limite dentro do qual o drone vai trabalhar. <b>Sempre desenhe essa área primeiro.</b></td></tr>
+  <tr><td class="b">Demarcar obstáculos</td><td>Árvores, postes, construções, torres. O drone desvia desses pontos.</td></tr>
+  <tr><td class="b">Área sem pulverizar<br>(No Spray)</td><td>Zona de exclusão: o drone passa por cima, mas fecha os bicos. Use em açudes, casas, apiários e áreas vizinhas.</td></tr>
+  <tr><td class="b">Ponto de calibração</td><td>Cria um pequeno triângulo na borda, usado como referência de calibração no controle.</td></tr>
+  <tr><td class="b">Área redonda / Obstáculo redondo</td><td>Formas circulares, para pivôs e obstáculos arredondados. Aparecem quando a ferramenta correspondente está ativa.</td></tr>
+  <tr><td class="b">Dividir área redonda (tesoura)</td><td>Corta uma área redonda em partes. Clique fora do círculo para fazer o corte.</td></tr>
+</table>
+
+<p><b>Como desenhar:</b> escolha a ferramenta e clique ponto a ponto no mapa. Um polígono precisa de
+pelo menos 3 pontos para fechar. A ferramenta ativa aparece sempre escrita acima do mapa
+(<b>Ferramenta ativa: ...</b>).</p>
+
+<h2>5.3 Selecionar e apagar</h2>
+<ul>
+  <li>Clique com o <b>botão direito</b> em cima de um desenho para selecioná-lo.</li>
+  <li><b>CTRL + botão direito</b> seleciona vários objetos do mesmo tipo de uma vez.</li>
+  <li>Com algo selecionado, o botão <span class="btn">Excluir seleção</span> fica disponível.</li>
+</ul>
+<p>O painel <b>Resumo do mapa</b>, à direita, conta quantos objetos existem de cada tipo.</p>
+
+<h2>5.4 Limite de pontos da XAG</h2>
+<div class="aviso"><span class="rot">Mapa precisa ser dividido</span>
+A XAG aceita um número máximo de pontos por mapa. Se o seu desenho passar desse limite, o XGuri
+avisa antes de exportar e sugere <b>reduzir os pontos</b> ou <b>dividir a área</b>. Em áreas
+redondas, use a tesoura para dividir antes de exportar ou enviar. Ao dividir, o XGuri gera dois
+mapas separados, cada um dentro do limite.</div>
+<p>Para evitar o problema: ao desenhar bordas longas, deixe cerca de 2 metros entre um clique e
+outro em vez de clicar de forma muito próxima.</p>
+
+<h2>5.5 Exportar ou enviar</h2>
+<table>
+  <tr><th style="width:36%">Botão</th><th>Resultado</th></tr>
+  <tr><td class="b">EXPORTAR</td><td>Salva o mapa de aplicação em arquivo <span class="campo">.kml</span> na pasta que você escolher. Serve para levar em pendrive ou guardar.</td></tr>
+  <tr><td class="b">ENVIAR PARA XAG ONE</td><td>Manda o mapa direto para a sua conta na nuvem da XAG. O programa pede um nome para o mapa (capítulo 9).</td></tr>
+</table>
+
+<!-- ================= 6 ================= -->
+<h1 class="cap"><span class="num">6</span>Criar mapa de taxa variável</h1>
+<p>Taxa variável é aplicar quantidades diferentes de produto em partes diferentes da lavoura.
+O XGuri monta essa prescrição em uma grade e exporta no formato que a XAG entende.</p>
+
+<h2>6.1 Escolher o método</h2>
+<p>Ao abrir a tela, o XGuri pergunta <b>&ldquo;Como você quer criar a taxa variável?&rdquo;</b>:</p>
+<div class="cards">
+  <div class="card"><span class="tit">Análise de solo</span><br><span class="des">Você já tem um Shapefile com as taxas recomendadas pelo agrônomo.</span></div>
+  <div class="card"><span class="tit">Coloração RGB</span><br><span class="des">O XGuri analisa a cor da lavoura no ortomosaico e separa as zonas automaticamente.</span></div>
+  <div class="card"><span class="tit">Criação manual</span><br><span class="des">Você pinta as zonas à mão, com três cores, direto sobre a imagem.</span></div>
+</div>
+<p>O botão <span class="btn">&larr; Métodos</span> volta para essa escolha a qualquer momento.</p>
+
+<h2>6.2 Análise de solo (Shapefile)</h2>
+<div class="passo"><span class="n">1</span>Clique em <b>Escolher Shapefile</b> e selecione o arquivo <span class="campo">.shp</span>.</div>
+<div class="passo"><span class="n">2</span>Em <span class="campo">Atributo com a taxa</span>, escolha a coluna do arquivo que contém o valor da taxa de aplicação.</div>
+<div class="passo"><span class="n">3</span>Confira a grade gerada sobre o mapa e exporte.</div>
+<div class="aviso"><span class="rot">O Shapefile não vem sozinho</span>
+Junto do <span class="campo">.shp</span> precisam estar, na mesma pasta, os arquivos
+<span class="campo">.dbf</span>, <span class="campo">.shx</span> e <span class="campo">.prj</span>.
+Sem o <span class="campo">.prj</span>, o XGuri pode não saber em que coordenadas o arquivo está.</div>
+
+<h2>6.3 Coloração RGB</h2>
+<p>O XGuri analisa a cor de cada pedaço da lavoura no ortomosaico e separa em faixas. Você escolhe
+o sentido da recomendação agronômica:</p>
+<ul>
+  <li><b>Menos verde &rarr; VERMELHO | Mais verde &rarr; VERDE</b></li>
+  <li><b>Menos verde &rarr; VERDE | Mais verde &rarr; VERMELHO</b></li>
+</ul>
+<p>Depois, o botão <span class="btn">AGRUPAR AUTOMATICAMENTE EM 3 TAXAS</span> reduz tudo a três
+faixas — é o formato que a aplicação usa.</p>
+
+<h2>6.4 Criação manual (pintura)</h2>
+<div class="passo"><span class="n">1</span>Clique em <b>Escolher ortomosaico</b> e abra a imagem da lavoura.</div>
+<div class="passo"><span class="n">2</span>Escolha uma das três cores em <b>Cores para pintura</b> (verde, amarelo e vermelho representam as três taxas).</div>
+<div class="passo"><span class="n">3</span>Ajuste o <b>Pincel</b> e pinte por cima da imagem, sobre a grade.</div>
+<div class="passo"><span class="n">4</span>Defina qual número de taxa cada cor representa antes de exportar.</div>
+
+<p>Tamanhos de pincel disponíveis:</p>
+<table>
+  <tr><th style="width:34%">Tamanho</th><th>Quando usar</th></tr>
+  <tr><td class="b">Pequena &ndash; 5 x 5 m</td><td>Acabamento e detalhes.</td></tr>
+  <tr><td class="b">Média &ndash; 15 x 15 m</td><td>Uso geral.</td></tr>
+  <tr><td class="b">Grande &ndash; 25 x 25 m</td><td>Manchas grandes.</td></tr>
+  <tr><td class="b">Muito grande &ndash; 45 x 45 m</td><td>Cobrir rapidamente grandes áreas.</td></tr>
+</table>
+<div class="nota"><span class="rot">Importante</span>
+O pincel maior só pinta mais rápido. A precisão interna do mapa continua sendo de
+<b>células de 5 x 5 m</b> em qualquer tamanho de pincel.</div>
+<p>O botão <span class="btn">Limpar pintura</span> apaga tudo o que foi pintado e recomeça.</p>
+
+<h2>6.5 Exportar ou enviar</h2>
+<table>
+  <tr><th style="width:36%">Botão</th><th>Resultado</th></tr>
+  <tr><td class="b">EXPORTAR JSON XAG</td><td>Abre a janela &ldquo;Salvar como&rdquo; e grava o arquivo <span class="campo">.json</span> da prescrição.</td></tr>
+  <tr><td class="b">ENVIAR PARA XAG ONE</td><td>Gera o arquivo temporariamente e manda direto para a nuvem da XAG.</td></tr>
+</table>
+<div class="aviso"><span class="rot">Antes de exportar</span>
+As três cores precisam ter uma taxa numérica definida. Se faltar alguma, o XGuri avisa e não
+deixa exportar.</div>
+
+<!-- ================= 7 ================= -->
+<h1 class="cap"><span class="num">7</span>Aplicação localizada</h1>
+<p>A aplicação localizada serve para tratar <b>só as manchas</b> — reboleiras de praga, falhas,
+pontos de daninhas — em vez de aplicar na área inteira.</p>
+
+<h2>7.1 Passo a passo</h2>
+<div class="passo"><span class="n">1</span>Clique em <span class="btn">IMPORTAR ORTOMOSAICO</span> e abra a imagem da lavoura.</div>
+<div class="passo"><span class="n">2</span>Use <span class="btn">VISUALIZAR GRADE</span> para mostrar a grade sobre a imagem (padrão de <b>5 x 5 m</b>).</div>
+<div class="passo"><span class="n">3</span>Clique em <span class="btn v">PINTAR ÁREA DE APLICAÇÃO</span> e pinte, em vermelho, os quadrados onde o produto deve ser aplicado.</div>
+<div class="passo"><span class="n">4</span>Ajuste o tamanho do pincel (1 × 1, 3 × 3 ...) conforme o tamanho da mancha. A <b>pré-visualização do pincel</b> mostra o formato antes de pintar.</div>
+<div class="passo"><span class="n">5</span>Acompanhe no <b>Resumo</b> quantos quadrados foram selecionados e quantos hectares isso representa.</div>
+<div class="passo"><span class="n">6</span>Exporte com <span class="btn">EXPORTAR JSON</span> ou mande direto com <span class="btn v">ENVIAR PARA O XAG ONE</span>.</div>
+
+<div class="dica"><span class="rot">Corrigiu demais?</span>
+<span class="btn">APAGAR QUADRADOS</span> remove quadrados específicos e
+<span class="btn">LIMPAR PINTURA</span> apaga toda a pintura de uma vez.</div>
+
+<div class="nota"><span class="rot">Economia real</span>
+O campo <b>Área de aplicação</b> mostra, em hectares, exatamente quanto será pulverizado.
+Compare com a área total do talhão para saber o quanto de produto está sendo economizado.</div>
+
+<!-- ================= 8 ================= -->
+<h1 class="cap"><span class="num">8</span>Criar rota personalizada</h1>
+<p>Nesta tela você desenha as passadas que o drone deve seguir, em vez de deixar o planejamento
+automático decidir. É útil em áreas irregulares, terraços, curvas de nível e faixas específicas.</p>
+
+<h2>8.1 Preparar a base</h2>
+<div class="passo"><span class="n">1</span>Clique em <b>Importar ortomosaico</b> (ou <b>Importar mapa processado</b>, para trazer um KML já pronto com a área e os obstáculos).</div>
+<div class="passo"><span class="n">2</span>Desenhe a <b>Área de aplicação</b> (boundary). Sem ela, o XGuri não consegue limitar nem exportar as rotas.</div>
+<div class="passo"><span class="n">3</span>Marque os <b>Obstáculos</b> que o drone precisa evitar.</div>
+
+<h2>8.2 Margens de segurança</h2>
+<p>Duas distâncias controlam o quanto a rota se afasta do perigo:</p>
+<table>
+  <tr><th style="width:40%">Campo</th><th>O que controla</th></tr>
+  <tr><td class="b">Distância de segurança da borda</td><td>O quanto a rota fica para dentro do limite do talhão.</td></tr>
+  <tr><td class="b">Distância de segurança do obstáculo</td><td>O quanto a rota se afasta de árvores, postes e construções.</td></tr>
+</table>
+<div class="aviso"><span class="rot">Atenção</span>
+Configure <b>a mesma distância</b> na pulverização, no controle do drone. Se os valores forem
+diferentes, a rota planejada aqui não corresponde ao que o drone vai executar.</div>
+
+<h2>8.3 Desenhar as rotas</h2>
+<div class="passo"><span class="n">1</span>Clique em <b>Criar rota</b>.</div>
+<div class="passo"><span class="n">2</span>Clique ponto a ponto para traçar a linha. Cada rota precisa de pelo menos 2 pontos.</div>
+<div class="passo"><span class="n">3</span>Clique com o <b>botão direito</b> para finalizar a linha.</div>
+
+<h3>Multiplicador de rota</h3>
+<p>Em vez de desenhar passada por passada, desenhe <b>uma</b> e deixe o XGuri repetir:</p>
+<div class="passo"><span class="n">1</span>Clique em <b>Multiplicador de rota</b>.</div>
+<div class="passo"><span class="n">2</span>Clique na rota que servirá de referência.</div>
+<div class="passo"><span class="n">3</span>Informe o <span class="campo">Espaçamento</span> (em metros) e quantas <span class="campo">Linhas à esquerda</span> e <span class="campo">Linhas à direita</span> devem ser criadas.</div>
+<p>O XGuri gera os trechos paralelos e descarta automaticamente o que cair fora da área permitida.</p>
+
+<h3>Corrigir rota</h3>
+<p>A ferramenta <b>Corrigir rota</b> ajusta um traçado já criado. Se a correção não der certo, a
+rota original é mantida.</p>
+
+<h2>8.4 Calibrar o ortomosaico (opcional)</h2>
+<p>Se você tem a coordenada exata de um ponto visível na imagem, clique em <b>Calibrar
+ortomosaico</b>, marque o ponto com o X e informe a <b>Coordenada conhecida</b>. O painel
+<b>Calibração</b> passa a mostrar <i>realizada</i>. Se preferir seguir com o georreferenciamento
+original da imagem, escolha <b>Não calibrar</b>.</p>
+
+<h2>8.5 Exportar</h2>
+<p>No botão <b>Exportar</b> o XGuri pergunta <b>&ldquo;O que você deseja exportar em KML?&rdquo;</b>:
+o <b>mapa de aplicação</b>, uma <b>rota específica</b> (clique na rota desejada) ou
+<b>múltiplas rotas</b> de uma vez.</p>
+<div class="nota"><span class="rot">Recorte automático</span>
+Na exportação, as rotas são recortadas automaticamente para ficarem dentro da área permitida.
+Se uma rota não tiver nenhum trecho válido dentro da área, o XGuri avisa e não a exporta.</div>
+<p>Os botões <b>Limpar rotas</b> e <b>Limpar tudo</b> apagam, respectivamente, só as rotas ou
+rotas e desenhos.</p>
+
+<!-- ================= 9 ================= -->
+<h1 class="cap"><span class="num">9</span>Enviar para a XAG One</h1>
+<p>O envio direto evita pendrive: o mapa sai do XGuri e aparece na sua conta XAG One, pronto para
+ser usado no voo.</p>
+
+<h2>9.1 Como funciona</h2>
+<div class="passo"><span class="n">1</span>Clique em <span class="btn v">ENVIAR PARA XAG ONE</span> na tela em que você está.</div>
+<div class="passo"><span class="n">2</span>Na primeira vez, abre a tela de login da XAG One. <b>Faça o login normalmente</b> — o envio continua sozinho logo em seguida.</div>
+<div class="passo"><span class="n">3</span>Digite o nome que deve aparecer na XAG One. Use um nome claro, com talhão e data.</div>
+<div class="passo"><span class="n">4</span>Acompanhe a mensagem de andamento (<b>ENVIANDO...</b>, &ldquo;enviando mapa 1/2&rdquo;, e assim por diante).</div>
+<div class="passo"><span class="n">5</span>Ao final aparece <b>Mapa enviado e importado na XAG One com sucesso</b>.</div>
+
+<div class="nota"><span class="rot">Cancelar</span>
+Enquanto o envio está em andamento, o botão vira <span class="btn">CANCELAR ENVIO</span>.
+O XGuri pede confirmação antes de interromper. Só existe um envio por vez: se aparecer
+&ldquo;já existe um envio em andamento&rdquo;, espere o anterior terminar.</div>
+
+<h2>9.2 O que é enviado</h2>
+<table>
+  <tr><th style="width:36%">Tela</th><th>O que vai para a XAG One</th></tr>
+  <tr><td class="b">Mapa de aplicação</td><td>A área, os obstáculos e as zonas sem pulverização, em KML.</td></tr>
+  <tr><td class="b">Taxa variável</td><td>A prescrição em JSON, com a grade e as taxas.</td></tr>
+  <tr><td class="b">Aplicação localizada</td><td>Os quadrados pintados como área de aplicação.</td></tr>
+  <tr><td class="b">Rota personalizada</td><td>A área (Field) e as rotas, vinculadas entre si na conta.</td></tr>
+</table>
+
+<h2>9.3 Se o envio falhar</h2>
+<table>
+  <tr><th style="width:40%">Mensagem</th><th>O que fazer</th></tr>
+  <tr><td class="b">Faça login na XAG One</td><td>Complete o login na janela que abriu. O envio retoma sozinho.</td></tr>
+  <tr><td class="b">Crie pelo menos uma rota antes de enviar</td><td>Desenhe a rota (ou a área) antes de clicar em enviar.</td></tr>
+  <tr><td class="b">Crie ou importe primeiro a Área de aplicação</td><td>A rota só pode ser enviada junto com a área que a contém.</td></tr>
+  <tr><td class="b">A XAG demorou demais / recusou</td><td>Problema de conexão ou do servidor da XAG. Confira a internet e tente novamente em alguns minutos.</td></tr>
+  <tr><td class="b">Mapa precisa ser dividido</td><td>O desenho passou do limite de pontos. Divida a área ou reduza os pontos (item 5.4).</td></tr>
+</table>
+<div class="dica"><span class="rot">Nada se perde</span>
+Quando um envio falha, o XGuri guarda os arquivos KML já preparados e mostra o caminho deles na
+mensagem. Dá para enviar esses arquivos manualmente pela XAG One depois.</div>
+
+<!-- ================= 10 ================= -->
+<h1 class="cap"><span class="num">10</span>Configurações</h1>
+<p>A tela de Configurações reúne idioma, pastas e limpeza de arquivos.</p>
+
+<h2>10.1 Idioma</h2>
+<p>Em <b>Idioma</b> escolha entre <b>Português (Brasil)</b>, <b>English</b> e <b>Español</b>.
+A troca vale na hora, em todas as telas abertas, e fica salva para a próxima vez que o XGuri abrir.</p>
+
+<h2>10.2 Pastas</h2>
+<table>
+  <tr><th style="width:36%">Campo</th><th>Para que serve</th></tr>
+  <tr><td class="b">Pasta padrão de saída</td><td>Onde os projetos e mapas terminados são gravados. Use <b>Selecionar</b> para trocar e <b>Abrir</b> para ver a pasta no Windows.</td></tr>
+  <tr><td class="b">Pasta temporária</td><td>Onde ficam os arquivos de trabalho durante o processamento. Prefira um disco com bastante espaço livre.</td></tr>
+  <tr><td class="b">Restaurar padrão</td><td>Volta as pastas para os valores originais do programa.</td></tr>
+</table>
+
+<h2>10.3 Espaço em disco e temporários</h2>
+<p>O painel <b>Uso do disco</b> mostra o espaço livre e quanto os temporários do XGuri estão
+ocupando. O campo <span class="campo">Limite de temporários</span> define a partir de quanto o
+programa considera que está na hora de limpar, e o botão
+<span class="btn">Limpar temporários</span> faz a limpeza na hora.</p>
+
+<div class="aviso"><span class="rot">Cuidado</span>
+Só apague temporários com o processamento <b>parado</b>. A limpeza não apaga os mapas já salvos na
+pasta de saída — apenas os arquivos de trabalho.</div>
+
+<p>Depois de mexer em qualquer opção, clique em <span class="btn v">SALVAR CONFIGURAÇÕES</span>.</p>
+
+<!-- ================= 11 ================= -->
+<h1 class="cap"><span class="num">11</span>Soluções para problemas comuns</h1>
+<table>
+  <tr><th style="width:38%">Situação</th><th>O que fazer</th></tr>
+  <tr><td class="b">&ldquo;Nenhuma imagem compatível foi encontrada nessa pasta&rdquo;</td>
+      <td>A pasta não tem fotos nos formatos aceitos (JPG, JPEG, PNG, TIF, TIFF) ou você apontou para a pasta errada. Verifique se as fotos não estão dentro de uma subpasta.</td></tr>
+  <tr><td class="b">Muitas fotos foram excluídas automaticamente</td>
+      <td>Normal quando há fotos de decolagem, pouso ou repetidas. Se sobrar pouca coisa, o voo provavelmente teve problema de GPS.</td></tr>
+  <tr><td class="b">&ldquo;GPS INSUFICIENTE&rdquo;</td>
+      <td>O voo não tem coordenadas suficientes para validar a cobertura. O resultado pode sair torto; refazer o voo é mais seguro.</td></tr>
+  <tr><td class="b">Ortomosaico com falhas ou buracos</td>
+      <td>Quase sempre é sobreposição baixa no voo. Refaça o mapeamento com mais sobreposição frontal e lateral.</td></tr>
+  <tr><td class="b">Processamento muito lento</td>
+      <td>Reduza a Resolução do DSM e a Nuvem de pontos nos AJUSTES HD, ou desmarque o Mapa HD e use o modo rápido. Feche outros programas pesados.</td></tr>
+  <tr><td class="b">Acabou o espaço em disco</td>
+      <td>Limpe os temporários em Configurações e aponte a pasta temporária para um disco maior.</td></tr>
+  <tr><td class="b">&ldquo;Importe primeiro o ortomosaico&rdquo;</td>
+      <td>A tela precisa da imagem carregada antes de desenhar. Use IMPORTAR DO PROGRAMA ou IMPORTAR DO COMPUTADOR.</td></tr>
+  <tr><td class="b">&ldquo;Crie primeiro uma Área de aplicação (boundary)&rdquo;</td>
+      <td>Desenhe a borda do talhão antes de obstáculos, rotas ou exportação.</td></tr>
+  <tr><td class="b">&ldquo;Mapa precisa ser dividido&rdquo;</td>
+      <td>O desenho passou do limite de pontos da XAG. Use a tesoura para dividir a área, ou redesenhe com menos cliques.</td></tr>
+  <tr><td class="b">&ldquo;Já existe uma pasta de projeto com esse nome&rdquo;</td>
+      <td>Troque o nome do projeto ou apague/mova a pasta antiga. O XGuri nunca sobrescreve um trabalho anterior.</td></tr>
+  <tr><td class="b">Erro ao abrir Shapefile</td>
+      <td>Confirme que os arquivos <span class="campo">.dbf</span>, <span class="campo">.shx</span> e <span class="campo">.prj</span> estão na mesma pasta do <span class="campo">.shp</span>.</td></tr>
+  <tr><td class="b">O mapa está deslocado em relação ao terreno</td>
+      <td>Use a calibração com ponto conhecido (item 4.3 ou 8.4) com uma coordenada coletada por rover/RTK.</td></tr>
+</table>
+
+<!-- ================= 12 ================= -->
+<h1 class="cap"><span class="num">12</span>Boas práticas de campo</h1>
+<ul>
+  <li><b>Padronize os nomes.</b> Use sempre o mesmo formato, por exemplo <i>Fazenda_Talhao_Data</i>.
+      Isso evita confusão na hora de achar o mapa na XAG One.</li>
+  <li><b>Voe com boa sobreposição.</b> É o fator que mais influencia a qualidade do ortomosaico —
+      mais do que qualquer ajuste dentro do programa.</li>
+  <li><b>Confira as estatísticas antes de processar.</b> Cinco segundos olhando GSD e sobreposição
+      evitam uma hora de processamento perdida.</li>
+  <li><b>Desenhe a borda primeiro, sempre.</b> Obstáculos, No Spray e rotas dependem dela.</li>
+  <li><b>Não exagere nos cliques ao desenhar.</b> Pontos muito próximos estouram o limite da XAG
+      sem melhorar a precisão.</li>
+  <li><b>Marque as zonas sem pulverização com folga.</b> Casas, açudes, apiários e áreas vizinhas
+      merecem margem de sobra.</li>
+  <li><b>Use a mesma distância de segurança</b> no XGuri e no controle do drone.</li>
+  <li><b>Guarde o ortomosaico.</b> Com ele salvo, dá para refazer mapas depois sem processar tudo
+      de novo.</li>
+  <li><b>Limpe os temporários no fim do dia</b> e confira o espaço em disco antes do próximo voo.</li>
+</ul>
+
+<!-- ================= 13 ================= -->
+<h1 class="cap"><span class="num">13</span>Glossário</h1>
+<table>
+  <tr><th style="width:26%">Termo</th><th>Significado</th></tr>
+  <tr><td class="b">Ortomosaico</td><td>A imagem única da lavoura, formada pela junção de todas as fotos do voo, já corrigida para se alinhar ao terreno.</td></tr>
+  <tr><td class="b">Mapa HD</td><td>O pacote completo (imagem + relevo + nuvem de pontos) salvo em um arquivo <span class="campo">.tar</span> para o controle XAG.</td></tr>
+  <tr><td class="b">DSM</td><td>Modelo de superfície: mostra a altura do terreno e do que está sobre ele (árvores, construções).</td></tr>
+  <tr><td class="b">Nuvem de pontos (LAS/LAZ)</td><td>Milhares de pontos com altura, usados para representar o relevo em 3D.</td></tr>
+  <tr><td class="b">GSD</td><td>Quantos centímetros do terreno cabem em cada ponto da imagem. Menor GSD = mais detalhe.</td></tr>
+  <tr><td class="b">Boundary</td><td>A borda da área de aplicação, o limite do talhão.</td></tr>
+  <tr><td class="b">No Spray</td><td>Área dentro do talhão onde o drone não pode pulverizar.</td></tr>
+  <tr><td class="b">Obstáculo</td><td>Objeto que o drone precisa desviar: árvore, poste, torre, construção.</td></tr>
+  <tr><td class="b">Calibração</td><td>Correção da posição do mapa, feita com a coordenada exata de um ponto conhecido.</td></tr>
+  <tr><td class="b">KML</td><td>Formato de arquivo com áreas e linhas georreferenciadas, usado para levar o mapa ao drone.</td></tr>
+  <tr><td class="b">Shapefile</td><td>Conjunto de arquivos (<span class="campo">.shp</span>, <span class="campo">.dbf</span>, <span class="campo">.shx</span>, <span class="campo">.prj</span>) com dados de mapa, comum em análises de solo.</td></tr>
+  <tr><td class="b">Taxa variável</td><td>Aplicar quantidades diferentes de produto em partes diferentes da lavoura.</td></tr>
+  <tr><td class="b">Aplicação localizada</td><td>Aplicar apenas em manchas específicas, deixando o resto da área sem produto.</td></tr>
+  <tr><td class="b">Field</td><td>Como a XAG One chama a área cadastrada na conta. A rota fica vinculada a um Field.</td></tr>
+  <tr><td class="b">XAG One</td><td>A plataforma na nuvem da XAG onde ficam as áreas, mapas e rotas da sua conta.</td></tr>
+</table>
+
+<div class="fim">
+<b>XGuri &mdash; Manual do Operador.</b> As telas e os nomes dos botões descritos aqui seguem a
+versão atual do programa. Se algum botão estiver com nome diferente na sua tela, a função
+correspondente continua sendo a descrita neste manual.
+</div>
+
+</body>
+</html>

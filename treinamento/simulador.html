@@ -1,0 +1,2866 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Simulador de treinamento: planejamento da vespera, retirada de produtos, montagem da estrutura, EPI e preparo de calda para pulverizacao com drone.">
+<meta name="robots" content="noindex">
+<title>Simulador de preparo de calda · XGuri</title>
+<style>
+:root{color-scheme:light dark}
+body{margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:14px}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=Caveat:wght@600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --ground:#E4E8DE; --ground-2:#D5DACB; --surface:#FBFBF6; --surface-2:#F1F2EA;
+  --ink:#161B14; --ink-2:#525B4F; --ink-3:#7C8577; --line:#C2C9B6; --line-forte:#A6AF98;
+  --papel:#E5D9B8; --papel-linha:#CBBD94; --papel-borda:#CFC29C; --papel-ink:#2B4356;
+  --azul:#1C5A7A; --azul-2:#3E8BB0; --amarelo:#E0A800; --verde:#4F7A3C; --vermelho:#B93A22;
+  --metal:#8E9689; --metal-2:#6E7669; --visor:#C9D6AE; --teclado:#2B2F2A;
+  --agua:#6FAFD0; --calda:#8C9B5A;
+  --sombra:0 1px 2px rgba(20,26,18,.10), 0 8px 24px -12px rgba(20,26,18,.30);
+  --epi:#C9B894; --epi-linha:#A3906A; --epi-claro:#D8CBAC; --bota:#E2B93C; --bota-sola:#2E2A24; --luva:#4E9A5A; --pele:#C98F63;
+  --vinheta:rgba(255,255,255,.35); --tick:rgba(20,26,18,.35); --tick-forte:rgba(20,26,18,.6);
+  --vidro-bg:linear-gradient(100deg, rgba(255,255,255,.22), rgba(255,255,255,.02) 42%, rgba(0,0,0,.06));
+  --btn-txt:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#13170F; --ground-2:#1B2018; --surface:#212719; --surface-2:#272E1F;
+    --ink:#E9EDE0; --ink-2:#A8B29B; --ink-3:#7E8873; --line:#39422E; --line-forte:#4D573F;
+    --papel:#DDD0AC; --papel-linha:#C2B48B; --papel-borda:#A6997A; --papel-ink:#25394A;
+    --azul:#4E93B6; --azul-2:#7FC0DF; --amarelo:#F2C13C; --verde:#5E8F45; --vermelho:#E06A4C;
+    --metal:#6B7367; --metal-2:#4E5649; --visor:#9FB47F; --teclado:#191C17;
+    --agua:#4E8FB2; --calda:#7C8B4C;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.8);
+    --epi:#BFAC85; --epi-linha:#8E7C58; --epi-claro:#CEBF9C; --bota:#D4AB2E; --luva:#4E9A5A;
+    --vinheta:rgba(255,255,255,.05); --tick:rgba(255,255,255,.38); --tick-forte:rgba(255,255,255,.6);
+    --vidro-bg:linear-gradient(100deg, rgba(255,255,255,.07), rgba(255,255,255,.01) 42%, rgba(0,0,0,.25));
+    --btn-txt:#F2F6EC;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#13170F; --ground-2:#1B2018; --surface:#212719; --surface-2:#272E1F;
+  --ink:#E9EDE0; --ink-2:#A8B29B; --ink-3:#7E8873; --line:#39422E; --line-forte:#4D573F;
+  --papel:#DDD0AC; --papel-linha:#C2B48B; --papel-borda:#A6997A; --papel-ink:#25394A;
+  --azul:#4E93B6; --azul-2:#7FC0DF; --amarelo:#F2C13C; --verde:#5E8F45; --vermelho:#E06A4C;
+  --metal:#6B7367; --metal-2:#4E5649; --visor:#9FB47F; --teclado:#191C17;
+  --agua:#4E8FB2; --calda:#7C8B4C;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.8);
+  --epi:#BFAC85; --epi-linha:#8E7C58; --epi-claro:#CEBF9C; --bota:#D4AB2E; --luva:#4E9A5A;
+  --vinheta:rgba(255,255,255,.05); --tick:rgba(255,255,255,.38); --tick-forte:rgba(255,255,255,.6);
+  --vidro-bg:linear-gradient(100deg, rgba(255,255,255,.07), rgba(255,255,255,.01) 42%, rgba(0,0,0,.25));
+  --btn-txt:#F2F6EC;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:15px; line-height:1.5;
+  background-image:radial-gradient(circle at 18% 8%, var(--vinheta), transparent 42%);
+}
+h1,h2,h3,.cond{font-family:"Barlow Condensed", "Barlow Semi Condensed", sans-serif; font-weight:700; letter-spacing:.01em}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2.5px solid var(--amarelo); outline-offset:2px; border-radius:3px}
+
+.wrap{max-width:1180px; margin:0 auto; padding-inline:16px; padding-block:0 40px}
+
+/* ---------- cabeçalho ---------- */
+.topo{border-bottom:1px solid var(--line); background:var(--surface-2)}
+.topo-in{max-width:1180px; margin:0 auto; padding:12px 16px; display:flex; flex-wrap:wrap; gap:14px 20px; align-items:center}
+.marca{display:flex; flex-direction:column; line-height:1.1}
+.marca b{font-family:"Barlow Condensed",sans-serif; font-size:23px; letter-spacing:.02em}
+.marca span{font-size:10.5px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-3); font-weight:600}
+.trilha{display:flex; gap:6px; margin-left:auto; flex-wrap:wrap}
+.trilha b{
+  font-family:"Barlow Condensed",sans-serif; font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+  padding:4px 11px; border:1px solid var(--line); border-radius:2px; color:var(--ink-3); background:var(--surface); display:flex; gap:7px; align-items:center;
+}
+.trilha b i{font-style:normal; font-family:"IBM Plex Mono",monospace; font-size:11px; opacity:.7}
+.trilha b{cursor:pointer; user-select:none}
+.trilha b:hover{border-color:var(--ink-2); color:var(--ink)}
+.trilha b.on{color:var(--surface); background:var(--azul); border-color:var(--azul)}
+.trilha b.on:hover{color:var(--surface)}
+.trilha b.feito{color:var(--verde); border-color:var(--verde)}
+.tema{margin-left:8px; background:none; border:1px solid var(--line); border-radius:2px; width:34px; height:30px; cursor:pointer; display:grid; place-items:center; color:var(--ink-2)}
+.tema:hover{border-color:var(--line-forte)}
+
+/* ---------- operador ---------- */
+.operador{
+  position:sticky; top:0; z-index:20; margin:0 -16px 18px; padding:12px 16px;
+  background:color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line); display:flex; gap:14px; align-items:flex-end;
+}
+.op-corpo{flex:none; position:relative}
+.op-corpo svg{display:block; width:100%; height:auto; overflow:visible}
+.op-mesa{width:80px}
+.operador.sem-boneco .op-mesa{display:none}
+.operador.sem-boneco .balao:before,.operador.sem-boneco .balao:after{display:none}
+.op-cena{flex:none; align-self:flex-end; margin:0 -10px 0 0; z-index:1}
+#opBancada{width:172px}
+/* poses do operador */
+.op-corpo .br-alto,.op-corpo .br-joia,.item-mao > g{display:none}
+.op-corpo.segurando .br-normal-d{display:none}
+.op-corpo.segurando .br-alto{display:block}
+.op-corpo.pose-frasco .it-frasco,.op-corpo.pose-saco .it-saco,.op-corpo.pose-copo .it-copo,.op-corpo.pose-mangueira .it-mangueira{display:block}
+.item-mao{transform-box:view-box; transform-origin:110px 53px; transition:transform .22s ease}
+.op-corpo.virando .item-mao{transform:rotate(104deg)}
+.op-corpo.pose-mangueira.virando .item-mao{transform:rotate(22deg)}
+.op-corpo.op-ok .br-normal-d{display:none}
+.op-corpo.op-ok .br-joia{display:block}
+.op-corpo.op-ok .br-alto{display:none}
+.balao{
+  position:relative; background:var(--surface); border:1.5px solid var(--ink); border-radius:4px;
+  padding:10px 14px; flex:1; min-width:0; box-shadow:3px 3px 0 var(--ground-2);
+}
+.balao:before,.balao:after{content:""; position:absolute; left:-9px; bottom:16px; border:8px solid transparent; border-right-color:var(--ink); border-left:0}
+.balao:after{left:-6.5px; border-right-color:var(--surface)}
+.balao .quem{display:block; font-family:"Barlow Condensed",sans-serif; font-weight:600; text-transform:uppercase;
+  letter-spacing:.14em; font-size:11px; color:var(--ink-3); margin-bottom:3px}
+.balao p{margin:0; font-size:15.5px}
+.balao p b{font-weight:600}
+.balao .aviso{color:var(--vermelho); font-weight:600}
+.balao .bom{color:var(--verde); font-weight:600}
+.op-erro .op-corpo{animation:tremida .4s}
+@keyframes tremida{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ---------- cartões ---------- */
+.eyebrow{font-family:"Barlow Condensed",sans-serif; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.17em; color:var(--ink-3); margin:0 0 4px}
+.cartao{background:var(--surface); border:1px solid var(--line); border-radius:3px; box-shadow:var(--sombra)}
+.briefing{padding:16px 18px; margin-bottom:18px; border-left:4px solid var(--amarelo)}
+.briefing h1{margin:0 0 6px; font-size:29px; line-height:1.05; text-wrap:balance}
+.briefing p{margin:0; color:var(--ink-2); max-width:66ch}
+.briefing dl{display:flex; flex-wrap:wrap; gap:4px 26px; margin:12px 0 0; padding-top:12px; border-top:1px dashed var(--line)}
+.briefing div{display:flex; flex-direction:column}
+.briefing dt{font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3); font-weight:600}
+.briefing dd{margin:0; font-family:"IBM Plex Mono",monospace; font-size:15px; font-weight:600}
+
+/* níveis */
+.niveis{display:grid; grid-template-columns:repeat(auto-fit,minmax(152px,1fr)); gap:8px; margin:14px 0 0}
+.niv{
+  background:var(--surface-2); border:1.5px solid var(--line); border-radius:3px; padding:8px 11px; cursor:pointer; text-align:left;
+  display:flex; flex-direction:column; gap:1px; transition:border-color .15s, background .15s;
+}
+.niv:hover{border-color:var(--line-forte)}
+.niv b{font-family:"Barlow Condensed",sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:.05em; line-height:1}
+.niv small{font-size:11.5px; color:var(--ink-3); line-height:1.25}
+.niv.on{border-color:var(--azul); background:color-mix(in srgb, var(--azul) 12%, var(--surface)); box-shadow:inset 0 0 0 1px var(--azul)}
+.niv.on small{color:var(--ink-2)}
+.niv[data-n="prova"]{border-style:dashed}
+.niv[data-n="prova"].on{border-style:solid; border-color:var(--vermelho); background:color-mix(in srgb, var(--vermelho) 11%, var(--surface)); box-shadow:inset 0 0 0 1px var(--vermelho)}
+.campo-nome{display:flex; gap:9px; align-items:center; margin:12px 0 0; flex-wrap:wrap}
+.campo-nome label{font-size:13px; color:var(--ink-2)}
+.campo-nome input{
+  flex:1; min-width:180px; background:var(--surface-2); border:1.5px solid var(--line); border-radius:2px; padding:7px 10px;
+  font:inherit; color:var(--ink);
+}
+.chip-prova{
+  display:flex; align-items:center; gap:10px; background:var(--vermelho); color:#fff; border-radius:2px; padding:4px 11px;
+  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
+}
+.chip-prova b{font-family:"IBM Plex Mono",monospace}
+.chip-prova span{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; font-size:12px; font-weight:700; opacity:.85}
+
+/* categorias de conhecimento */
+.cat-bloco{margin:16px 0 0; padding:14px 0 0; border-top:1px dashed var(--line)}
+.cat-bloco h3{margin:0 0 2px; font-size:17px; letter-spacing:.01em}
+.cat-bloco p{margin:0 0 9px; font-size:13px; color:var(--ink-3); max-width:60ch}
+.switch-prova{
+  display:flex; gap:12px; align-items:flex-start; margin:16px 0 0; padding:12px 14px;
+  border:1.5px dashed var(--line-forte); border-radius:3px; cursor:pointer; background:var(--surface-2);
+}
+.switch-prova.on{border-style:solid; border-color:var(--vermelho); background:color-mix(in srgb, var(--vermelho) 10%, var(--surface))}
+.switch-prova .cx{width:22px; height:22px; flex:none; border:2px solid var(--line-forte); border-radius:3px; display:grid; place-items:center;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; color:transparent; margin-top:1px}
+.switch-prova.on .cx{border-color:var(--vermelho); background:var(--vermelho); color:#fff}
+.switch-prova b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:17px; text-transform:uppercase; letter-spacing:.05em; line-height:1.1}
+.switch-prova small{font-size:12.5px; color:var(--ink-3)}
+
+/* véspera: foto do receituário e recado do piloto */
+.foto{position:relative; transform:rotate(-1.1deg); filter:saturate(.92) contrast(1.04)}
+.foto:after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(118deg, rgba(255,255,255,.34) 0 22%, transparent 42%)}
+.selo-foto{
+  position:absolute; right:-6px; top:-12px; z-index:3; background:var(--ink); color:var(--ground);
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; padding:3px 9px; transform:rotate(2deg); letter-spacing:.03em;
+}
+.recado{background:var(--surface); border:1px solid var(--line); border-radius:3px; box-shadow:var(--sombra); overflow:hidden}
+.recado-topo{display:flex; align-items:center; gap:9px; padding:9px 14px; background:var(--surface-2); border-bottom:1px solid var(--line)}
+.recado-topo b{font-family:"Barlow Condensed",sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:.06em}
+.recado-topo span{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+.avatar-piloto{width:26px; height:26px; border-radius:50%; background:var(--azul); display:grid; place-items:center; color:#fff;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:13px}
+.recado-msg{margin:12px 14px; padding:10px 13px; background:color-mix(in srgb, var(--verde) 13%, var(--surface));
+  border-radius:3px 12px 12px 12px; font-size:14.5px; line-height:1.5; position:relative}
+.recado-msg + .recado-msg{margin-top:-4px}
+.recado-msg b{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:600}
+.recado-msg .hora{display:block; text-align:right; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-3); margin-top:3px}
+.dados-piloto{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:1px; background:var(--line); border-top:1px solid var(--line)}
+.dados-piloto div{background:var(--surface); padding:9px 12px}
+.dados-piloto dt{font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); font-weight:600}
+.dados-piloto dd{margin:0; font-family:"IBM Plex Mono",monospace; font-size:16px; font-weight:600}
+
+/* barracão */
+.grade-barracao{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px; align-items:start}
+.item-barracao{padding:14px 16px 16px; display:grid; gap:10px}
+.item-barracao > header b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:19px; text-transform:uppercase; letter-spacing:.03em; line-height:1}
+.item-barracao > header i{font-style:normal; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.item-barracao.pronto{border-color:var(--verde); box-shadow:inset 3px 0 0 var(--verde), var(--sombra)}
+.preciso{display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line)}
+.preciso label{flex:1; font-size:13.5px}
+.preciso input{width:92px; text-align:right; background:var(--surface-2); border:1.5px solid var(--line); border-radius:2px; padding:5px 8px;
+  font-family:"IBM Plex Mono",monospace; font-size:15px; color:var(--ink)}
+.preciso input.ok{border-color:var(--verde)} .preciso input.err{border-color:var(--vermelho)}
+.preciso .un{font-family:"Barlow Condensed",sans-serif; font-weight:600; width:24px}
+.embalagens{display:flex; gap:7px; flex-wrap:wrap}
+.emb{background:var(--surface-2); border:1.5px solid var(--line); border-radius:3px; padding:6px 8px 5px; cursor:pointer;
+  display:grid; justify-items:center; gap:2px; min-width:60px; position:relative}
+.emb:hover{border-color:var(--ink-2)}
+.emb b{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600}
+.emb svg{display:block}
+.emb .conta{position:absolute; top:-7px; right:-7px; min-width:19px; height:19px; padding:0 4px; border-radius:10px; background:var(--azul); color:#fff;
+  font-family:"IBM Plex Mono",monospace; font-size:11px; display:grid; place-items:center; font-weight:600}
+.carrinho{display:flex; align-items:baseline; gap:8px; font-size:13.5px; min-height:22px; flex-wrap:wrap}
+.carrinho b{font-family:"IBM Plex Mono",monospace; font-size:15px}
+.carrinho .zerar{margin-left:auto; background:none; border:0; text-decoration:underline; cursor:pointer; color:var(--ink-3); font-size:12.5px; padding:0}
+.ficha{margin-top:18px; padding:14px 16px}
+.ficha h3{margin:0 0 8px; font-size:16px; text-transform:uppercase; letter-spacing:.08em}
+.ficha .l{display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line); font-size:14px}
+.ficha .l b{font-family:"IBM Plex Mono",monospace}
+
+/* estrutura: patio de operacao */
+.patio{background:var(--surface-2); border:1px solid var(--line); border-radius:3px; padding:10px; box-shadow:var(--sombra);
+  background-image:radial-gradient(circle at 28% 22%, rgba(0,0,0,.05) 0 1px, transparent 1px); background-size:11px 11px}
+.patio svg{display:block; width:100%; height:auto}
+.alvo{cursor:pointer}
+.alvo:hover{filter:drop-shadow(0 0 4px var(--ink-3))}
+.alvo.sel{filter:drop-shadow(0 0 5px var(--amarelo))}
+.alvo.feito .marca-ok{display:block}
+.marca-ok{display:none}
+.braco{transition:transform .5s cubic-bezier(.2,.8,.3,1); transform-box:view-box}
+.helice{transition:transform .4s; transform-box:view-box}
+.drone-grupo{transition:transform .8s cubic-bezier(.3,.7,.3,1); transform-box:view-box}
+.girando-motor{animation:girar 1.1s linear infinite; transform-box:view-box}
+@keyframes girar{to{transform:rotate(360deg)}}
+.fumaca{opacity:0; transition:opacity .4s}
+.ligado-ger .fumaca{opacity:1; animation:sobe 2.2s ease-out infinite}
+@keyframes sobe{0%{opacity:.6; transform:translateY(0) scale(.7)}100%{opacity:0; transform:translateY(-22px) scale(1.4)}}
+
+.painel-eq{display:grid; gap:12px; align-content:start}
+.painel-eq .cartao{padding:14px 16px}
+.painel-eq h3{margin:0 0 3px; font-size:19px; text-transform:uppercase; letter-spacing:.03em}
+.painel-eq .sub{margin:0 0 10px; font-size:13px; color:var(--ink-3)}
+.acoes-eq{display:flex; flex-wrap:wrap; gap:7px}
+.acoes-eq .btn{font-size:13.5px; padding:7px 13px}
+.medidor-comb{display:grid; gap:4px; margin:10px 0 12px}
+.barra{height:16px; border:1.5px solid var(--line-forte); border-radius:2px; overflow:hidden; background:var(--surface-2); position:relative}
+.barra i{display:block; height:100%; background:var(--vermelho); transition:width .12s linear}
+.barra.ok i{background:var(--verde)}
+.barra .risco{position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink)}
+.barra-rot{display:flex; justify-content:space-between; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2)}
+.baterias{display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:8px}
+.bat{border:1.5px solid var(--line); border-radius:3px; padding:8px; display:grid; gap:6px; background:var(--surface-2)}
+.bat.cheia{border-color:var(--verde)}
+.bat.carregando{border-color:var(--amarelo)}
+.bat-topo{display:flex; justify-content:space-between; align-items:baseline; font-family:"IBM Plex Mono",monospace; font-size:12px}
+.bat-topo b{font-size:15px}
+.bat .barra{height:11px}
+.bat .barra i{background:var(--amarelo)}
+.bat.cheia .barra i{background:var(--verde)}
+.bat button{font-size:12px; padding:4px 8px; width:100%}
+.check-est{list-style:none; margin:0; padding:0}
+.check-est li{display:flex; gap:9px; align-items:flex-start; padding:6px 0; border-bottom:1px dashed var(--line); font-size:13.5px; color:var(--ink-3)}
+.check-est li .cx{width:18px; height:18px; flex:none; border:1.5px solid var(--line-forte); border-radius:2px; display:grid; place-items:center;
+  font-size:11px; font-family:"Barlow Condensed",sans-serif; font-weight:700}
+.check-est li.ok{color:var(--ink)}
+.check-est li.ok .cx{background:var(--verde); border-color:var(--verde); color:#fff}
+.grade-estrutura{display:grid; grid-template-columns:minmax(300px,1.35fr) minmax(280px,1fr); gap:18px; align-items:start}
+@media (max-width:860px){ .grade-estrutura{grid-template-columns:1fr} }
+
+/* paramentacao de EPI */
+.grade-epi{display:grid; grid-template-columns:minmax(230px,.85fr) minmax(300px,1.15fr); gap:18px; align-items:start}
+@media (max-width:820px){ .grade-epi{grid-template-columns:1fr} }
+.vestiario{background:var(--surface-2); border:1px solid var(--line); border-radius:3px; padding:14px; box-shadow:var(--sombra);
+  display:grid; justify-items:center; gap:8px}
+.vestiario svg{display:block; width:100%; max-width:210px; height:auto}
+.vestiario .legenda{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; font-size:12px; color:var(--ink-3)}
+.cabide{display:grid; grid-template-columns:repeat(auto-fit,minmax(154px,1fr)); gap:9px}
+.epi-item{background:var(--surface); border:1.5px solid var(--line); border-radius:3px; padding:9px 10px; cursor:pointer; text-align:left;
+  display:grid; grid-template-columns:30px 1fr; gap:9px; align-items:center; box-shadow:var(--sombra); position:relative}
+.epi-item:hover:not([disabled]){border-color:var(--ink-2); transform:translateY(-1px)}
+.epi-item b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:14.5px; text-transform:uppercase; letter-spacing:.03em; line-height:1.05}
+.epi-item i{font-style:normal; font-size:11px; color:var(--ink-3); line-height:1.25; display:block}
+.epi-item .ca{position:absolute; top:5px; right:6px; font-family:"IBM Plex Mono",monospace; font-size:8.5px; letter-spacing:.06em; color:var(--verde)}
+.epi-item.vestido{border-color:var(--verde); background:color-mix(in srgb, var(--verde) 10%, var(--surface)); cursor:default}
+.epi-item.vestido .ordem-epi{background:var(--verde); color:#fff}
+.epi-item.proibido{border-style:dashed; border-color:var(--vermelho)}
+.epi-item .ordem-epi{position:absolute; bottom:5px; right:6px; min-width:17px; height:17px; border-radius:9px; background:var(--line);
+  color:var(--ink-2); font-family:"IBM Plex Mono",monospace; font-size:10px; display:grid; place-items:center; font-weight:600}
+.epi-item svg{width:30px; height:34px; display:block}
+.ordem-lista{list-style:none; margin:0; padding:0; counter-reset:o}
+.ordem-lista li{display:flex; gap:9px; align-items:baseline; padding:5px 0; border-bottom:1px dashed var(--line); font-size:13.5px; color:var(--ink-3)}
+.ordem-lista li b{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3); width:16px; flex:none}
+.ordem-lista li.ok{color:var(--ink)} .ordem-lista li.ok b{color:var(--verde)}
+.ordem-lista li.agora{color:var(--ink); font-weight:600}
+.ordem-lista li.agora b{color:var(--vermelho)}
+
+/* boletim */
+.boletim{max-width:560px; margin:0 auto 24px; text-align:left; border:1px solid var(--line); background:var(--surface-2)}
+.boletim-topo{display:flex; align-items:center; gap:16px; padding:14px 18px; border-bottom:1px solid var(--line)}
+.nota{font-family:"Barlow Condensed",sans-serif; font-size:52px; line-height:.9; font-weight:700}
+.nota small{font-size:19px; color:var(--ink-3)}
+.veredito{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:19px; padding:3px 12px; border-radius:2px; color:#fff}
+.veredito.ap{background:var(--verde)} .veredito.rp{background:var(--vermelho)}
+.boletim-meta{margin-left:auto; text-align:right; font-size:12.5px; color:var(--ink-2); line-height:1.4}
+.boletim ul{list-style:none; margin:0; padding:10px 18px 14px}
+.boletim li{display:flex; justify-content:space-between; gap:12px; padding:5px 0; border-bottom:1px dashed var(--line); font-size:14px}
+.boletim li:last-child{border:0}
+.boletim li b{font-family:"IBM Plex Mono",monospace; white-space:nowrap}
+.boletim li.neg b{color:var(--vermelho)}
+.boletim .roda{padding:10px 18px 14px; border-top:1px solid var(--line); font-size:11.5px; color:var(--ink-3)}
+
+.mesa{display:grid; grid-template-columns:minmax(300px,1.05fr) minmax(296px,1fr) 238px; gap:18px; align-items:start}
+.coluna-dir{display:grid; gap:18px; align-content:start}
+#slotCalcCalda,#slotCalcVespera{align-self:stretch}
+
+/* ---------- receituário ---------- */
+.receita{
+  background:var(--papel); color:var(--papel-ink); border:1px solid var(--papel-borda);
+  padding:20px 20px 16px; position:relative; box-shadow:var(--sombra);
+  background-image:repeating-linear-gradient(180deg, transparent 0 27px, rgba(43,67,86,.07) 27px 28px);
+}
+.receita:before{
+  content:""; position:absolute; top:-11px; left:50%; transform:translateX(-50%) rotate(-1.4deg);
+  width:104px; height:24px; background:rgba(224,200,140,.75); border:1px solid rgba(120,100,50,.22);
+  box-shadow:0 2px 5px rgba(0,0,0,.14);
+}
+.receita h2{margin:0; font-size:22px; line-height:1.05; letter-spacing:.02em; text-transform:uppercase}
+.receita .num{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.04em; opacity:.75}
+.receita hr{border:0; border-top:1.5px solid rgba(43,67,86,.4); margin:10px 0 12px}
+.rec-cab{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px 18px; margin-bottom:14px}
+.rec-cab span{display:block; font-size:10px; text-transform:uppercase; letter-spacing:.12em; opacity:.65; font-weight:600}
+.rec-cab strong{font-size:14.5px; font-weight:600; display:block; line-height:1.25}
+.tab-rec{width:100%; border-collapse:collapse; font-size:14px}
+.tab-rec th{
+  text-align:left; font-family:"Barlow Condensed",sans-serif; font-size:12.5px; text-transform:uppercase; letter-spacing:.1em;
+  border-bottom:1.5px solid rgba(43,67,86,.45); padding:0 6px 4px; font-weight:700;
+}
+.tab-rec td{padding:8px 6px; border-bottom:1px dotted rgba(43,67,86,.32); vertical-align:top}
+.tab-rec .ord{font-family:"IBM Plex Mono",monospace; font-weight:600; width:26px; text-align:center;
+  background:rgba(43,67,86,.1); border-radius:2px}
+.tab-rec .cat{font-weight:600}
+.tab-rec .form{font-size:11.5px; opacity:.72; display:block; letter-spacing:.02em}
+.tab-rec .dose,.tab-rec .dens{font-family:"IBM Plex Mono",monospace; white-space:nowrap; text-align:right}
+.rec-nota{margin:14px 0 0; padding:10px 12px; background:rgba(43,67,86,.08); border-left:3px solid rgba(43,67,86,.5); font-size:13px}
+.rec-nota b{display:block; font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:12.5px}
+.rec-nota code{font-family:"IBM Plex Mono",monospace; font-size:12.5px; background:rgba(43,67,86,.1); padding:1px 4px}
+.assinatura{margin-top:16px; padding-top:6px; border-top:1px solid rgba(43,67,86,.45); font-size:11px; letter-spacing:.06em; text-transform:uppercase; opacity:.7}
+
+/* ---------- bloco de cálculos ---------- */
+.bloco{
+  background:var(--papel); color:var(--papel-ink); border:1px solid var(--papel-borda); box-shadow:var(--sombra);
+  padding:0 0 16px; position:relative;
+}
+.bloco-topo{background:rgba(43,67,86,.88); color:var(--papel); padding:9px 16px; display:flex; align-items:baseline; gap:10px}
+.bloco-topo h2{margin:0; font-size:17px; text-transform:uppercase; letter-spacing:.09em}
+.bloco-topo span{font-size:11px; letter-spacing:.1em; opacity:.8; margin-left:auto; text-transform:uppercase}
+.bloco-corpo{padding:14px 16px 0}
+.linha{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--papel-linha)}
+.linha .rot{flex:1; min-width:0; font-size:14px; line-height:1.25}
+.linha .rot b{display:block; font-weight:600}
+.linha .rot i{font-style:normal; font-size:11.5px; opacity:.7; font-family:"IBM Plex Mono",monospace}
+.linha input{
+  width:106px; flex:none; text-align:right; background:transparent; border:0; border-bottom:2px solid rgba(43,67,86,.45);
+  font-family:"Caveat",cursive; font-size:25px; font-weight:600; color:var(--papel-ink); padding:0 4px 1px;
+}
+.linha input::placeholder{color:rgba(43,67,86,.3)}
+.linha input:focus{outline:0; border-bottom-color:var(--vermelho); background:rgba(255,255,255,.35)}
+.linha .un{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:15px; width:28px; flex:none}
+.linha .marca-cor{width:6px; height:30px; border-radius:2px; flex:none}
+.linha.ok input{border-bottom-color:var(--verde)}
+.linha.err input{border-bottom-color:var(--vermelho)}
+.linha .sinal{width:20px; flex:none; text-align:center; font-weight:700; font-size:18px; font-family:"Barlow Condensed",sans-serif}
+.linha.ok .sinal{color:var(--verde)}
+.linha.err .sinal{color:var(--vermelho)}
+.linha.travada{opacity:.4}
+.linha.travada input{border-bottom-style:dotted}
+.linha.ativa{background:rgba(255,255,255,.4); box-shadow:inset 3px 0 0 var(--vermelho); border-radius:2px}
+.linha.ativa .rot b{text-decoration:underline; text-decoration-color:rgba(43,67,86,.35); text-underline-offset:3px}
+.passo-guia{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.06em;
+  background:var(--ink); color:var(--ground); padding:1px 7px; border-radius:2px; margin-right:7px; vertical-align:1px}
+.dica{font-size:12.5px; color:var(--vermelho); padding:0 0 8px; margin:-4px 0 0; font-weight:500}
+.base-calc{margin:-2px 0 10px; padding:7px 10px; background:rgba(43,67,86,.08); border-left:3px solid rgba(43,67,86,.5);
+  font-size:12.5px; line-height:1.4}
+.base-calc b{font-family:"IBM Plex Mono",monospace; font-size:12.5px}
+.area-passo{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; padding-bottom:12px}
+#linhasCalc[hidden]{display:none}
+.bloco .acoes{padding:14px 16px 0; display:flex; gap:10px; flex-wrap:wrap}
+
+/* ---------- botões ---------- */
+.btn{
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:15px;
+  background:var(--azul); color:var(--btn-txt); border:0; border-radius:2px; padding:9px 18px; cursor:pointer;
+  box-shadow:0 2px 0 rgba(0,0,0,.22); transition:transform .08s, filter .15s;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(2px); box-shadow:none}
+.btn[disabled]{opacity:.42; cursor:not-allowed; filter:none; transform:none}
+.btn.sec{background:transparent; color:var(--ink-2); border:1.5px solid var(--line-forte); box-shadow:none}
+.btn.sec:hover{color:var(--ink); border-color:var(--ink-2)}
+.bloco .btn.sec{color:var(--papel-ink); border-color:rgba(43,67,86,.45)}
+.btn.verde{background:var(--verde)}
+.btn.grande{font-size:18px; padding:12px 26px}
+
+/* ---------- calculadora ---------- */
+.calc{background:var(--teclado); border-radius:8px; padding:13px; box-shadow:var(--sombra); border:1px solid rgba(0,0,0,.4);
+  position:sticky; top:130px; align-self:start}
+.calc-topo{display:flex; align-items:center; justify-content:space-between; margin-bottom:9px}
+.calc-topo span{font-family:"Barlow Condensed",sans-serif; color:#8E9789; font-size:12px; text-transform:uppercase; letter-spacing:.18em}
+.solar{width:52px; height:14px; background:linear-gradient(90deg,#3B4630,#55633F); border:1px solid #1B2016; border-radius:2px;
+  background-image:repeating-linear-gradient(90deg,#2F3A26 0 11px,#556040 11px 12px)}
+.visor{background:var(--visor); border:1px solid #556040; border-radius:3px; padding:6px 10px 4px; text-align:right; margin-bottom:11px}
+.visor .fila{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:#46512F; min-height:15px; letter-spacing:.02em; overflow:hidden; white-space:nowrap}
+.visor .num{font-family:"IBM Plex Mono",monospace; font-size:27px; font-weight:600; color:#1E2612; line-height:1.15; overflow:hidden; white-space:nowrap}
+.teclas{display:grid; grid-template-columns:repeat(4,1fr); gap:7px}
+.teclas button{
+  background:#494F45; border:0; border-bottom:2.5px solid #24291F; border-radius:4px; color:#F0F2E9;
+  font-family:"IBM Plex Mono",monospace; font-size:17px; padding:11px 0; cursor:pointer;
+}
+.teclas button:hover{background:#565D50}
+.teclas button:active{transform:translateY(1.5px); border-bottom-width:1px}
+.teclas .op{background:#5C5544; color:var(--amarelo)}
+.teclas .op:hover{background:#6B6350}
+.teclas .ac{background:#6E3B2F; color:#FBE9E2}
+.teclas .ac:hover{background:#82463A}
+.teclas .ig{background:#2F5E77; color:#E9F4F8}
+.teclas .ig:hover{background:#3A7391}
+
+/* ---------- ato 2: bancada ---------- */
+.bancada{display:grid; grid-template-columns:150px minmax(280px,1fr) minmax(250px,320px); gap:18px; align-items:start}
+.prateleira{display:grid; gap:10px}
+.prateleira .eyebrow{margin-bottom:0}
+#frascos{display:grid; gap:10px}
+.frasco{
+  background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:8px 8px 9px; cursor:pointer; text-align:left;
+  display:grid; grid-template-columns:34px 1fr; gap:9px; align-items:center; box-shadow:var(--sombra); position:relative;
+}
+.frasco:hover:not([disabled]){border-color:var(--ink-2); transform:translateY(-1px)}
+.frasco[disabled]{cursor:default; opacity:.55}
+.frasco.pronto{opacity:1; border-color:var(--verde); background:color-mix(in srgb, var(--verde) 10%, var(--surface))}
+.frasco .rotulo b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:15px; line-height:1.05; text-transform:uppercase; letter-spacing:.03em}
+.frasco .rotulo i{font-style:normal; font-size:11px; font-family:"IBM Plex Mono",monospace; color:var(--ink-3)}
+.frasco .ordem{position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; background:var(--ink); color:var(--ground);
+  font-family:"IBM Plex Mono",monospace; font-size:11px; display:grid; place-items:center; font-weight:600}
+.frasco.pronto .ordem{background:var(--verde); color:#fff}
+.frasco svg{width:34px; height:44px; display:block}
+
+.cena{background:var(--surface-2); border:1px solid var(--line); border-radius:3px; padding:16px; box-shadow:var(--sombra);
+  background-image:linear-gradient(180deg, transparent 72%, var(--ground-2) 72%)}
+.cena-in{display:flex; gap:18px; align-items:flex-end; justify-content:center; flex-wrap:wrap}
+
+.tanque{position:relative; width:186px; flex:none; z-index:2}
+.agitador-topo{position:relative; height:34px; margin-left:auto; margin-right:auto; width:58px}
+.agitador-topo .motor{position:absolute; inset:0 0 10px 0; background:linear-gradient(180deg,var(--metal),var(--metal-2)); border-radius:3px; border:1px solid rgba(0,0,0,.3)}
+.agitador-topo .motor:after{content:""; position:absolute; left:8px; right:8px; top:6px; height:3px; background:rgba(0,0,0,.25); border-radius:2px;
+  box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.agitador-topo .luz{position:absolute; top:4px; right:4px; width:7px; height:7px; border-radius:50%; background:#5A3A32; border:1px solid rgba(0,0,0,.4)}
+.ligado .agitador-topo .luz{background:#FF6B4A; box-shadow:0 0 8px #FF6B4A}
+.vidro{
+  position:relative; height:250px; border:2.5px solid var(--metal-2); border-top-width:5px; border-radius:6px 6px 12px 12px; overflow:hidden;
+  background:var(--vidro-bg);
+  box-shadow:inset 0 0 22px rgba(0,0,0,.18);
+}
+.liquido{position:absolute; left:0; right:0; bottom:0; height:0%; background:var(--cor-liq,var(--agua)); transition:height .1s linear, background .5s}
+.liquido:after{content:""; position:absolute; left:0; right:0; top:-3px; height:6px; background:rgba(255,255,255,.35); border-radius:50%}
+.ligado .liquido{animation:redemoinho 1.1s linear infinite}
+@keyframes redemoinho{0%,100%{transform:skewX(0deg)}25%{transform:skewX(2.2deg)}75%{transform:skewX(-2.2deg)}}
+.marcas{position:absolute; inset:0; pointer-events:none}
+.marcas .t{position:absolute; right:0; height:1px; background:var(--tick); width:12px}
+.marcas .t.maior{width:26px; background:var(--tick-forte)}
+.marcas .t b{position:absolute; right:30px; top:-8px; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-2); font-weight:400}
+.alvo{position:absolute; left:0; right:0; height:0; border-top:2px dashed var(--vermelho); z-index:3}
+.alvo b{position:absolute; left:4px; top:-16px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:#fff; background:var(--vermelho); padding:1px 5px; border-radius:2px; white-space:nowrap}
+.jorro{position:absolute; top:0; left:24%; width:8px; margin-left:-4px; height:0; background:linear-gradient(180deg, var(--cor-jorro,var(--agua)), color-mix(in srgb, var(--cor-jorro,var(--agua)) 60%, transparent));
+  border-radius:0 0 4px 4px; z-index:2; opacity:0; transition:opacity .1s}
+.jorrando .jorro{opacity:1; height:100%}
+.copo .jorro{left:32%}
+.leitura{margin-top:8px; text-align:center; font-family:"IBM Plex Mono",monospace; font-size:20px; font-weight:600; letter-spacing:-.01em}
+.leitura span{font-size:12px; color:var(--ink-3); font-weight:400}
+.rotulo-tanque{position:absolute; left:10px; top:60px; width:64px; background:var(--surface); border:1px solid var(--line-forte); border-radius:2px;
+  padding:5px 6px; transform:rotate(-1deg); box-shadow:0 2px 6px rgba(0,0,0,.14); z-index:4}
+.rotulo-tanque b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.06em; line-height:1.05}
+.rotulo-tanque i{font-style:normal; font-family:"IBM Plex Mono",monospace; font-size:9.5px; color:var(--ink-3)}
+
+/* medidor (copo / balança) */
+.medidor{flex:none; width:150px; display:flex; flex-direction:column; align-items:center; gap:6px}
+.copo{position:relative; width:104px; height:150px; margin:0 auto;
+  border:2.5px solid var(--metal-2); border-top:0; border-radius:3px 3px 14px 14px; overflow:hidden;
+  background:linear-gradient(100deg, rgba(255,255,255,.3), rgba(255,255,255,.04) 45%, rgba(0,0,0,.05));
+  clip-path:polygon(6% 0, 94% 0, 88% 100%, 12% 100%);
+}
+.copo .liquido{transition:height .1s linear}
+.copo .marcas .t{background:rgba(20,26,18,.45)}
+.copo .marcas .t b{right:20px; font-size:9px}
+.balanca{width:142px; display:flex; flex-direction:column; align-items:center}
+.prato{width:132px; height:12px; background:linear-gradient(180deg,var(--metal),var(--metal-2)); border-radius:3px; position:relative; z-index:2}
+.monte{width:0px; height:0px; background:var(--cor-po,#B9843C); border-radius:50% 50% 8% 8%; margin:0 auto -1px;
+  transition:width .12s linear, height .12s linear; box-shadow:inset -6px -3px 0 rgba(0,0,0,.14)}
+.corpo-balanca{width:142px; background:linear-gradient(180deg,var(--surface),var(--surface-2)); border:1px solid var(--line-forte); border-top:0;
+  border-radius:0 0 6px 6px; padding:9px 10px 10px; box-shadow:var(--sombra)}
+.visor-balanca{background:#20291C; border-radius:3px; padding:5px 8px; text-align:right; font-family:"IBM Plex Mono",monospace;
+  font-size:19px; font-weight:600; color:#9FE07A; border:1px solid #0E140B}
+
+.segurar{
+  width:100%; background:var(--amarelo); color:#231C00; border:0; border-bottom:3px solid rgba(0,0,0,.3); border-radius:3px;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.07em; font-size:15px;
+  padding:10px 12px; cursor:pointer; touch-action:none; user-select:none;
+}
+.segurar:active,.segurar.ativa{background:#F5C63C; border-bottom-width:1px; transform:translateY(2px)}
+.segurar[disabled]{opacity:.45; cursor:not-allowed}
+.acoes-medidor{display:flex; gap:7px; width:100%}
+.acoes-medidor .btn{flex:1; padding:8px 6px; font-size:13.5px; text-align:center}
+
+/* painel direito */
+.painel{display:grid; gap:14px; align-content:start}
+.etapas{list-style:none; margin:0; padding:0; counter-reset:e}
+.etapas li{display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-bottom:1px dashed var(--line); font-size:14px; color:var(--ink-3)}
+.etapas li .cx{width:19px; height:19px; flex:none; border:1.5px solid var(--line-forte); border-radius:2px; display:grid; place-items:center;
+  font-size:12px; font-family:"Barlow Condensed",sans-serif; font-weight:700; margin-top:1px}
+.etapas li.on{color:var(--ink); font-weight:600}
+.etapas li.on .cx{border-color:var(--azul); background:var(--azul); color:#fff}
+.etapas li.fim{color:var(--ink-2)}
+.etapas li.fim .cx{border-color:var(--verde); background:var(--verde); color:#fff}
+.ref{background:var(--papel); color:var(--papel-ink); border:1px solid var(--papel-borda); padding:12px 14px; box-shadow:var(--sombra)}
+.ref h3{margin:0 0 8px; font-size:15px; text-transform:uppercase; letter-spacing:.09em; border-bottom:1.5px solid rgba(43,67,86,.4); padding-bottom:5px}
+.ref .l{display:flex; justify-content:space-between; gap:10px; padding:4px 0; font-size:13.5px; border-bottom:1px solid var(--papel-linha)}
+.ref .l:last-child{border:0}
+.ref .l b{font-family:"Caveat",cursive; font-size:20px; font-weight:600; white-space:nowrap}
+.ref .l.feito{opacity:.5; text-decoration:line-through}
+
+/* ---------- final ---------- */
+.final{text-align:center; padding:40px 24px 34px; position:relative; overflow:hidden}
+.final h1{font-size:40px; margin:14px 0 6px; line-height:1; text-wrap:balance}
+.final .sub{color:var(--ink-2); max-width:52ch; margin:0 auto 22px; font-size:16.5px}
+.selo{width:88px; height:88px; margin:0 auto; border-radius:50%; background:var(--verde); display:grid; place-items:center; box-shadow:0 0 0 6px color-mix(in srgb,var(--verde) 22%, transparent)}
+.resumo{display:grid; grid-template-columns:repeat(auto-fit,minmax(122px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); max-width:640px; margin:0 auto 24px}
+.resumo div{background:var(--surface); padding:12px 10px}
+.resumo dt{font-size:10px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3); font-weight:600; margin-bottom:2px}
+.resumo dd{margin:0; font-family:"IBM Plex Mono",monospace; font-size:18px; font-weight:600}
+
+/* ---------- utilitários ---------- */
+[hidden]{display:none!important}
+.aviso-linha{font-size:13.5px; color:var(--vermelho); font-weight:500; margin:6px 0 0}
+.rodape{margin-top:26px; padding-top:14px; border-top:1px solid var(--line); color:var(--ink-3); font-size:12.5px; display:flex; gap:14px; flex-wrap:wrap; justify-content:space-between}
+
+@media (max-width:1040px){
+  .mesa{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .mesa > :nth-child(1){grid-column:1; grid-row:1 / span 2}
+  .mesa > :nth-child(2){grid-column:2; grid-row:1}
+  .mesa > :nth-child(3){grid-column:2; grid-row:2}
+}
+@media (max-width:980px){
+  .bancada{grid-template-columns:1fr 1fr}
+  .prateleira{grid-column:1/-1}
+  #frascos{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+}
+@media (max-width:760px){
+  .mesa,.bancada{grid-template-columns:1fr}
+  .mesa > *{grid-column:auto; grid-row:auto}
+  .calc{position:static}
+  .cena-in{flex-direction:column; align-items:center}
+  .op-mesa{width:64px}
+  #opBancada{width:140px}
+  .briefing h1{font-size:25px}
+  .final h1{font-size:31px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important}
+}
+
+/* ===== portaria de acesso ===== */
+html.travado body > *:not(#portaria){display:none!important}
+#portaria{position:fixed; inset:0; z-index:9999; display:grid; place-items:center; padding:20px;
+  background:#1B2018; background-image:radial-gradient(circle at 50% 8%, rgba(224,168,0,.14), transparent 55%);
+  font-family:"Barlow",system-ui,sans-serif; color:#ECF1E4}
+#portaria .caixa{width:100%; max-width:430px; background:#232A20; border:1px solid #39422E; border-radius:5px; padding:26px}
+#portaria .selo{font-family:"Barlow Condensed",sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#8B9681}
+#portaria h2{font-family:"Barlow Condensed",sans-serif; font-size:30px; margin:4px 0 6px; line-height:1.05; color:#ECF1E4}
+#portaria p{margin:0 0 18px; font-size:14.5px; color:#A7B49E; line-height:1.45}
+#portaria label{display:block; font-size:12.5px; color:#A7B49E; margin-bottom:5px}
+#portaria input{width:100%; box-sizing:border-box; background:#1A2017; border:1.5px solid #39422E; color:#ECF1E4;
+  border-radius:3px; padding:12px 13px; font:inherit; font-size:17px; letter-spacing:.04em}
+#portaria input:focus{outline:2px solid #E0A800; outline-offset:1px}
+#portaria button{width:100%; margin-top:12px; background:#4F7A3C; color:#0B1109; border:0; border-radius:3px; padding:13px;
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.09em; font-size:17px; cursor:pointer}
+#portaria button:disabled{opacity:.5; cursor:wait}
+#portaria .erro{color:#E4664A; font-size:13.5px; margin:10px 0 0; min-height:19px}
+#portaria .rodape{margin-top:18px; padding-top:14px; border-top:1px solid #39422E; font-size:11.5px; color:#7E8873}
+#portaria .chave{width:54px; height:54px; margin-bottom:12px}
+</style>
+</head>
+<body>
+<div id="portaria">
+  <div class="caixa">
+    <svg class="chave" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="17" cy="17" r="11" fill="none" stroke="#E0A800" stroke-width="4"/>
+      <path d="M25 25 L41 41 M35 35 l5 -5 M30 30 l4 -4" stroke="#E0A800" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
+    <p class="selo">XGuri · Treinamento de campo</p>
+    <h2>Simulador de preparo de calda</h2>
+    <p>Este material é liberado por senha. Use a senha que o instrutor passou para a sua turma.</p>
+    <label for="portaSenha">Senha de acesso</label>
+    <input id="portaSenha" type="password" autocomplete="current-password" placeholder="••••••••" autofocus>
+    <button id="portaBtn">Entrar</button>
+    <p class="erro" id="portaErro"></p>
+    <p class="rodape">Se você não tem a senha, fale com o instrutor responsável pelo curso.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var ACESSO = {
+    iter: 200000,
+    chaves: [
+      {nome: "Senha geral", sal: "4b7a8dbbef93f0ee96ee67a26643355e",
+       hash: "dfadde86a724aead7438dd73e4b7068280499fe9200ea5dac3f4eea49a886d33"}
+    ]
+  };
+  var LEMBRAR = "xguri_acesso_v1";
+  var raiz = document.documentElement;
+  raiz.classList.add("travado");
+
+  function liberar(nome){
+    try{ localStorage.setItem(LEMBRAR, nome); }catch(e){}
+    raiz.classList.remove("travado");
+    var p = document.getElementById("portaria");
+    if(p) p.remove();
+    window.dispatchEvent(new Event("acesso-liberado"));
+  }
+  try{ if(localStorage.getItem(LEMBRAR)) { liberar(localStorage.getItem(LEMBRAR)); return; } }catch(e){}
+
+  function hex(buf){
+    return Array.prototype.map.call(new Uint8Array(buf), function(b){
+      return ("0" + b.toString(16)).slice(-2); }).join("");
+  }
+  function bytes(h){
+    var a = new Uint8Array(h.length/2);
+    for(var i=0;i<a.length;i++) a[i] = parseInt(h.substr(i*2,2),16);
+    return a;
+  }
+  async function conferir(senha){
+    var enc = new TextEncoder();
+    var base = await crypto.subtle.importKey("raw", enc.encode(senha), "PBKDF2", false, ["deriveBits"]);
+    for(var i=0;i<ACESSO.chaves.length;i++){
+      var k = ACESSO.chaves[i];
+      var bits = await crypto.subtle.deriveBits(
+        {name:"PBKDF2", salt:bytes(k.sal), iterations:ACESSO.iter, hash:"SHA-256"}, base, 256);
+      if(hex(bits) === k.hash) return k.nome;
+    }
+    return null;
+  }
+
+  var btn = document.getElementById("portaBtn");
+  var campo = document.getElementById("portaSenha");
+  var erro = document.getElementById("portaErro");
+  var tentando = false;
+
+  async function tentar(){
+    if(tentando) return;
+    var s = campo.value.trim();
+    if(!s){ erro.textContent = "Digite a senha."; return; }
+    tentando = true; btn.disabled = true; btn.textContent = "Conferindo…"; erro.textContent = "";
+    try{
+      var nome = await conferir(s);
+      if(nome){ liberar(nome); return; }
+      erro.textContent = "Senha incorreta.";
+    }catch(e){
+      erro.textContent = "Não consegui conferir a senha neste navegador.";
+    }
+    tentando = false; btn.disabled = false; btn.textContent = "Entrar"; campo.select();
+  }
+  btn.addEventListener("click", tentar);
+  campo.addEventListener("keydown", function(e){ if(e.key === "Enter") tentar(); });
+})();
+</script>
+
+
+<header class="topo">
+  <div class="topo-in">
+    <div class="marca"><span>XGuri · Treinamento de campo</span><b>Bancada da Calda</b></div>
+    <nav class="trilha" aria-label="Etapas">
+      <b id="tr0" data-fase="vespera" role="button" tabindex="0" title="Ir para a véspera"><i>01</i>Véspera</b>
+      <b id="trB" data-fase="barracao" role="button" tabindex="0" title="Ir para o barracão"><i>02</i>Barracão</b>
+      <b id="trE" data-fase="estrutura" role="button" tabindex="0" title="Ir para a montagem"><i>03</i>Estrutura</b>
+      <b id="trP" data-fase="epi" role="button" tabindex="0" title="Ir para a paramentação"><i>04</i>EPI</b>
+      <b id="tr1" data-fase="calculos" role="button" tabindex="0" title="Ir para a calda"><i>05</i>Calda</b>
+      <b id="tr2" data-fase="preparo" role="button" tabindex="0" title="Ir para o preparo"><i>06</i>Preparo</b>
+      <b id="tr3" data-fase="fim" role="button" tabindex="0" title="Ir para a conclusão"><i>07</i>Conclusão</b>
+    </nav>
+    <div class="chip-prova" id="chipProva" hidden><span>Prova</span><b id="chipNota">100 pts</b><b id="chipTempo">00:00</b></div>
+    <button class="tema" id="btnReiniciar" title="Recomeçar do início" aria-label="Recomeçar do início">↺</button>
+    <button class="tema" id="btnTema" title="Alternar claro/escuro" aria-label="Alternar tema claro ou escuro">◐</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="operador" id="operador">
+    <div class="op-corpo op-mesa" id="opMesa"></div>
+    <div class="balao"><span class="quem">Paula Veiga · instrutora</span><p id="fala">Bom dia, sou a Paula Veiga, sua instrutora. Chegou receituário novo — vamos conferir juntos antes de o auxiliar encostar em qualquer produto.</p></div>
+  </div>
+
+  <!-- ====================== TELA INICIAL ====================== -->
+  <section id="inicio">
+    <div class="cartao briefing">
+      <p class="eyebrow">Treinamento de preparo de calda</p>
+      <h1>Antes de começar, quem é o preparador?</h1>
+      <p>O nome vai no crachá do auxiliar que trabalha na bancada e no boletim ao final. A instrutora Paula Veiga acompanha o exercício inteiro: ela explica, aponta o erro e avalia.</p>
+      <div class="campo-nome">
+        <label for="inNome">Nome do preparador de calda</label>
+        <input id="inNome" maxlength="32" placeholder="como você quer ser chamado" autocomplete="off">
+      </div>
+      <div class="cat-bloco">
+        <h3>Acompanhamento de operações com drone pulverizador</h3>
+        <p>Planejamento da véspera, água, combustível e apoio ao piloto em campo.</p>
+        <div class="niveis" id="catGeral" role="group" aria-label="Conhecimento em operações com drone">
+          <button class="niv on" data-n="iniciante"><b>Iniciante</b><small>O sistema mostra as fórmulas e explica cada conta</small></button>
+          <button class="niv" data-n="intermediario"><b>Intermediário</b><small>Fórmulas na mão, o sistema só aponta a linha errada</small></button>
+          <button class="niv" data-n="avancado"><b>Avançado</b><small>Sem fórmulas e sem dica — só o que o piloto informou</small></button>
+        </div>
+      </div>
+      <div class="cat-bloco">
+        <h3>Preparo de calda</h3>
+        <p>Receituário, ordem de mistura, dosagem no copo e na balança.</p>
+        <div class="niveis" id="catCalda" role="group" aria-label="Conhecimento em preparo de calda">
+          <button class="niv on" data-n="iniciante"><b>Iniciante</b><small>Fórmulas no receituário, ordem numerada nos frascos, erro explicado</small></button>
+          <button class="niv" data-n="intermediario"><b>Intermediário</b><small>Frascos sem numeração — a ordem de mistura é você que sabe</small></button>
+          <button class="niv" data-n="avancado"><b>Avançado</b><small>5 produtos, sem fórmulas, sem marca de nível no tanque</small></button>
+        </div>
+      </div>
+      <div class="switch-prova" id="switchProva" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="cx">✓</span>
+        <span><b>Modo prova</b><small>Sem dica nenhuma, nota de 0 a 100 com descontos por erro, cronômetro no cabeçalho e boletim assinado pela instrutora no fim. Aprovado a partir de 70.</small></span>
+      </div>
+      <p class="dica" id="dicaNome" hidden></p>
+      <div style="margin-top:18px"><button class="btn grande" id="btnComecar">Entrar na bancada</button></div>
+    </div>
+  </section>
+
+  <!-- ====================== VÉSPERA ====================== -->
+  <section id="vespera" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Um dia antes da operação</p>
+      <h1>Planejar o que vai no caminhão</h1>
+      <p>O produtor mandou a foto do receituário e o piloto passou os rendimentos do equipamento. Nada disso se resolve na lavoura: água que falta é viagem perdida, combustível que falta é operação parada. Feche as contas hoje.</p>
+    </div>
+    <div class="mesa">
+      <div>
+        <div style="position:relative">
+          <span class="selo-foto" id="seloFoto">FOTO · ONTEM 18:42</span>
+          <article class="receita foto" id="receitaFoto"></article>
+        </div>
+      </div>
+      <div class="coluna-dir">
+        <div class="recado">
+          <div class="recado-topo"><span class="avatar-piloto">P</span><b>Piloto</b><span>ontem · 19:05</span></div>
+          <div class="recado-msg" id="msgPiloto"></div>
+          <dl class="dados-piloto" id="dadosPiloto"></dl>
+        </div>
+        <article class="bloco">
+          <div class="bloco-topo"><h2>Planejamento da véspera</h2><span>o que carregar</span></div>
+          <div class="bloco-corpo"><div id="linhasPlano"></div><p class="dica" id="dicaPlano" hidden></p></div>
+          <div class="acoes">
+            <button class="btn" id="btnConferirPlano">Conferir o planejamento</button>
+            <button class="btn verde" id="btnIrOperacao" hidden>Dia da operação →</button>
+          </div>
+        </article>
+      </div>
+      <div id="slotCalcVespera"></div>
+    </div>
+  </section>
+
+  <!-- ====================== BARRACÃO ====================== -->
+  <section id="barracao" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Dia da operação · barracão do produtor</p>
+      <h1>Retirar os produtos com o produtor</h1>
+      <p>O produtor abriu o barracão e está esperando ao lado. Retire o que a operação vai consumir na área do receituário — o piloto ainda está mapeando, então a conta aqui é pelos hectares autorizados, não pela área do voo. Embalagem grande aberta à toa vira sobra sem destino: leve o menor volume que cobre a necessidade.</p>
+    </div>
+    <div class="grade-barracao" id="gradeBarracao"></div>
+    <div class="cartao ficha" id="fichaRetirada"></div>
+    <div style="margin-top:18px"><button class="btn grande verde" id="btnIrCalda" hidden>Seguir para o pátio de operação →</button></div>
+  </section>
+
+  <!-- ====================== ESTRUTURA ====================== -->
+  <section id="estrutura" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Dia da operação · pátio ao lado da lavoura</p>
+      <h1>Montar e testar a estrutura</h1>
+      <p id="textoEstrutura">O piloto foi mapear e deixou o pátio com você. Clique em cada equipamento para trabalhar nele. Equipamento que falha no meio da operação custa hora de voo — é agora que se descobre o problema, não depois.</p>
+    </div>
+    <div class="grade-estrutura">
+      <div class="patio" id="patio"></div>
+      <div class="painel-eq">
+        <div class="cartao" id="painelEq"></div>
+        <div class="cartao" style="padding:14px 16px">
+          <p class="eyebrow">Antes de preparar a calda</p>
+          <ul class="check-est" id="checkEst"></ul>
+          <button class="btn verde" id="btnIrCaldaEst" style="margin-top:12px; width:100%" disabled>Estrutura pronta — vestir o EPI</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== EPI ====================== -->
+  <section id="epi" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Dia da operação · antes de abrir qualquer embalagem</p>
+      <h1>Vestir o EPI, na ordem</h1>
+      <p>Uso obrigatório por lei na aplicação de defensivos. E a ordem não é capricho: item colocado fora de sequência sobrepõe o outro errado e cria ponto de acúmulo de produto na roupa. Vista peça por peça — todas com CA.</p>
+    </div>
+    <div class="grade-epi">
+      <div class="vestiario">
+        <div class="op-corpo" id="bonecoEpi"></div>
+        <span class="legenda" id="legendaEpi">Sem proteção nenhuma</span>
+      </div>
+      <div style="display:grid; gap:14px">
+        <div class="cabide" id="cabide"></div>
+        <div class="cartao" style="padding:14px 16px">
+          <p class="eyebrow">Sequência de paramentação</p>
+          <ol class="ordem-lista" id="ordemEpi"></ol>
+          <p class="aviso-linha" id="avEpi" hidden></p>
+          <button class="btn verde" id="btnIrCaldaEpi" style="margin-top:12px; width:100%" disabled>Paramentado — ir para a calda</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== ATO 1 ====================== -->
+  <section id="calculos" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Ordem de serviço</p>
+      <h1>Preparar a calda para o voo de hoje</h1>
+      <p>Quem põe a mão na calda é o <b>auxiliar do piloto</b>, lá na bancada: é ele que puxa a água, vira cada produto no copo, despeja no misturador e agita. Você comanda o que ele faz — e a instrutora <b>Paula Veiga</b> acompanha, aponta o erro e assina o boletim no fim. O piloto informa quantos hectares vão ser voados, nunca mais do que o receituário autoriza; a partir daí é conta no bloco antes de encostar em qualquer produto.</p>
+      <dl>
+        <div><dt>Misturador</dt><dd id="bCap">200 L</dd></div>
+        <div><dt>Equipamento</dt><dd>Drone pulverizador</dd></div>
+        <div><dt>Copo medidor</dt><dd>2.000 mL</dd></div>
+        <div><dt>Balança</dt><dd>3.000 g</dd></div>
+        <div><dt>Instrutora</dt><dd>Paula Veiga</dd></div>
+        <div><dt>Preparador</dt><dd id="bQuem">—</dd></div>
+        <div><dt>Nível</dt><dd id="bNivel">Aprendiz</dd></div>
+        <div><dt>EPI</dt><dd>Em uso</dd></div>
+      </dl>
+    </div>
+
+    <div class="mesa">
+      <article class="receita" id="receita"></article>
+
+      <div class="coluna-dir">
+        <article class="bloco">
+          <div class="bloco-topo"><h2>Bloco de cálculos</h2><span id="dataBloco"></span></div>
+          <div class="bloco-corpo">
+            <div class="area-passo">
+              <div class="linha" style="flex:1; border:0; padding-bottom:0">
+                <label class="rot" for="inArea"><b>Área que o piloto vai voar</b><i>máx. <span id="areaMax">—</span> ha</i></label>
+                <input id="inArea" inputmode="decimal" placeholder="0,0" autocomplete="off">
+                <span class="un">ha</span><span class="sinal"></span>
+              </div>
+              <button class="btn" id="btnArea">Confirmar área</button>
+            </div>
+            <p class="dica" id="dicaArea" hidden></p>
+            <p class="base-calc" id="baseCalc" hidden></p>
+
+            <div id="linhasCalc" hidden>
+              <div class="linha" data-campo="total">
+                <span class="marca-cor" style="background:var(--agua)"></span>
+                <label class="rot" for="inTotal"><b>Volume total de calda</b><i>área × volume de calda por ha</i></label>
+                <input id="inTotal" inputmode="decimal" placeholder="0,0" autocomplete="off"><span class="un">L</span><span class="sinal"></span>
+              </div>
+              <div class="linha" data-campo="agua">
+                <span class="marca-cor" style="background:var(--azul-2)"></span>
+                <label class="rot" for="inAgua"><b>Água inicial — 50% do tanque</b><i>metade do volume de calda</i></label>
+                <input id="inAgua" inputmode="decimal" placeholder="0,0" autocomplete="off"><span class="un">L</span><span class="sinal"></span>
+              </div>
+              <div id="linhasProd"></div>
+              <p class="dica" id="dicaCalc" hidden></p>
+            </div>
+          </div>
+          <div class="acoes" id="acoesBloco" hidden>
+            <button class="btn" id="btnConferir">Conferir cálculos</button>
+            <button class="btn verde" id="btnIrPreparo" hidden>Ir para o preparo →</button>
+          </div>
+        </article>
+
+        <div class="calc" id="calculadora">
+          <div class="calc-topo"><span>Calculadora de bancada</span><div class="solar"></div></div>
+          <div class="visor"><div class="fila" id="calcFila">&nbsp;</div><div class="num" id="calcNum">0</div></div>
+          <div class="teclas" id="teclas">
+            <button class="ac" data-k="AC">AC</button><button class="ac" data-k="←">←</button>
+            <button class="op" data-k="%">%</button><button class="op" data-k="÷">÷</button>
+            <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="op" data-k="×">×</button>
+            <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button class="op" data-k="−">−</button>
+            <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button class="op" data-k="+">+</button>
+            <button data-k="0" style="grid-column:span 2">0</button><button data-k=",">,</button><button class="ig" data-k="=">=</button>
+          </div>
+        </div>
+      </div>
+      <div id="slotCalcCalda"></div>
+    </div>
+  </section>
+
+  <!-- ====================== ATO 2 ====================== -->
+  <section id="preparo" hidden>
+    <div class="bancada">
+      <div class="prateleira">
+        <p class="eyebrow">Prateleira</p>
+        <div id="frascos"></div>
+      </div>
+
+      <div class="cena" id="cena">
+        <div class="cena-in">
+          <div class="op-cena"><div class="op-corpo" id="opBancada"></div></div>
+          <div class="tanque" id="tanque">
+            <div class="agitador-topo"><div class="motor"></div><div class="luz"></div></div>
+            <div class="vidro" id="vidro">
+              <div class="liquido" id="liqTanque"></div>
+              <div class="jorro" id="jorroTanque"></div>
+              <div class="marcas" id="marcasTanque"></div>
+              <div class="alvo" id="alvoTanque" hidden><b id="alvoTanqueTxt"></b></div>
+              <div class="rotulo-tanque"><b>Misturador</b><i id="rotCap">200 L</i></div>
+            </div>
+            <div class="leitura" id="leituraTanque">0,0 <span>L</span></div>
+          </div>
+
+          <div class="medidor" id="medidor" hidden>
+            <div id="modCopo" hidden>
+              <div class="copo" id="copo">
+                <div class="liquido" id="liqCopo"></div>
+                <div class="jorro" id="jorroCopo"></div>
+                <div class="marcas" id="marcasCopo"></div>
+              </div>
+              <div class="leitura" id="leituraCopo">0 <span>mL</span></div>
+            </div>
+            <div id="modBalanca" hidden>
+              <div class="balanca">
+                <div class="monte" id="monte"></div>
+                <div class="prato"></div>
+                <div class="corpo-balanca"><div class="visor-balanca" id="visorBalanca">0 g</div></div>
+              </div>
+            </div>
+            <button class="segurar" id="btnVirar">Segure para virar</button>
+            <div class="acoes-medidor">
+              <button class="btn" id="btnDespejar">Despejar no misturador</button>
+              <button class="btn sec" id="btnLimparCopo">Devolver</button>
+            </div>
+            <p class="aviso-linha" id="avisoMedidor" hidden></p>
+          </div>
+        </div>
+
+        <div id="painelAgua" style="max-width:300px; margin:16px auto 0">
+          <button class="segurar" id="btnTorneira">Segure para abrir a torneira</button>
+          <div class="acoes-medidor" style="margin-top:8px">
+            <button class="btn" id="btnConfNivel">Confirmar nível</button>
+            <button class="btn sec" id="btnEsvaziar">Esvaziar</button>
+          </div>
+          <p class="aviso-linha" id="avisoAgua" hidden></p>
+        </div>
+
+        <div id="painelAgitar" style="max-width:300px; margin:16px auto 0" hidden>
+          <button class="btn grande" id="btnAgitar" style="width:100%">Ligar o agitador</button>
+          <p class="aviso-linha" id="avisoAgitar" hidden style="color:var(--ink-3)"></p>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="cartao" style="padding:14px 16px">
+          <p class="eyebrow">Sequência de preparo</p>
+          <ul class="etapas" id="listaEtapas"></ul>
+        </div>
+        <div class="ref" id="refValores"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== ATO 3 ====================== -->
+  <section id="fim" hidden>
+    <div class="cartao final">
+      <div class="selo">
+        <svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><path d="M12 25 l8 8 l17-19" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="eyebrow" style="margin-top:14px">Preparo encerrado</p>
+      <h1 id="fimTitulo">Parabéns — calda pronta e aplicação concluída com sucesso</h1>
+      <p class="sub" id="fimTexto"></p>
+      <div class="boletim" id="boletim" hidden></div>
+      <dl class="resumo" id="fimResumo"></dl>
+      <button class="btn grande verde" id="btnNovo">Novo receituário</button>
+    </div>
+  </section>
+
+  <div class="cartao" style="margin-top:22px; padding:16px 18px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; border-left:4px solid var(--verde)">
+    <div style="flex:1; min-width:240px">
+      <p class="eyebrow" style="margin-bottom:2px">Para dar aula</p>
+      <b style="font-family:'Barlow Condensed',sans-serif; font-size:21px; display:block; line-height:1.05">Tira-dúvida ao vivo, turma inteira junto</b>
+      <span style="font-size:13.5px; color:var(--ink-2)">Quiz de perguntas e respostas no estilo Kahoot: você abre a sala e projeta o código, a turma entra pelo celular e o placar sobe a cada acerto.</span>
+    </div>
+    <a class="btn" href="https://claude.ai/artifact/6K5hxUFSU7z3eMpr3maefu" target="_blank" rel="noopener"
+       style="text-decoration:none; display:inline-block">Abrir o tira-dúvida</a>
+  </div>
+
+  <p class="rodape">
+    <span>Simulador de treinamento. Produtos genéricos por categoria — na lavoura, siga sempre o receituário e a bula.</span>
+    <span>XGuri · Treinamento de campo</span>
+  </p>
+</div>
+
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const $ = s => document.querySelector(s);
+const fmt = (n, d = 1) => Number(n).toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmt0 = n => Math.round(n).toLocaleString('pt-BR');
+function parseBR(s){
+  if(s == null) return NaN;
+  let t = String(s).trim().replace(/\s/g,'');
+  if(t === '') return NaN;
+  if(t.includes(',')) t = t.replace(/\./g,'').replace(',', '.');
+  return parseFloat(t);
+}
+const sorteio = arr => arr[Math.floor(Math.random()*arr.length)];
+const passo = (min, max, p) => { const n = Math.round((min + Math.random()*(max-min))/p)*p; return Math.round(n*1000)/1000; };
+
+/* ============ o operador ============ */
+const SVG_AUX = `
+<svg viewBox="0 0 132 156" aria-hidden="true">
+  <ellipse cx="62" cy="150" rx="35" ry="5" fill="rgba(0,0,0,.14)"/>
+  <rect x="45" y="102" width="15" height="32" rx="6" fill="var(--epi)" stroke="var(--epi-linha)"/>
+  <rect x="64" y="102" width="15" height="32" rx="6" fill="var(--epi)" stroke="var(--epi-linha)"/>
+  <rect x="42" y="124" width="19" height="19" rx="4" fill="var(--bota)" stroke="#A8871F"/>
+  <rect x="63" y="124" width="19" height="19" rx="4" fill="var(--bota)" stroke="#A8871F"/>
+  <rect x="41" y="138" width="42" height="7" rx="3" fill="var(--bota-sola)"/>
+  <path d="M38 64 q0-15 13-19 h22 q13 4 13 19 v34 q0 9-9 9 H47 q-9 0-9-9z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.2"/>
+  <path d="M62 47 v60" stroke="var(--epi-linha)" stroke-width="1.5"/>
+  <rect x="44" y="78" width="21" height="14" rx="2" fill="none" stroke="var(--epi-linha)" stroke-width="1.2"/>
+  <rect x="66" y="70" width="17" height="9" rx="1.5" fill="#FBFBF6" stroke="var(--epi-linha)" stroke-width=".9"/>
+  <text id="crachaAux" x="74.5" y="76.7" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="5.4" font-weight="700" fill="#3A4136" letter-spacing=".2"></text>
+  <path d="M39 66 q-10 6-11 20 q-1 8 3 12" stroke="var(--epi)" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <circle cx="32" cy="101" r="7" fill="var(--luva)"/>
+  <g class="br-normal-d">
+    <path d="M85 66 q10 6 11 20 q1 8-3 12" stroke="var(--epi)" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="92" cy="101" r="7" fill="var(--luva)"/>
+  </g>
+  <g class="br-joia">
+    <path d="M85 66 q12 2 15-12 q1-6-1-10" stroke="var(--epi)" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="98" cy="41" r="7.5" fill="var(--luva)"/>
+    <rect x="95" y="28" width="6" height="12" rx="3" fill="var(--luva)"/>
+  </g>
+  <g class="br-alto">
+    <g class="item-mao">
+      <g class="it-frasco">
+        <rect x="102" y="36" width="17" height="34" rx="3" fill="var(--cor-item,#B9843C)" stroke="rgba(0,0,0,.35)"/>
+        <rect x="106" y="29" width="9" height="8" rx="1.5" fill="#3A4136"/>
+        <rect x="101" y="47" width="19" height="12" fill="rgba(255,255,255,.85)"/>
+        <rect x="104" y="50" width="13" height="2" fill="rgba(0,0,0,.45)"/>
+        <rect x="104" y="54" width="8" height="1.6" fill="rgba(0,0,0,.3)"/>
+      </g>
+      <g class="it-saco">
+        <path d="M100 40 q11-5 21 0 v28 a3 3 0 0 1-3 3 h-15 a3 3 0 0 1-3-3z" fill="var(--cor-item,#9A9384)" stroke="rgba(0,0,0,.35)"/>
+        <path d="M100 40 q11-5 21 0 q-11 4-21 0z" fill="rgba(0,0,0,.2)"/>
+        <rect x="102" y="50" width="17" height="11" fill="rgba(255,255,255,.85)"/>
+        <rect x="105" y="53" width="11" height="2" fill="rgba(0,0,0,.45)"/>
+      </g>
+      <g class="it-copo">
+        <path d="M101 40 h20 l-3 30 h-14z" fill="rgba(255,255,255,.5)" stroke="var(--metal-2)" stroke-width="1.6"/>
+        <path d="M103 52 h16 l-1.6 17 h-12.8z" fill="var(--cor-item,#7EA8C4)" opacity=".85"/>
+        <path d="M104 47 h14" stroke="rgba(20,26,18,.4)" stroke-width="1"/>
+        <path d="M104.6 56 h13" stroke="rgba(20,26,18,.4)" stroke-width="1"/>
+      </g>
+      <g class="it-mangueira">
+        <path d="M96 58 q-8 10-22 8" stroke="#3E4A3A" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <rect x="103" y="42" width="10" height="24" rx="3" fill="var(--metal-2)"/>
+        <rect x="105" y="62" width="6" height="10" rx="2" fill="var(--metal)"/>
+        <rect x="101" y="44" width="14" height="6" rx="2" fill="var(--metal)"/>
+      </g>
+    </g>
+    <path d="M85 66 q16 3 22-9" stroke="var(--epi)" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="110" cy="53" r="7.5" fill="var(--luva)"/>
+  </g>
+  <path d="M46 32 q0-18 16-18 q16 0 16 18 v10 q0 10-16 10 q-16 0-16-10z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.2"/>
+  <rect x="44" y="26" width="36" height="11" rx="4" fill="#2B3B49" opacity=".9"/>
+  <rect x="46" y="28" width="32" height="7" rx="3" fill="#8FC6E0" opacity=".85"/>
+  <rect x="50" y="28" width="7" height="7" rx="3" fill="#FFF" opacity=".55"/>
+  <path d="M50 40 h24 v7 q0 6-12 6 q-12 0-12-6z" fill="#C9CEBF" stroke="#A9B09C" stroke-width="1"/>
+  <circle cx="56" cy="45" r="3.4" fill="#8E9689"/><circle cx="68" cy="45" r="3.4" fill="#8E9689"/>
+  <rect x="43" y="54" width="38" height="8" rx="4" fill="var(--amarelo)"/>
+</svg>`;
+
+const SVG_PAULA = `
+<svg viewBox="0 0 132 156" aria-hidden="true">
+  <ellipse cx="62" cy="150" rx="30" ry="5" fill="rgba(0,0,0,.14)"/>
+  <rect x="47" y="98" width="14" height="36" rx="5" fill="#3B4557"/>
+  <rect x="63" y="98" width="14" height="36" rx="5" fill="#3B4557"/>
+  <rect x="44" y="130" width="19" height="13" rx="4" fill="#4A3B2E"/>
+  <rect x="62" y="130" width="19" height="13" rx="4" fill="#4A3B2E"/>
+  <path d="M42 64 q0-14 12-17 h16 q12 3 12 17 v30 q0 8-8 8 H50 q-8 0-8-8z" fill="#E7E9DF" stroke="#C2C7B6" stroke-width="1.1"/>
+  <path d="M42 66 q0-14 12-16 v45 q-6 0-8-3z" fill="var(--amarelo)"/>
+  <path d="M82 66 q0-14-12-16 v45 q6 0 8-3z" fill="var(--amarelo)"/>
+  <rect x="44" y="76" width="9" height="3" fill="rgba(255,255,255,.75)"/>
+  <rect x="71" y="76" width="9" height="3" fill="rgba(255,255,255,.75)"/>
+  <path d="M44 66 q-9 8-10 20 q-1 8 2 11" stroke="#E7E9DF" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <circle cx="36" cy="98" r="6" fill="var(--pele)"/>
+  <g class="br-normal-d">
+    <path d="M80 66 q10 8 8 18" stroke="#E7E9DF" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <circle cx="87" cy="88" r="6" fill="var(--pele)"/>
+    <g transform="rotate(-8 84 86)">
+      <rect x="66" y="74" width="26" height="30" rx="2" fill="#C8B78E" stroke="#9A8B67" stroke-width="1.2"/>
+      <rect x="69" y="78" width="20" height="22" fill="#FBFBF6"/>
+      <rect x="71" y="82" width="15" height="1.8" fill="#8E9689"/>
+      <rect x="71" y="87" width="15" height="1.8" fill="#8E9689"/>
+      <rect x="71" y="92" width="10" height="1.8" fill="#8E9689"/>
+      <rect x="73" y="71" width="12" height="5" rx="2" fill="#8E9689"/>
+    </g>
+  </g>
+  <g class="br-joia">
+    <path d="M80 66 q12 2 15-12 q1-6-1-10" stroke="#E7E9DF" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <circle cx="94" cy="41" r="6.5" fill="var(--pele)"/>
+    <rect x="91" y="29" width="5.5" height="11" rx="2.75" fill="var(--pele)"/>
+  </g>
+  <path d="M78 26 q10 4 9 16 q-1 10-9 12z" fill="#3A2A22"/>
+  <path d="M85 40 q9 3 8 13 q-1 7-7 9 q4-11-1-22z" fill="#3A2A22"/>
+  <path d="M48 34 q0-17 14-17 q14 0 14 17 v9 q0 10-14 10 q-14 0-14-10z" fill="var(--pele)"/>
+  <path d="M48 36 q0-19 14-19 q14 0 14 19 q-6-7-14-7 q-8 0-14 7z" fill="#3A2A22"/>
+  <path d="M46 30 q1-14 16-14 q15 0 16 14 q-16-6-32 0z" fill="var(--azul)"/>
+  <path d="M44 29 q-6 1-7 5 q10 3 20 1z" fill="var(--azul)" opacity=".85"/>
+  <circle cx="56" cy="40" r="1.9" fill="#2C2119"/><circle cx="68" cy="40" r="1.9" fill="#2C2119"/>
+  <path d="M58 46 q4 3 8 0" stroke="#2C2119" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <rect x="50" y="53" width="24" height="7" rx="3.5" fill="#D8DCCF"/>
+</svg>`;
+
+function pose(nome, cor){
+  const el = document.getElementById('opBancada');
+  if(!el) return;
+  el.className = 'op-corpo' + (nome ? ' segurando pose-' + nome : '');
+  if(cor) el.style.setProperty('--cor-item', cor);
+}
+function virando(lig){
+  const el = document.getElementById('opBancada');
+  if(el) el.classList.toggle('virando', lig);
+}
+
+/* ============ níveis ============ */
+const NIVEIS = {
+  iniciante:    {rot:'Iniciante',    produtos:4, formulas:true,  base:true,  ordemFrasco:true,  diag:'completo', marca:'completa', area:'redonda',  tolCalc:.01,  tolCopo:.03,  tolAgua:.02,  prova:false},
+  intermediario:{rot:'Intermediário',produtos:4, formulas:true,  base:false, ordemFrasco:false, diag:'curto',    marca:'linha',    area:'redonda',  tolCalc:.01,  tolCopo:.025, tolAgua:.015, prova:false},
+  avancado:     {rot:'Avançado',     produtos:5, formulas:false, base:false, ordemFrasco:false, diag:'minimo',   marca:'nenhuma',  area:'quebrada', tolCalc:.005, tolCopo:.02,  tolAgua:.012, prova:false}
+};
+const DUROS = {formulas:false, base:false, ordemFrasco:false, diag:'nenhum', marca:'nenhuma', tolCalc:.005, tolCopo:.02, tolAgua:.012, prova:true};
+let nivelId = 'iniciante', nivelGeralId = 'iniciante', MODO_PROVA = false;
+try{
+  const g = sessionStorage.getItem('nivelCalda'); if(g && NIVEIS[g]) nivelId = g;
+  const h = sessionStorage.getItem('nivelGeral'); if(h && NIVEIS[h]) nivelGeralId = h;
+}catch(e){}
+let NIV = NIVEIS[nivelId], NIVG = NIVEIS[nivelGeralId];
+function aplicarProva(){
+  NIV  = MODO_PROVA ? {...NIVEIS[nivelId], ...DUROS} : NIVEIS[nivelId];
+  NIVG = MODO_PROVA ? {...NIVEIS[nivelGeralId], ...DUROS} : NIVEIS[nivelGeralId];
+}
+
+/* ============ tema ============ */
+const btnTema = $('#btnTema');
+btnTema.addEventListener('click', () => {
+  const atual = document.documentElement.getAttribute('data-theme');
+  const escuro = atual ? atual === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme', escuro ? 'light' : 'dark');
+});
+
+/* ============ receituário ============ */
+const MODELOS = [
+  {
+    cultura:'Soja', estadio:'R2 — pleno florescimento',
+    alvo:'Ferrugem-asiática e lagarta-da-soja',
+    extraIdx:2,
+    itens:[
+      {cat:'Fungicida', form:'WG', formNome:'Granulado dispersível', estado:'po',  base:'ha', min:.05, max:.11, p:.01, un:'kg/ha', dens:null, cor:'#B9843C'},
+      {cat:'Fungicida', form:'SC', formNome:'Suspensão concentrada', estado:'liq', base:'ha', min:.06, max:.11, p:.01, un:'kg/ha', dens:[1.12,1.24], cor:'#D8CDAE'},
+      {cat:'Inseticida',form:'SC', formNome:'Suspensão concentrada', estado:'liq', base:'ha', min:.05, max:.10, p:.01, un:'kg/ha', dens:[1.05,1.16], cor:'#A8B79A'},
+      {cat:'Inseticida',form:'EC', formNome:'Concentrado emulsionável', estado:'liq', base:'ha', min:.05, max:.09, p:.01, un:'L/ha', dens:null, cor:'#C9A227'},
+      {cat:'Adjuvante', form:'OM', formNome:'Óleo mineral', estado:'liq', base:'vol', min:.3, max:.6, p:.1, un:'% v/v', dens:null, cor:'#6E8B3D'}
+    ]
+  },
+  {
+    cultura:'Milho safrinha', estadio:'Pré-plantio — dessecação',
+    alvo:'Buva e capim-amargoso em pré-semeadura',
+    extraIdx:1,
+    itens:[
+      {cat:'Herbicida', form:'WG', formNome:'Granulado dispersível', estado:'po',  base:'ha', min:.04, max:.10, p:.01, un:'kg/ha', dens:null, cor:'#9A9384'},
+      {cat:'Herbicida', form:'SC', formNome:'Suspensão concentrada', estado:'liq', base:'ha', min:.05, max:.10, p:.01, un:'kg/ha', dens:[1.08,1.18], cor:'#BFC4A8'},
+      {cat:'Herbicida', form:'SL', formNome:'Concentrado solúvel', estado:'liq', base:'ha', min:.06, max:.12, p:.01, un:'kg/ha', dens:[1.28,1.38], cor:'#C7B77E'},
+      {cat:'Herbicida', form:'EC', formNome:'Concentrado emulsionável', estado:'liq', base:'ha', min:.05, max:.09, p:.01, un:'L/ha', dens:null, cor:'#B58B4C'},
+      {cat:'Adjuvante', form:'OM', formNome:'Óleo mineral / antideriva', estado:'liq', base:'vol', min:.4, max:.8, p:.1, un:'% v/v', dens:null, cor:'#6E8B3D'}
+    ]
+  }
+];
+const CAP = 200;            // capacidade do misturador (L)
+const COPO_MAX = 2000;      // mL
+const BAL_MAX = 3000;       // g
+
+let R = null, S = null;
+
+function gerarReceita(){
+  const m = sorteio(MODELOS);
+  const dificil = NIV.area === 'quebrada';
+  const taxa = dificil ? sorteio([9, 11, 12]) : sorteio([8, 10, 12]);
+  const areaRec = sorteio([12, 14, 15]) + (dificil ? .5 : 0);
+  const usados = NIV.produtos >= 5 ? m.itens : m.itens.filter((_, i) => i !== m.extraIdx);
+  const itens = usados.map((it, i) => ({
+    ...it, ordem:i+1,
+    dose: passo(it.min, it.max, it.p),
+    densidade: it.dens ? Math.round((it.dens[0] + Math.random()*(it.dens[1]-it.dens[0]))*100)/100 : null
+  }));
+  return {
+    numero: '2026/' + String(300 + Math.floor(Math.random()*690)),
+    cultura:m.cultura, estadio:m.estadio, alvo:m.alvo, taxa, areaRec, itens,
+    piloto:{
+      consumo: sorteio([1.2, 1.5, 1.8]),     // L/h do gerador
+      rendimento: sorteio([8, 10, 12]),      // ha/h do drone
+      enxagues: 3,                           // tríplice lavagem do misturador
+      pctEnxague: 10,                        // % da capacidade por enxágue
+      pctLimpeza: sorteio([20, 25, 30]),     // % do volume de calda para lavar o drone
+      folga: 20                              // % de folga no combustível
+    }
+  };
+}
+
+function esperados(area){
+  const total = area * R.taxa;
+  const agua1 = total / 2;
+  const qtds = R.itens.map(it => {
+    if(it.base === 'vol') return {v: total * 1000 * (it.dose/100), un:'mL'};
+    if(it.estado === 'po') return {v: it.dose * area * 1000, un:'g'};
+    if(it.un === 'kg/ha') return {v: it.dose * area * 1000 / it.densidade, un:'mL'};
+    return {v: it.dose * area * 1000, un:'mL'};
+  });
+  const litrosLiq = qtds.reduce((s,q,i) => s + (R.itens[i].estado === 'liq' ? q.v/1000 : 0), 0);
+  return {total, agua1, qtds, litrosLiq, complemento: total - agua1 - litrosLiq};
+}
+
+function planoEsperado(){
+  const pl = R.piloto;
+  const calda = R.areaRec * R.taxa;
+  const lavMist = CAP * (pl.pctEnxague/100) * pl.enxagues;
+  const lavDrone = calda * (pl.pctLimpeza/100);
+  const horas = R.areaRec / pl.rendimento;
+  return {
+    calda, lavMist, lavDrone,
+    aguaTotal: calda + lavMist + lavDrone,
+    horas,
+    combustivel: horas * pl.consumo * (1 + pl.folga/100)
+  };
+}
+
+const LINHAS_PLANO = [
+  {id:'calda',   rot:'Calda prevista para a área toda',  pista:'área do receituário × volume de calda por ha', un:'L', cor:'var(--calda)'},
+  {id:'lavMist', rot:'Água da tríplice lavagem do misturador', pista:'3 enxágues de 10% da capacidade do tanque', un:'L', cor:'var(--azul-2)'},
+  {id:'lavDrone',rot:'Água da pré-limpeza do drone',     pista:'percentual do volume de calda que o piloto pediu', un:'L', cor:'var(--agua)'},
+  {id:'aguaTotal',rot:'Água total a carregar',           pista:'soma das três linhas acima', un:'L', cor:'var(--azul)'},
+  {id:'horas',   rot:'Tempo previsto de operação',       pista:'área ÷ rendimento do drone', un:'h', cor:'var(--amarelo)'},
+  {id:'combustivel', rot:'Combustível do gerador',       pista:'horas × consumo, mais a folga que o piloto pediu', un:'L', cor:'var(--vermelho)'}
+];
+
+function renderVespera(){
+  const pl = R.piloto;
+  $('#msgPiloto').innerHTML = `Boa noite! Amanhã é na área do receituário que te mandei, <b>${fmt(R.areaRec,1)} ha</b>.
+    O gerador está gastando <b>${fmt(pl.consumo,1)} L/h</b> e eu rendo <b>${pl.rendimento} ha/h</b> nessa taxa.
+    Leva água para a tríplice lavagem do misturador (${pl.enxagues} enxágues de ${pl.pctEnxague}% do tanque) e mais <b>${pl.pctLimpeza}%</b> do volume de calda para a pré-limpeza do drone.
+    No combustível, sempre <b>${pl.folga}% de folga</b> — se der pane, não tem posto perto.
+    <span class="hora">19:05 ✓✓</span>`;
+  $('#dadosPiloto').innerHTML = `
+    <div><dt>Consumo do gerador</dt><dd>${fmt(pl.consumo,1)} L/h</dd></div>
+    <div><dt>Rendimento do drone</dt><dd>${pl.rendimento} ha/h</dd></div>
+    <div><dt>Misturador</dt><dd>${CAP} L</dd></div>
+    <div><dt>Limpeza do drone</dt><dd>${pl.pctLimpeza}%</dd></div>
+    <div><dt>Folga de combustível</dt><dd>${pl.folga}%</dd></div>`;
+  $('#linhasPlano').innerHTML = LINHAS_PLANO.map(l => `
+    <div class="linha" data-campo="${l.id}">
+      <span class="marca-cor" style="background:${l.cor}"></span>
+      <label class="rot" for="pl_${l.id}"><b>${l.rot}</b>${NIVG.formulas ? `<i>${l.pista}</i>` : ''}</label>
+      <input id="pl_${l.id}" inputmode="decimal" placeholder="0,0" autocomplete="off"><span class="un">${l.un}</span><span class="sinal"></span>
+    </div>`).join('');
+}
+
+$('#btnConferirPlano').addEventListener('click', () => {
+  const exp = planoEsperado();
+  const ruins = [];
+  LINHAS_PLANO.forEach(l => {
+    const el = $('#pl_' + l.id), linha = el.closest('.linha');
+    const v = parseBR(el.value), alvo = exp[l.id];
+    const tol = Math.max(alvo * NIVG.tolCalc, l.un === 'h' ? .05 : .5);
+    const ok = isFinite(v) && Math.abs(v - alvo) <= tol;
+    const mostra = ok || NIVG.diag !== 'nenhum';
+    linha.classList.toggle('ok', ok); linha.classList.toggle('err', !ok && mostra);
+    linha.querySelector('.sinal').textContent = ok ? '✓' : (mostra ? '✗' : '');
+    if(!ok) ruins.push({l, v, alvo});
+  });
+  const dica = $('#dicaPlano');
+  if(!ruins.length){
+    dica.hidden = true;
+    $('#btnConferirPlano').disabled = true;
+    $('#btnIrOperacao').hidden = false;
+    fala('Planejamento fechado. Amanhã é só carregar o que está no papel e ir para a lavoura.', 'ok');
+    return;
+  }
+  ruins.forEach(r => penalizarPlano('Planejamento — ' + r.l.rot));
+  const r = ruins[0], n = ruins.length;
+  const plural = n === 1 ? 'linha não fecha' : 'linhas não fecham';
+  if(NIVG.diag === 'completo')    dica.innerHTML = `${n} ${plural}. Comece por <b>“${r.l.rot}”</b>: ${r.l.pista} — o número está ${!isFinite(r.v) ? 'em branco' : (r.v > r.alvo ? 'alto' : 'baixo')}.`;
+  else if(NIVG.diag === 'curto')  dica.innerHTML = `${n} ${plural}. Revise <b>“${r.l.rot}”</b>.`;
+  else if(NIVG.diag === 'minimo') dica.innerHTML = `${n} ${plural} — estão marcadas com <b>✗</b>.`;
+  else                            dica.innerHTML = `${n} ${plural}. Refaça as contas.`;
+  dica.hidden = false;
+  fala('Ainda não fecha. Água ou combustível a menos significa operação parada no meio da lavoura.', 'erro');
+});
+
+function penalizarPlano(motivo){
+  if(!S) return;
+  S.erros++;
+  if(!MODO_PROVA) return;
+  if(S.penalizados.has(motivo)) return;
+  S.penalizados.add(motivo);
+  S.nota = Math.max(0, S.nota - 5);
+  S.descontos.push({motivo, pts:5});
+  atualizaChip();
+}
+
+$('#btnIrOperacao').addEventListener('click', () => {
+  $('#vespera').hidden = true; $('#barracao').hidden = false;
+  $('#tr0').classList.remove('on'); $('#tr0').classList.add('feito');
+  $('#trB').classList.add('on');
+  renderBarracao();
+  fala(guiada()
+    ? `Chegamos, e o produtor abriu o barracão. Comece pelo <b>${R.itens[0].cat} ${R.itens[0].form}</b>, o primeiro da lista: calcule quanto ele consome nos ${fmt(R.areaRec,1)} ha do receituário, escreva no campo e só então escolha as embalagens — sempre o menor volume que cobre a conta.`
+    : 'Chegamos. O receituário original está em mãos e o produtor abriu o barracão — retire o produto pelos hectares do receituário, que o piloto ainda está mapeando.');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+
+/* ============ aula guiada (nivel iniciante) ============ */
+let guia = null;
+
+function guiada(){ return NIVG.diag === 'completo' && !MODO_PROVA; }
+
+const LICOES = {
+  calda: e => `Vamos pela ordem, que é o jeito de não se perder. <b>Calda prevista</b>: o receituário cobre ${fmt(R.areaRec,1)} ha e manda ${R.taxa} L de calda por hectare. Multiplique um pelo outro na calculadora e escreva o resultado em litros.`,
+  lavMist: e => `<b>Tríplice lavagem do misturador</b>: são ${R.piloto.enxagues} enxágues, cada um com ${R.piloto.pctEnxague}% da capacidade do tanque. O tanque é de ${CAP} L, então cada enxágue leva ${fmt(CAP*R.piloto.pctEnxague/100,0)} L. Multiplique pelos ${R.piloto.enxagues} enxágues.`,
+  lavDrone: e => `<b>Pré-limpeza do drone</b>: o piloto pediu ${R.piloto.pctLimpeza}% do volume de calda. Pegue os ${fmt(e.calda,1)} L que você acabou de achar e tire ${R.piloto.pctLimpeza}% — na calculadora dá para fazer ${fmt(e.calda,1)} × ${R.piloto.pctLimpeza} e apertar a tecla %.`,
+  aguaTotal: e => `<b>Água total a carregar</b>: aqui é só somar as três linhas de cima — a calda, a lavagem do misturador e a limpeza do drone. Esse é o número que vai encher os reservatórios amanhã.`,
+  horas: e => `<b>Tempo de operação</b>: área dividida pelo rendimento. São ${fmt(R.areaRec,1)} ha e o piloto rende ${R.piloto.rendimento} ha por hora. O resultado sai em horas, com casa decimal mesmo.`,
+  combustivel: e => `<b>Combustível do gerador</b>: ele gasta ${fmt(R.piloto.consumo,1)} L por hora e a operação leva ${fmt(e.horas,1)} h. Multiplique os dois e acrescente os ${R.piloto.folga}% de folga que o piloto pediu — ou multiplique tudo por 1,${R.piloto.folga} de uma vez.`
+};
+
+const EMPURRAO = {
+  calda: 'Multiplique os hectares pelo volume por hectare.',
+  lavMist: 'Um enxágue de cada vez: 10% do tanque, vezes três.',
+  lavDrone: 'É percentual sobre a calda, não sobre a área.',
+  aguaTotal: 'Só somar as três linhas de cima.',
+  horas: 'Divisão: hectares ÷ hectares por hora.',
+  combustivel: 'Horas × consumo, depois a folga por cima.'
+};
+
+function iniciarGuiaPlano(){
+  if(!guiada()){ guia = null; return; }
+  guia = {i:0, exp:planoEsperado()};
+  document.querySelectorAll('#linhasPlano .linha').forEach(l => l.classList.add('travada'));
+  document.querySelectorAll('#linhasPlano input').forEach(inp => inp.disabled = true);
+  $('#btnConferirPlano').hidden = true;
+  passoPlano();
+}
+
+function passoPlano(){
+  const l = LINHAS_PLANO[guia.i];
+  const linha = document.querySelector('#linhasPlano .linha[data-campo="' + l.id + '"]');
+  const inp = document.getElementById('pl_' + l.id);
+  linha.classList.remove('travada');
+  linha.classList.add('ativa');
+  inp.disabled = false;
+  inp.focus();
+  fala(`<span class="passo-guia">PASSO ${guia.i+1}/${LINHAS_PLANO.length}</span>${LICOES[l.id](guia.exp)}`);
+}
+
+function conferirPasso(){
+  const l = LINHAS_PLANO[guia.i];
+  const inp = document.getElementById('pl_' + l.id);
+  const linha = inp.closest('.linha');
+  const alvo = guia.exp[l.id];
+  const v = parseBR(inp.value);
+  const tol = Math.max(alvo * NIVG.tolCalc, l.un === 'h' ? .05 : .5);
+  if(!isFinite(v) || Math.abs(v - alvo) > tol) return false;
+  linha.classList.remove('ativa');
+  linha.classList.add('ok');
+  linha.querySelector('.sinal').textContent = '✓';
+  inp.readOnly = true;
+  guia.i++;
+  if(guia.i >= LINHAS_PLANO.length){
+    $('#btnIrOperacao').hidden = false;
+    $('#dicaPlano').hidden = true;
+    fala('Planejamento fechado, e fechado do jeito certo: você sabe agora quanta água e quanto combustível sobem no caminhão. Amanhã é só carregar o que está no papel.', 'ok');
+    return true;
+  }
+  passoPlano();
+  return true;
+}
+
+function erroPasso(){
+  const l = LINHAS_PLANO[guia.i];
+  const inp = document.getElementById('pl_' + l.id);
+  if(!inp.value.trim()) return;
+  const v = parseBR(inp.value), alvo = guia.exp[l.id];
+  if(!isFinite(v)) return;
+  const dir = v > alvo ? 'passou do que dá' : 'ficou abaixo';
+  $('#dicaPlano').textContent = `Esse número ${dir}. ${EMPURRAO[l.id]}`;
+  $('#dicaPlano').hidden = false;
+}
+
+$('#linhasPlano').addEventListener('input', e => {
+  if(!guia || !e.target.matches('input')) return;
+  $('#dicaPlano').hidden = true;
+  if(conferirPasso()) return;
+});
+$('#linhasPlano').addEventListener('focusout', e => {
+  if(!guia || !e.target.matches('input')) return;
+  if(!conferirPasso()) erroPasso();
+});
+
+/* ============ barracao: retirada de produtos ============ */
+const EMB_LIQ = [1000, 5000, 10000, 20000];   // mL
+const EMB_PO  = [100, 1000, 15000];           // g
+let RET = null;
+
+function necessidade(i){
+  const it = R.itens[i], caldaRec = R.areaRec * R.taxa;
+  if(it.base === 'vol') return {v: caldaRec * 1000 * (it.dose/100), un:'mL'};
+  if(it.estado === 'po') return {v: it.dose * R.areaRec * 1000, un:'g'};
+  if(it.un === 'kg/ha')  return {v: it.dose * R.areaRec * 1000 / it.densidade, un:'mL'};
+  return {v: it.dose * R.areaRec * 1000, un:'mL'};
+}
+function melhorCombo(need, tam){
+  let best = null;
+  const max = tam.map(t => Math.ceil(need/t));
+  (function rec(i, tot, qtd){
+    if(tot >= need){
+      if(!best || tot < best.tot || (tot === best.tot && qtd < best.qtd)) best = {tot, qtd};
+      return;
+    }
+    if(i >= tam.length) return;
+    for(let c = 0; c <= max[i]; c++) rec(i+1, tot + c*tam[i], qtd + c);
+  })(0, 0, 0);
+  return best;
+}
+const rotuloEmb = (t, un) => un === 'g'
+  ? (t >= 1000 ? fmt0(t/1000) + ' kg' : t + ' g')
+  : (t >= 1000 ? fmt0(t/1000) + ' L' : t + ' mL');
+const svgEmb = (t, un, maxT) => {
+  const h = Math.round(20 + 22 * Math.pow(t/maxT, .34));
+  const w = Math.round(12 + 13 * Math.pow(t/maxT, .34));
+  return un === 'g'
+    ? `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="M1 ${h*.18} q${w/2-1} -${h*.12} ${w-2} 0 v${h*.72} a2 2 0 0 1 -2 2 H3 a2 2 0 0 1 -2 -2z" fill="#B9A57E" stroke="rgba(0,0,0,.35)"/><rect x="${w*.2}" y="${h*.42}" width="${w*.6}" height="${h*.26}" fill="rgba(255,255,255,.85)"/></svg>`
+    : `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><rect x="${w*.32}" y="1" width="${w*.36}" height="${h*.12}" fill="#3A4136"/><rect x="1" y="${h*.12}" width="${w-2}" height="${h*.85}" rx="3" fill="#7FA8C0" stroke="rgba(0,0,0,.35)"/><rect x="${w*.15}" y="${h*.45}" width="${w*.7}" height="${h*.28}" fill="rgba(255,255,255,.85)"/></svg>`;
+};
+
+function renderBarracao(){
+  RET = R.itens.map(it => ({cart:new Array((it.estado === 'po' ? EMB_PO : EMB_LIQ).length).fill(0), ok:false}));
+  $('#gradeBarracao').innerHTML = R.itens.map((it,i) => {
+    const nec = necessidade(i);
+    const tam = it.estado === 'po' ? EMB_PO : EMB_LIQ;
+    const maxT = tam[tam.length-1];
+    const dose = it.base === 'vol' ? `${fmt(it.dose,1)} % v/v` : `${fmt(it.dose,2)} ${it.un}`;
+    return `<article class="cartao item-barracao" data-i="${i}">
+      <header><b>${it.cat} ${it.form}</b><i>${dose} · ${fmt(R.areaRec,1)} ha${it.densidade ? ' · d ' + fmt(it.densidade,2) : ''}</i></header>
+      <div class="preciso">
+        <label for="bq${i}">Preciso retirar</label>
+        <input id="bq${i}" inputmode="decimal" placeholder="0" autocomplete="off"><span class="un">${nec.un}</span>
+      </div>
+      <div class="embalagens">
+        ${tam.map((t,k) => `<button class="emb" data-k="${k}" title="Pegar ${rotuloEmb(t, nec.un)}">${svgEmb(t, nec.un, maxT)}<b>${rotuloEmb(t, nec.un)}</b><span class="conta" hidden>0</span></button>`).join('')}
+      </div>
+      <div class="carrinho" id="car${i}"><span>Nada retirado ainda.</span></div>
+      <button class="btn" data-conf="${i}">Confirmar retirada</button>
+      <p class="aviso-linha" id="av${i}" hidden></p>
+    </article>`;
+  }).join('');
+  atualizaFicha();
+}
+
+function totalCarrinho(i){
+  const tam = R.itens[i].estado === 'po' ? EMB_PO : EMB_LIQ;
+  return RET[i].cart.reduce((sum, c, k) => sum + c*tam[k], 0);
+}
+function atualizaCarrinho(i){
+  const it = R.itens[i], nec = necessidade(i), tam = it.estado === 'po' ? EMB_PO : EMB_LIQ;
+  const partes = RET[i].cart.map((c,k) => c ? `${c}× ${rotuloEmb(tam[k], nec.un)}` : null).filter(Boolean);
+  const tot = totalCarrinho(i);
+  document.getElementById('car' + i).innerHTML = partes.length
+    ? `<span>${partes.join(' + ')}</span><b>= ${fmt0(tot)} ${nec.un}</b><button class="zerar" data-zerar="${i}">devolver tudo</button>`
+    : '<span>Nada retirado ainda.</span>';
+  const card = document.querySelector('.item-barracao[data-i="' + i + '"]');
+  card.querySelectorAll('.emb').forEach((b,k) => {
+    const c = RET[i].cart[k], sel = b.querySelector('.conta');
+    sel.hidden = !c; sel.textContent = c;
+  });
+}
+function atualizaFicha(){
+  const feitos = RET.filter(r => r.ok).length;
+  $('#fichaRetirada').innerHTML = '<h3>Ficha de retirada do produtor</h3>' +
+    R.itens.map((it,i) => {
+      const nec = necessidade(i);
+      return `<div class="l"><span>${it.cat} ${it.form}</span><b>${RET[i].ok ? fmt0(totalCarrinho(i)) + ' ' + nec.un + ' ✓' : '—'}</b></div>`;
+    }).join('') +
+    `<div class="l"><span><b>Itens conferidos</b></span><b>${feitos}/${R.itens.length}</b></div>`;
+  $('#btnIrCalda').hidden = feitos < R.itens.length;
+}
+
+$('#gradeBarracao').addEventListener('click', e => {
+  const zerar = e.target.closest('[data-zerar]');
+  if(zerar){ const i = +zerar.dataset.zerar; RET[i].cart.fill(0); atualizaCarrinho(i); return; }
+  const conf = e.target.closest('[data-conf]');
+  if(conf){ confirmarRetirada(+conf.dataset.conf); return; }
+  const emb = e.target.closest('.emb');
+  if(emb){
+    const i = +emb.closest('.item-barracao').dataset.i, k = +emb.dataset.k;
+    if(RET[i].ok) return;
+    RET[i].cart[k] = Math.min(RET[i].cart[k] + 1, 40);
+    atualizaCarrinho(i);
+  }
+});
+
+function confirmarRetirada(i){
+  const it = R.itens[i], nec = necessidade(i), tam = it.estado === 'po' ? EMB_PO : EMB_LIQ;
+  const inp = document.getElementById('bq' + i), av = document.getElementById('av' + i);
+  const v = parseBR(inp.value);
+  const tol = Math.max(nec.v * NIVG.tolCalc, 8);
+  const contaOk = isFinite(v) && Math.abs(v - nec.v) <= tol;
+  inp.classList.toggle('ok', contaOk); inp.classList.toggle('err', !contaOk);
+  av.hidden = false;
+  if(!contaOk){
+    penalizarPlano('Retirada — quantidade de ' + it.cat + ' ' + it.form);
+    av.textContent = (NIVG.diag === 'nenhum' || NIVG.diag === 'minimo')
+      ? 'A quantidade não confere.'
+      : 'A quantidade não confere. É a dose ' + (it.base === 'vol' ? 'em % sobre a calda prevista' : 'multiplicada pelos ' + fmt(R.areaRec,1) + ' ha do receituário') + (it.densidade ? ', dividida pela densidade' : '') + '.';
+    fala('Sem saber quanto precisa, não dá para escolher embalagem. Refaz a conta.', 'erro');
+    return;
+  }
+  const tot = totalCarrinho(i), best = melhorCombo(nec.v, tam);
+  if(tot === 0){ av.textContent = 'Clique nas embalagens da prateleira para pegar o produto.'; return; }
+  if(tot < nec.v){
+    penalizarPlano('Retirada — volume insuficiente de ' + it.cat + ' ' + it.form);
+    av.textContent = NIVG.diag === 'nenhum' ? 'Não cobre a necessidade.' : `Não cobre: faltam ${fmt0(nec.v - tot)} ${nec.un}.`;
+    fala('Faltou produto. Voltar ao barracão no meio da operação custa caro.', 'erro');
+    return;
+  }
+  if(tot > best.tot){
+    penalizarPlano('Retirada — embalagem maior que o necessário em ' + it.cat + ' ' + it.form);
+    av.textContent = (NIVG.diag === 'nenhum' || NIVG.diag === 'minimo')
+      ? 'Retirada fora do padrão.'
+      : `Sobram ${fmt0(tot - nec.v)} ${nec.un} de embalagem aberta. Dá para cobrir com menos — troque por embalagens menores.`;
+    fala('Abriu embalagem à toa. Produto aberto que sobra não volta para a prateleira do produtor — vira resíduo.', 'erro');
+    return;
+  }
+  RET[i].ok = true;
+  av.hidden = true;
+  inp.disabled = true;
+  document.querySelector('.item-barracao[data-i="' + i + '"]').classList.add('pronto');
+  document.querySelector('[data-conf="' + i + '"]').disabled = true;
+  atualizaCarrinho(i); atualizaFicha();
+  const sobra = tot - nec.v;
+  fala(`${it.cat} ${it.form} retirado: ${fmt0(tot)} ${nec.un}` + (sobra > 0 ? ` — sobra ${fmt0(sobra)} ${nec.un} na embalagem, o mínimo possível.` : ' — bateu exato.'), 'ok');
+}
+
+$('#btnIrCalda').addEventListener('click', () => {
+  $('#barracao').hidden = true; $('#estrutura').hidden = false;
+  $('#trB').classList.remove('on'); $('#trB').classList.add('feito');
+  $('#trE').classList.add('on');
+  iniciarEstrutura();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ============ render do receituário ============ */
+function renderReceita(sel){
+  const linhas = R.itens.map(it => `
+    <tr>
+      <td class="ord">${it.ordem}</td>
+      <td><span class="cat">${it.cat}</span><span class="form">${it.form} · ${it.formNome}</span></td>
+      <td class="dose">${it.base === 'vol' ? fmt(it.dose,1) + ' %' : fmt(it.dose,2)}<span class="form" style="text-align:right">${it.base === 'vol' ? 'v/v da calda' : it.un}</span></td>
+      <td class="dens">${it.densidade ? fmt(it.densidade,2) + '<span class="form" style="text-align:right">g/mL</span>' : '<span style="opacity:.45">—</span>'}</td>
+    </tr>`).join('');
+  const alvo = document.querySelector(sel || '#receita');
+  alvo.innerHTML = `
+    <h2>Receituário agronômico</h2>
+    <div class="num">Nº ${R.numero} · via do aplicador</div>
+    <hr>
+    <div class="rec-cab">
+      <div><span>Cultura</span><strong>${R.cultura}</strong></div>
+      <div><span>Estádio</span><strong>${R.estadio}</strong></div>
+      <div><span>Alvo</span><strong>${R.alvo}</strong></div>
+      <div><span>Área tratada</span><strong>${fmt(R.areaRec,1)} ha</strong></div>
+      <div><span>Volume de calda</span><strong>${R.taxa} L/ha</strong></div>
+      <div><span>Equipamento</span><strong>Drone pulverizador</strong></div>
+    </div>
+    <table class="tab-rec">
+      <thead><tr><th>Ord.</th><th>Produto</th><th style="text-align:right">Dose</th><th style="text-align:right">Densidade</th></tr></thead>
+      <tbody>${linhas}</tbody>
+    </table>
+    <p class="rec-nota">
+      <b>Ordem de mistura — obrigatória</b>
+      Pós (WG/WP) → suspensões (SC) → solúveis (SL) → emulsionáveis (EC) → adjuvantes e óleos. Fora dessa ordem a calda empedra ou quebra a emulsão.
+      ${NIV.formulas ? `<br><br>
+      <b>Como calcular</b>
+      Dose em <code>L/ha</code>: multiplique pela área — vai direto para o copo, sem densidade. Dose em <code>kg/ha</code> de líquido: multiplique pela área e divida pela <b>densidade</b> para achar os mL — só aqui ela entra na conta. Dose em <code>% v/v</code>: é percentual do volume total de calda. Pó: multiplique pela área e pese em gramas.` : ''}
+    </p>
+    <p class="assinatura">Assinatura e CREA do responsável técnico ____________________</p>`;
+  $('#areaMax').textContent = fmt(R.areaRec,1);
+  $('#bCap').textContent = CAP + ' L';
+  $('#rotCap').textContent = CAP + ' L';
+  $('#dataBloco').textContent = new Date().toLocaleDateString('pt-BR');
+}
+
+function renderLinhasProduto(){
+  $('#linhasProd').innerHTML = R.itens.map((it,i) => {
+    const un = it.estado === 'po' ? 'g' : 'mL';
+    const base = it.base === 'vol' ? `${fmt(it.dose,1)}% do volume de calda` : `${it.base==='vol'?'':''}${fmt(it.dose,2)} ${it.un}${it.densidade ? ' · d ' + fmt(it.densidade,2) : ''}`;
+    return `<div class="linha" data-campo="p${i}">
+      <span class="marca-cor" style="background:${it.cor}"></span>
+      <label class="rot" for="inP${i}"><b>${it.ordem}. ${it.cat} ${it.form}</b><i>${base}</i></label>
+      <input id="inP${i}" inputmode="decimal" placeholder="0" autocomplete="off"><span class="un">${un}</span><span class="sinal"></span>
+    </div>`;
+  }).join('');
+}
+
+/* ============ fala do operador ============ */
+let falaTimer = null;
+function fala(html, tipo){
+  $('#fala').innerHTML = html;
+  const op = $('#operador');
+  op.classList.remove('op-erro');
+  if(tipo === 'erro') op.classList.add('op-erro');
+  $('#opMesa').classList.toggle('op-ok', tipo === 'ok');
+  clearTimeout(falaTimer);
+  if(tipo === 'erro') falaTimer = setTimeout(() => op.classList.remove('op-erro'), 500);
+}
+
+/* ============ ato 1 ============ */
+$('#btnArea').addEventListener('click', confirmarArea);
+$('#inArea').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmarArea(); }});
+
+function confirmarArea(){
+  const v = parseBR($('#inArea').value);
+  const linha = $('#inArea').closest('.linha');
+  const dica = $('#dicaArea');
+  const minimo = Math.round(R.areaRec * 0.9 * 10)/10;
+  const errar = msg => {
+    linha.classList.remove('ok'); linha.classList.add('err');
+    linha.querySelector('.sinal').textContent = '✗';
+    dica.textContent = msg; dica.hidden = false;
+    fala(msg, 'erro');
+  };
+  if(!S) return;
+  if(!isFinite(v) || v <= 0) return errar('Digite a área em hectares, por exemplo ' + fmt(R.areaRec,1).replace(/,\d$/, ',0') + '.');
+  if(v > R.areaRec) return errar(`O receituário autoriza ${fmt(R.areaRec,1)} ha. Não se prepara calda para mais área do que a receita cobre — informe ${fmt(R.areaRec,1)} ha ou menos.`);
+  if(v < minimo) return errar(`${fmt(v,1)} ha está longe demais do receituário. O piloto informa a área que vai voar de verdade: entre ${fmt(minimo,1)} e ${fmt(R.areaRec,1)} ha.`);
+
+  S.area = v; S.exp = esperados(v);
+  if(S.exp.total > CAP) return errar(`${fmt(v,1)} ha dá ${fmt(S.exp.total,1)} L de calda e o misturador é de ${CAP} L. Reduza a área.`);
+
+  linha.classList.remove('err'); linha.classList.add('ok');
+  linha.querySelector('.sinal').textContent = '✓';
+  dica.hidden = true;
+  $('#inArea').disabled = true; $('#btnArea').disabled = true;
+  $('#linhasCalc').hidden = false; $('#acoesBloco').hidden = false;
+  if(NIV.base){
+    $('#baseCalc').hidden = false;
+    $('#baseCalc').innerHTML = `Base de cálculo: <b>${fmt(v,1)} ha</b> — a área que o piloto vai voar, não os ${fmt(R.areaRec,1)} ha do receituário. As doses <b>por hectare</b> vêm do receituário; a área vem do piloto.`;
+  }
+  renderLinhasProduto();
+  fala(`Fechado: <b>${fmt(v,1)} ha</b> a ${R.taxa} L/ha. Agora puxe os números no bloco — use a calculadora do lado, sem arredondar por cima.`);
+  $('#inTotal').focus();
+}
+
+function checaCampo(id, esperado, tolRel, tolAbs){
+  const el = $('#' + id), linha = el.closest('.linha');
+  const v = parseBR(el.value);
+  const tol = Math.max(esperado * tolRel, tolAbs);
+  const ok = isFinite(v) && Math.abs(v - esperado) <= tol;
+  const mostra = ok || NIV.diag !== 'nenhum';
+  linha.classList.toggle('ok', ok); linha.classList.toggle('err', !ok && mostra);
+  linha.querySelector('.sinal').textContent = ok ? '✓' : (mostra ? '✗' : '');
+  return {ok, v, esperado};
+}
+
+/* ============ pontuação e cronômetro ============ */
+let cronoT = null;
+function iniciarCronometro(){
+  $('#chipProva').hidden = false;
+  atualizaChip();
+  clearInterval(cronoT);
+  cronoT = setInterval(atualizaChip, 1000);
+}
+function tempoDecorrido(){
+  const s = Math.floor((Date.now() - S.inicio)/1000);
+  return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+}
+function atualizaChip(){
+  if(!S) return;
+  $('#chipNota').textContent = S.nota + ' pts';
+  $('#chipTempo').textContent = tempoDecorrido();
+}
+function penalizar(motivo, pts, chave){
+  S.erros++;
+  if(!NIV.prova) return;
+  if(chave){ if(S.penalizados.has(chave)) return; S.penalizados.add(chave); }
+  S.nota = Math.max(0, S.nota - pts);
+  S.descontos.push({motivo, pts});
+  atualizaChip();
+}
+
+function diagnostico(r){
+  const {v, esperado, it, un} = r;
+  const perto = (a, b, tol = .03) => isFinite(a) && b > 0 && Math.abs(a - b) <= b * tol;
+  if(!isFinite(v)) return 'o campo está em branco.';
+  if(it && perto(v, it.dose)) return `esse é o número da dose do receituário. Falta multiplicar pela área do piloto (${fmt(S.area,1)} ha).`;
+  if(perto(v, esperado/1000)) return `a conta está certa, mas a resposta está em ${un === 'g' ? 'kg' : 'litros'} e o campo pede ${un}. ${fmt(v,2)} = ${fmt0(esperado)} ${un}.`;
+  if(perto(v, esperado*1000)) return `esse valor está em ${un === 'L' ? 'mL' : 'g'} e o campo pede ${un}.`;
+  if(it && it.densidade && perto(v, esperado*it.densidade)) return 'faltou dividir pela densidade — é ela que transforma kg em mL.';
+  if(it && it.densidade && perto(v, esperado/it.densidade)) return 'você dividiu pela densidade duas vezes.';
+  if(it && it.densidade && perto(v, esperado*it.densidade*it.densidade)) return 'você multiplicou pela densidade; para achar mL a partir de kg a conta é divisão.';
+  if(perto(v, esperado*2)) return 'o número está dobrado.';
+  if(perto(v, esperado/2)) return 'o número está pela metade.';
+  return `o número está ${v > esperado ? 'alto' : 'baixo'}. Confira se multiplicou pela área do piloto (${fmt(S.area,1)} ha).`;
+}
+
+$('#btnConferir').addEventListener('click', () => {
+  const res = [];
+  res.push({nome:'Volume total de calda', un:'L', ...checaCampo('inTotal', S.exp.total, NIV.tolCalc, .5)});
+  res.push({nome:'Água inicial', un:'L', ...checaCampo('inAgua', S.exp.agua1, NIV.tolCalc, .5)});
+  R.itens.forEach((it,i) => {
+    res.push({nome:`${it.ordem}. ${it.cat} ${it.form}`, it, un:S.exp.qtds[i].un, ...checaCampo('inP'+i, S.exp.qtds[i].v, NIV.tolCalc, 8)});
+  });
+  const ruins = res.filter(r => !r.ok);
+  const dica = $('#dicaCalc');
+  if(ruins.length === 0){
+    dica.hidden = true;
+    $('#btnConferir').disabled = true;
+    $('#btnIrPreparo').hidden = false;
+    $('#tr1').classList.remove('on'); $('#tr1').classList.add('feito');
+    fala('Cálculo bate. Leve o bloco para a bancada — daqui pra frente é só seguir o que está escrito nele.', 'ok');
+  }else{
+    ruins.forEach(r => penalizar('Cálculo — ' + r.nome, 6, 'calc:' + r.nome));
+    const r = ruins[0];
+    const n = ruins.length, plural = n === 1 ? 'valor não confere' : 'valores não conferem';
+    if(NIV.diag === 'completo')      dica.innerHTML = `${n} ${plural}. Comece pela linha <b>“${r.nome}”</b>: ${diagnostico(r)}`;
+    else if(NIV.diag === 'curto')    dica.innerHTML = `${n} ${plural}. Revise a linha <b>“${r.nome}”</b> — o número está ${r.v > r.esperado ? 'alto' : 'baixo'}.`;
+    else if(NIV.diag === 'minimo')   dica.innerHTML = `${n} ${plural}. As linhas erradas estão marcadas com <b>✗</b>.`;
+    else                             dica.innerHTML = `${n} ${plural}. Refaça as contas — a prova não diz onde.`;
+    dica.hidden = false;
+    fala('Não bateu. Calda errada é dinheiro fora e risco de fitotoxidez — refaça a conta antes de seguir.', 'erro');
+  }
+});
+
+/* ============ calculadora ============ */
+const calc = {a:null, op:null, atual:'0', novo:true};
+function mostraCalc(){
+  $('#calcNum').textContent = calc.atual;
+  $('#calcFila').innerHTML = calc.op ? `${calc.a.toLocaleString('pt-BR',{maximumFractionDigits:6})} ${calc.op}` : '&nbsp;';
+}
+function aplicaOp(a, op, b){
+  if(op === '+') return a + b;
+  if(op === '−') return a - b;
+  if(op === '×') return a * b;
+  if(op === '÷') return b === 0 ? NaN : a / b;
+  return b;
+}
+function numCalc(){ return parseFloat(calc.atual.replace(',', '.')) || 0; }
+function setCalc(n){
+  if(!isFinite(n)){ calc.atual = 'ERRO'; return; }
+  calc.atual = (Math.round(n*1e6)/1e6).toLocaleString('pt-BR', {maximumFractionDigits:6});
+}
+function tecla(k){
+  if(calc.atual === 'ERRO' && k !== 'AC'){ calc.atual = '0'; calc.novo = true; }
+  if(/^\d$/.test(k)){
+    calc.atual = (calc.novo || calc.atual === '0') ? k : (calc.atual.replace(/\./g,'').length < 12 ? calc.atual + k : calc.atual);
+    calc.novo = false;
+  }else if(k === ','){
+    if(calc.novo){ calc.atual = '0,'; calc.novo = false; }
+    else if(!calc.atual.includes(',')) calc.atual += ',';
+  }else if(k === 'AC'){ calc.a = null; calc.op = null; calc.atual = '0'; calc.novo = true; }
+  else if(k === '←'){ calc.atual = calc.atual.length > 1 ? calc.atual.slice(0,-1) : '0'; if(calc.atual === '0') calc.novo = true; }
+  else if(k === '%'){ setCalc(numCalc()/100); calc.novo = true; }
+  else if(['+','−','×','÷'].includes(k)){
+    if(calc.op && !calc.novo){ const r = aplicaOp(calc.a, calc.op, numCalc()); calc.a = r; setCalc(r); }
+    else calc.a = numCalc();
+    calc.op = k; calc.novo = true;
+  }else if(k === '='){
+    if(calc.op){ const r = aplicaOp(calc.a, calc.op, numCalc()); setCalc(r); calc.a = null; calc.op = null; calc.novo = true; }
+  }
+  mostraCalc();
+}
+$('#teclas').addEventListener('click', e => { const b = e.target.closest('button'); if(b) tecla(b.dataset.k); });
+document.addEventListener('keydown', e => {
+  if($('#calculos').hidden) return;
+  const alvo = e.target;
+  if(alvo && alvo.tagName === 'INPUT') return;
+  const mapa = {'*':'×','x':'×','/':'÷','-':'−','.':',',',':',','Enter':'=','=':'=','Backspace':'←','Escape':'AC','%':'%','+':'+'};
+  const k = /^\d$/.test(e.key) ? e.key : mapa[e.key];
+  if(k){ e.preventDefault(); tecla(k); }
+});
+mostraCalc();
+
+/* ============ motor de despejo (segurar) ============ */
+const despejo = {ativo:false, valor:0, alvo:0, max:0, inicio:0, raf:0, t:0, onTick:null, onStop:null};
+function iniciarDespejo(){
+  if(despejo.ativo) return;
+  despejo.ativo = true; despejo.t = performance.now(); despejo.inicio = despejo.valor;
+  const loop = agora => {
+    if(!despejo.ativo) return;
+    const dt = Math.min((agora - despejo.t)/1000, .12); despejo.t = agora;
+    const dist = Math.max(despejo.alvo - despejo.inicio, despejo.alvo*0.15);
+    const rapido = dist/3.2;
+    const v = despejo.valor > despejo.inicio + dist*0.82 ? rapido/5 : rapido;
+    despejo.valor = Math.min(despejo.valor + v*dt, despejo.max);
+    despejo.onTick && despejo.onTick(despejo.valor);
+    if(despejo.valor >= despejo.max){ pararDespejo(); return; }
+    despejo.raf = requestAnimationFrame(loop);
+  };
+  despejo.raf = requestAnimationFrame(loop);
+}
+function pararDespejo(){
+  if(!despejo.ativo) return;
+  despejo.ativo = false; cancelAnimationFrame(despejo.raf);
+  despejo.onStop && despejo.onStop(despejo.valor);
+}
+function ligaSegurar(btn, aoIniciar, aoParar){
+  const on = e => { if(btn.disabled) return; e.preventDefault(); btn.classList.add('ativa'); aoIniciar(); };
+  const off = () => { btn.classList.remove('ativa'); aoParar(); };
+  btn.addEventListener('pointerdown', on);
+  ['pointerup','pointercancel','pointerleave'].forEach(ev => btn.addEventListener(ev, off));
+  btn.addEventListener('keydown', e => { if((e.key === ' ' || e.key === 'Enter') && !e.repeat) on(e); });
+  btn.addEventListener('keyup', e => { if(e.key === ' ' || e.key === 'Enter') off(); });
+  btn.addEventListener('click', e => e.preventDefault());
+}
+
+/* ============ ato 2 ============ */
+let P = null;
+
+$('#btnIrPreparo').addEventListener('click', () => {
+  $('#calculos').hidden = true; $('#preparo').hidden = false;
+  $('#operador').classList.add('sem-boneco');
+  $('#tr2').classList.add('on');
+  window.scrollTo({top:0, behavior:'smooth'});
+  iniciarPreparo();
+});
+
+function iniciarPreparo(){
+  P = {
+    etapa:0, nivel:0, faltam:R.itens.map(() => true),
+    copo:0, prodAtual:null, agitando:false,
+    etapas:[
+      {tipo:'agua', rot:`Água inicial — ${fmt(S.exp.agua1,1)} L (50%)`, alvo:S.exp.agua1},
+      ...R.itens.map((it,i) => ({tipo:'prod', idx:i, rot:`${it.ordem}. ${it.cat} ${it.form} — ${it.estado==='po'? fmt0(S.exp.qtds[i].v)+' g' : fmt0(S.exp.qtds[i].v)+' mL'}`})),
+      {tipo:'agua', rot:`Completar com água até ${fmt(S.exp.total,1)} L`, alvo:S.exp.total},
+      {tipo:'agitar', rot:'Agitar a calda e liberar para o voo'}
+    ]
+  };
+  renderFrascos(); renderMarcas(); renderRef(); renderEtapas(); aplicaEtapa();
+}
+
+function renderFrascos(){
+  $('#frascos').innerHTML = R.itens.map((it,i) => `
+    <button class="frasco" data-i="${i}" id="fr${i}">
+      ${NIV.ordemFrasco ? `<span class="ordem">${it.ordem}</span>` : ''}
+      ${it.estado === 'po' ? svgSaco(it.cor) : svgFrasco(it.cor)}
+      <span class="rotulo"><b>${it.cat}</b><i>${it.form} · ${it.base==='vol' ? fmt(it.dose,1)+' %' : fmt(it.dose,2)+' '+it.un}</i></span>
+    </button>`).join('');
+  $('#frascos').addEventListener('click', e => {
+    const b = e.target.closest('.frasco'); if(!b || b.disabled) return;
+    escolherProduto(parseInt(b.dataset.i,10));
+  });
+}
+const svgFrasco = c => `<svg viewBox="0 0 34 44" aria-hidden="true"><rect x="13" y="1" width="8" height="6" rx="1.5" fill="#3A4136"/><path d="M11 7 h12 l3 5 v28 a3 3 0 0 1 -3 3 H11 a3 3 0 0 1 -3 -3 V12z" fill="${c}" stroke="rgba(0,0,0,.35)"/><rect x="9" y="19" width="16" height="13" fill="rgba(255,255,255,.82)"/><rect x="11" y="22" width="12" height="2" fill="rgba(0,0,0,.45)"/><rect x="11" y="26" width="8" height="1.5" fill="rgba(0,0,0,.28)"/><rect x="11" y="29" width="10" height="1.5" fill="rgba(0,0,0,.28)"/></svg>`;
+const svgSaco = c => `<svg viewBox="0 0 34 44" aria-hidden="true"><path d="M6 8 q11 -5 22 0 v31 a3 3 0 0 1 -3 3 H9 a3 3 0 0 1 -3 -3z" fill="${c}" stroke="rgba(0,0,0,.35)"/><path d="M6 8 q11 -5 22 0 q-11 4 -22 0z" fill="rgba(0,0,0,.18)"/><rect x="8" y="20" width="18" height="12" fill="rgba(255,255,255,.82)"/><rect x="10" y="23" width="14" height="2" fill="rgba(0,0,0,.45)"/><rect x="10" y="27" width="9" height="1.5" fill="rgba(0,0,0,.28)"/></svg>`;
+
+function renderMarcas(){
+  let h = '';
+  for(let l = 20; l <= CAP; l += 20){
+    const y = 100 - (l/CAP*100);
+    h += `<div class="t maior" style="top:${y}%"><b>${l}</b></div>`;
+    if(l < CAP) h += `<div class="t" style="top:${100-((l+10)/CAP*100)}%"></div>`;
+  }
+  $('#marcasTanque').innerHTML = h;
+}
+function renderMarcasCopo(max, un){
+  let h = '';
+  const passoM = max > 1500 ? 500 : 250;
+  for(let v = passoM; v <= max; v += passoM){
+    const y = 100 - (v/max*100);
+    h += `<div class="t maior" style="top:${y}%"><b>${fmt0(v)}</b></div>`;
+  }
+  $('#marcasCopo').innerHTML = h;
+}
+
+function renderEtapas(){
+  $('#listaEtapas').innerHTML = P.etapas.map((e,i) => `
+    <li class="${i < P.etapa ? 'fim' : i === P.etapa ? 'on' : ''}">
+      <span class="cx">${i < P.etapa ? '✓' : i+1}</span><span>${e.rot}</span>
+    </li>`).join('');
+}
+function renderRef(){
+  const l = [];
+  l.push(['Volume de calda', fmt(S.exp.total,1) + ' L']);
+  l.push(['Água inicial (50%)', fmt(S.exp.agua1,1) + ' L']);
+  R.itens.forEach((it,i) => l.push([`${it.ordem}. ${it.cat} ${it.form}`, fmt0(S.exp.qtds[i].v) + ' ' + S.exp.qtds[i].un]));
+  l.push(['Completar até', fmt(S.exp.total,1) + ' L']);
+  $('#refValores').innerHTML = `<h3>Seu bloco</h3>` + l.map(([a,b]) => `<div class="l"><span>${a}</span><b>${b}</b></div>`).join('');
+}
+
+function corLiquido(){
+  const n = P.faltam.filter(f => !f).length;
+  const el = $('#liqTanque');
+  if(n === 0){ el.style.setProperty('--cor-liq', 'var(--agua)'); return; }
+  const mix = Math.min(n / R.itens.length, 1);
+  el.style.setProperty('--cor-liq', `color-mix(in srgb, var(--calda) ${Math.round(30 + mix*55)}%, var(--agua))`);
+}
+function atualizaTanque(){
+  $('#liqTanque').style.height = (P.nivel/CAP*100) + '%';
+  $('#leituraTanque').innerHTML = fmt(P.nivel,1) + ' <span>L</span>';
+}
+
+function aplicaEtapa(){
+  const e = P.etapas[P.etapa];
+  renderEtapas();
+  $('#painelAgua').hidden = e.tipo !== 'agua';
+  $('#painelAgitar').hidden = e.tipo !== 'agitar';
+  $('#medidor').hidden = true;
+  $('#avisoAgua').hidden = true; $('#avisoMedidor').hidden = true;
+  document.querySelectorAll('.frasco').forEach((b,i) => { b.disabled = e.tipo !== 'prod'; b.classList.toggle('pronto', !P.faltam[i]); });
+  $('#alvoTanque').hidden = e.tipo !== 'agua' || NIV.marca === 'nenhuma';
+  $('#alvoTanqueTxt').style.display = NIV.marca === 'completa' ? '' : 'none';
+
+  if(e.tipo === 'agua'){
+    $('#alvoTanque').style.bottom = (e.alvo/CAP*100) + '%';
+    $('#alvoTanqueTxt').textContent = fmt(e.alvo,1) + ' L';
+    despejo.valor = P.nivel; despejo.alvo = e.alvo; despejo.max = CAP;
+    despejo.onTick = v => { P.nivel = v; atualizaTanque(); };
+    despejo.onStop = () => { $('#tanque').classList.remove('jorrando'); avaliaAgua(true); };
+    $('#jorroTanque').style.setProperty('--cor-jorro', 'var(--agua)');
+    pose('mangueira');
+    if(P.etapa === 0) fala(`Primeiro a água — sempre. Encha o misturador até <b>${fmt(e.alvo,1)} L</b>, a metade do volume de calda. Produto em tanque seco empedra.`);
+    else fala(`Todos os produtos entraram. Agora complete com água até a marca de <b>${fmt(e.alvo,1)} L</b> — o volume total da calda.`);
+  }
+  if(e.tipo === 'prod'){
+    const it = R.itens[e.idx];
+    pose(null);
+    fala(`Próximo da ordem: <b>${it.ordem}. ${it.cat} ${it.form}</b>. Pegue o produto certo na prateleira — fora da ordem a calda empelota.`);
+  }
+  if(e.tipo === 'agitar'){
+    pose('agita');
+    fala('Tanque completo. Ligue o agitador e deixe homogeneizar antes de abastecer o drone.');
+  }
+}
+
+function avaliaAgua(silencioso){
+  const e = P.etapas[P.etapa];
+  const tol = Math.max(e.alvo*NIV.tolAgua, 1.2);
+  const d = P.nivel - e.alvo;
+  const aviso = $('#avisoAgua');
+  if(Math.abs(d) <= tol){ aviso.hidden = true; return true; }
+  aviso.hidden = false;
+  aviso.textContent = NIV.diag === 'nenhum' ? 'Nível fora da marca. Confira o seu bloco.'
+    : (d < 0 ? `Faltam ${fmt(-d,1)} L para a marca.` : `Passou ${fmt(d,1)} L da marca — a calda fica fora de dose.`);
+  return false;
+}
+
+ligaSegurar($('#btnTorneira'),
+  () => { $('#tanque').classList.add('jorrando'); virando(true); iniciarDespejo(); },
+  () => { pararDespejo(); $('#tanque').classList.remove('jorrando'); virando(false); });
+
+$('#btnConfNivel').addEventListener('click', () => {
+  if(P.nivel <= 0){ fala('O tanque está vazio. Segure a torneira para encher.', 'erro'); return; }
+  if(!avaliaAgua(false)){
+    penalizar('Nível de água fora da marca', 5);
+    const d = P.nivel - P.etapas[P.etapa].alvo;
+    fala(d < 0 ? 'Ainda falta água para a marca. Continue segurando a torneira.' : 'Passou da marca. Esvazie o que der e refaça o nível — calda diluída errada muda a dose por hectare.', 'erro');
+    return;
+  }
+  fala('Nível conferido.', 'ok');
+  avancar();
+});
+$('#btnEsvaziar').addEventListener('click', () => {
+  const base = P.etapa === 0 ? 0 : (S.exp.agua1 + somaLiquidosAdicionados());
+  P.nivel = base; despejo.valor = base; atualizaTanque(); avaliaAgua(true);
+  fala('Tanque de volta ao nível anterior. Refaça com calma — a torneira fecha devagar perto da marca.');
+});
+function somaLiquidosAdicionados(){
+  return R.itens.reduce((s,it,i) => s + (!P.faltam[i] && it.estado === 'liq' ? S.exp.qtds[i].v/1000 : 0), 0);
+}
+
+/* --- produtos --- */
+function escolherProduto(i){
+  const e = P.etapas[P.etapa];
+  if(e.tipo !== 'prod') return;
+  if(i !== e.idx){
+    penalizar('Ordem de mistura trocada', 8);
+    const certo = R.itens[e.idx], errado = R.itens[i];
+    fala(NIV.diag === 'nenhum' || NIV.diag === 'minimo'
+      ? 'Esse não é o próximo da ordem de mistura.'
+      : `Esse não. <span class="aviso">${errado.cat} ${errado.form} é o nº ${errado.ordem}</span> — antes dele entra o <b>${certo.cat} ${certo.form} (${certo.form === 'WG' ? 'pó, sempre primeiro' : 'nº ' + certo.ordem})</b>.`, 'erro');
+    return;
+  }
+  abrirMedidor(i);
+}
+
+function abrirMedidor(i){
+  const it = R.itens[i], q = S.exp.qtds[i];
+  P.prodAtual = i; P.copo = 0;
+  $('#medidor').hidden = false;
+  $('#modCopo').hidden = it.estado === 'po';
+  $('#modBalanca').hidden = it.estado !== 'po';
+  $('#avisoMedidor').hidden = true;
+  $('#btnVirar').textContent = it.estado === 'po' ? 'Segure para virar o pó' : 'Segure para virar o produto';
+  const max = it.estado === 'po' ? BAL_MAX : COPO_MAX;
+  if(it.estado === 'po'){ $('#monte').style.setProperty('--cor-po', it.cor); }
+  else { $('#liqCopo').style.setProperty('--cor-liq', it.cor); $('#jorroCopo').style.setProperty('--cor-jorro', it.cor); renderMarcasCopo(max, q.un); }
+  despejo.valor = 0; despejo.alvo = q.v; despejo.max = max;
+  despejo.onTick = v => { P.copo = v; atualizaMedidor(it, max); };
+  despejo.onStop = () => { $('#copo').classList.remove('jorrando'); };
+  atualizaMedidor(it, max);
+  pose(it.estado === 'po' ? 'saco' : 'frasco', it.cor);
+  fala(`${it.cat} ${it.form}: vire <b>${fmt0(q.v)} ${q.un}</b> ${it.estado === 'po' ? 'na balança' : 'no copo'} e confira na marcação antes de jogar no misturador.`);
+}
+function atualizaMedidor(it, max){
+  if(it.estado === 'po'){
+    $('#visorBalanca').textContent = fmt0(P.copo) + ' g';
+    const p = Math.min(P.copo/BAL_MAX, 1);
+    $('#monte').style.width = (30 + p*100) + 'px';
+    $('#monte').style.height = (4 + p*46) + 'px';
+  }else{
+    $('#liqCopo').style.height = (P.copo/max*100) + '%';
+    $('#leituraCopo').innerHTML = fmt0(P.copo) + ' <span>mL</span>';
+  }
+}
+ligaSegurar($('#btnVirar'),
+  () => { $('#copo').classList.add('jorrando'); virando(true); iniciarDespejo(); },
+  () => { pararDespejo(); $('#copo').classList.remove('jorrando'); virando(false); });
+
+$('#btnLimparCopo').addEventListener('click', () => {
+  const it = R.itens[P.prodAtual];
+  P.copo = 0; despejo.valor = 0;
+  atualizaMedidor(it, it.estado === 'po' ? BAL_MAX : COPO_MAX);
+  $('#avisoMedidor').hidden = true;
+  fala('Devolvido ao frasco. Vire de novo, com calma no fim.');
+});
+
+$('#btnDespejar').addEventListener('click', () => {
+  const i = P.prodAtual, it = R.itens[i], q = S.exp.qtds[i];
+  const tol = Math.max(q.v*NIV.tolCopo, 20);
+  const d = P.copo - q.v;
+  if(Math.abs(d) > tol){
+    penalizar('Medida fora da tolerância — ' + it.cat + ' ' + it.form, 5);
+    $('#avisoMedidor').hidden = false;
+    $('#avisoMedidor').textContent = NIV.diag === 'nenhum'
+      ? 'Fora da medida. Confira o seu bloco.'
+      : (d < 0 ? `Faltam ${fmt0(-d)} ${q.un} para ${fmt0(q.v)} ${q.un}.`
+               : `Passou ${fmt0(d)} ${q.un}. Devolva ao frasco e meça de novo.`);
+    fala(d < 0 ? 'Ainda não chegou na medida. Continue virando.' : 'Passou da medida — subdose ou sobredose começa aqui. Devolva e meça de novo.', 'erro');
+    return;
+  }
+  P.faltam[i] = false;
+  if(it.estado === 'liq') P.nivel = Math.min(P.nivel + q.v/1000, CAP);
+  corLiquido(); atualizaTanque();
+  P.copo = 0; despejo.valor = 0;
+  $('#medidor').hidden = true;
+  fala(`${it.cat} ${it.form} dentro do misturador.`, 'ok');
+  avancar();
+});
+
+/* --- agitação --- */
+$('#btnAgitar').addEventListener('click', () => {
+  if(P.agitando) return;
+  P.agitando = true;
+  $('#tanque').classList.add('ligado');
+  $('#btnAgitar').disabled = true;
+  $('#btnAgitar').textContent = 'Agitando…';
+  $('#avisoAgitar').hidden = false;
+  fala('Agitador ligado. Homogeneizando a calda — não desligue antes de ficar uniforme.');
+  let s = 6;
+  $('#avisoAgitar').textContent = `Homogeneizando… ${s}s`;
+  const t = setInterval(() => {
+    s--;
+    $('#avisoAgitar').textContent = s > 0 ? `Homogeneizando… ${s}s` : 'Calda homogênea.';
+    if(s <= 0){ clearInterval(t); concluir(); }
+  }, 1000);
+});
+
+function avancar(){
+  P.etapa++;
+  if(P.etapa >= P.etapas.length) return;
+  aplicaEtapa();
+}
+
+function concluir(){
+  clearInterval(cronoT);
+  pose(null);
+  $('#preparo').hidden = true; $('#fim').hidden = false;
+  $('#operador').classList.remove('sem-boneco');
+  $('#tr2').classList.remove('on'); $('#tr2').classList.add('feito'); $('#tr3').classList.add('on');
+  const min = Math.max(1, Math.round((Date.now() - S.inicio)/60000));
+  $('#fimTexto').textContent = S.erros === 0
+    ? 'Calda preparada na dose, na ordem e no volume certos, sem nenhuma correção no caminho. Foi assim que a aplicação fechou limpa.'
+    : `Calda preparada na dose e na ordem certas, com ${S.erros} ${S.erros === 1 ? 'correção' : 'correções'} no caminho — corrigir na bancada é barato, corrigir na lavoura não é.`;
+  const itens = R.itens.map((it,i) => `<div><dt>${it.cat} ${it.form}</dt><dd>${fmt0(S.exp.qtds[i].v)} ${S.exp.qtds[i].un}</dd></div>`).join('');
+  $('#fimResumo').innerHTML = `
+    <div><dt>Área aplicada</dt><dd>${fmt(S.area,1)} ha</dd></div>
+    <div><dt>Volume de calda</dt><dd>${fmt(S.exp.total,1)} L</dd></div>
+    <div><dt>Taxa</dt><dd>${R.taxa} L/ha</dd></div>
+    ${itens}
+    <div><dt>Tempo de bancada</dt><dd>${min} min</dd></div>`;
+  if(NIV.prova) renderBoletim();
+  fala('Serviço concluído: calda homogênea, dose correta e drone liberado para o voo. Bom trabalho.', 'ok');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderBoletim(){
+  const aprovado = S.nota >= 70;
+  const nome = NOME || 'Avaliado sem nome';
+  const grupos = {};
+  S.descontos.forEach(d => {
+    const chave = d.motivo.split(' — ')[0];
+    grupos[chave] = grupos[chave] || {n:0, pts:0};
+    grupos[chave].n++; grupos[chave].pts += d.pts;
+  });
+  const linhas = Object.entries(grupos).map(([k,v]) =>
+    `<li class="neg"><span>${k}${v.n > 1 ? ` <small>(${v.n}×)</small>` : ''}</span><b>−${v.pts}</b></li>`).join('');
+  $('#fimTitulo').textContent = aprovado
+    ? 'Aprovado — calda preparada dentro do padrão'
+    : 'Reprovado — refaça o preparo antes de ir a campo';
+  $('#fimTexto').textContent = aprovado
+    ? 'O preparo fechou dentro da dose, da ordem e do volume. Guarde o boletim.'
+    : 'A nota mínima é 70. Os descontos abaixo mostram onde o preparo saiu do padrão.';
+  $('#boletim').hidden = false;
+  $('#boletim').innerHTML = `
+    <div class="boletim-topo">
+      <div class="nota">${S.nota}<small>/100</small></div>
+      <div class="veredito ${aprovado ? 'ap' : 'rp'}">${aprovado ? 'Aprovado' : 'Reprovado'}</div>
+      <div class="boletim-meta">${nome}<br>Instrutora: Paula Veiga<br>${new Date().toLocaleDateString('pt-BR')} · ${tempoDecorrido()} de bancada<br>${R.cultura} · ${fmt(S.area,1)} ha</div>
+    </div>
+    <ul>
+      <li><span>Nota inicial</span><b>100</b></li>
+      ${linhas || '<li><span>Nenhum desconto — preparo sem erro</span><b>0</b></li>'}
+      <li><span><b>Nota final</b></span><b>${S.nota}</b></li>
+    </ul>
+    ${S.pulou ? '<p class="roda" style="color:var(--vermelho)">Etapas foram puladas pela navegação do topo — a nota é apenas indicativa.</p>' : ''}
+    <p class="roda">Boletim de simulador de treinamento. Não tem valor de certificação oficial nem substitui capacitação em uso de defensivos agrícolas.</p>`;
+}
+
+$('#btnNovo').addEventListener('click', () => location.reload());
+
+/* ============ tela inicial ============ */
+let NOME = '';
+function escolherCategoria(grupo, n){
+  if(grupo === 'catCalda') nivelId = n; else nivelGeralId = n;
+  document.querySelectorAll('#' + grupo + ' .niv').forEach(x => x.classList.toggle('on', x.dataset.n === n));
+  aplicarProva();
+  R = gerarReceita(); renderReceita();
+}
+['catGeral','catCalda'].forEach(g => {
+  $('#' + g).addEventListener('click', e => {
+    const b = e.target.closest('.niv'); if(!b) return;
+    escolherCategoria(g, b.dataset.n);
+  });
+});
+function alternarProva(){
+  MODO_PROVA = !MODO_PROVA;
+  const sw = $('#switchProva');
+  sw.classList.toggle('on', MODO_PROVA);
+  sw.setAttribute('aria-checked', MODO_PROVA ? 'true' : 'false');
+  aplicarProva();
+  R = gerarReceita(); renderReceita();
+}
+$('#switchProva').addEventListener('click', alternarProva);
+$('#switchProva').addEventListener('keydown', e => { if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); alternarProva(); } });
+
+$('#inNome').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('#btnComecar').click(); } });
+$('#btnComecar').addEventListener('click', () => {
+  NOME = $('#inNome').value.trim();
+  if(NOME.length < 2){
+    $('#dicaNome').textContent = NIV.prova
+      ? 'A prova precisa do nome de quem está sendo avaliado — é ele que vai no boletim.'
+      : 'Escreva seu nome para o crachá do auxiliar.';
+    $('#dicaNome').hidden = false;
+    $('#inNome').focus();
+    return;
+  }
+  $('#dicaNome').hidden = true;
+  try{
+    sessionStorage.setItem('nomeCalda', NOME);
+    sessionStorage.setItem('nivelCalda', nivelId);
+    sessionStorage.setItem('nivelGeral', nivelGeralId);
+  }catch(err){}
+  const primeiro = NOME.split(/\s+/)[0].toUpperCase().slice(0,9);
+  const cracha = document.getElementById('crachaAux');
+  if(cracha) cracha.textContent = primeiro;
+  $('#bQuem').textContent = NOME;
+  $('#bNivel').textContent = NIV.rot + (MODO_PROVA ? ' · prova' : '');
+  S = {erros:0, inicio:Date.now(), nota:100, descontos:[], penalizados:new Set()};
+  if(MODO_PROVA) iniciarCronometro();
+  renderReceita('#receitaFoto');
+  renderVespera();
+  iniciarGuiaPlano();
+  $('#inicio').hidden = true;
+  $('#vespera').hidden = false;
+  $('#slotCalcVespera').appendChild($('#calculadora'));
+  $('#tr0').classList.add('on');
+  const trat = primeiro.charAt(0) + primeiro.slice(1).toLowerCase();
+  fala(`Prazer, ${trat}. A operação é amanhã, mas o trabalho começa hoje: o produtor mandou a foto do receituário e o piloto passou os rendimentos. Feche as contas de água e combustível antes de carregar o caminhão.`);
+  $('#pl_calda').focus();
+});
+
+
+
+/* ============ estrutura: patio de operacao ============ */
+const TANQUE_GER = 6;          // litros do tanque do gerador
+let EST = null, carregaT = null;
+
+function iniciarEstrutura(){
+  if(EST) { renderPatio(); return; }
+  const plano = planoEsperado();
+  EST = {
+    sel:'drone',
+    droneNoChao:false, bracos:false, helices:false,
+    baterias:[100, 100, sorteio([58,64,71]), sorteio([82,88,93])]
+      .sort(() => Math.random()-.5)
+      .map((pct,i) => ({id:i+1, pct, carregando:false})),
+    ger:{
+      combustivel: Math.round((0.2 + Math.random()*0.8)*10)/10,
+      necessario: Math.ceil(plano.combustivel*10)/10,
+      ligado:false, tentativas:0,
+      falha: sorteio([null, 'registro', 'filtro', null]),
+      registroAberto:true, filtroLimpo:true,
+      viuRegistro:false, viuFiltro:false
+    },
+    mist:{
+      ligado:false, testado:false, tentativas:0,
+      falha: sorteio([null, 'tomada', 'bomba', 'mangueira']),
+      tomada:true, bomba:true, mangueira:true, aguaOk:false
+    }
+  };
+  if(EST.ger.falha === 'registro') EST.ger.registroAberto = false;
+  if(EST.ger.falha === 'filtro')   EST.ger.filtroLimpo = false;
+  if(EST.mist.falha === 'tomada')    EST.mist.tomada = false;
+  if(EST.mist.falha === 'bomba')     EST.mist.bomba = false;
+  if(EST.mist.falha === 'mangueira') EST.mist.mangueira = false;
+  renderPatio();
+  falaEstrutura();
+}
+
+function falaEstrutura(){
+  if(guiada()) fala('Pátio montado do jeito que o piloto deixou. Comece tirando o drone da carretinha — no chão, com espaço, dá para abrir os braços sem forçar nada. Depois vamos às baterias, ao gerador e ao misturador. Clique em cada equipamento no desenho.');
+  else fala('O pátio é seu. Deixe tudo pronto e testado antes de encostar na calda.');
+}
+
+function renderPatio(){
+  const e = EST;
+  const arm = (ang, aberto) => aberto ? ang : (ang > 90 && ang < 270 ? 190 : 350);
+  const bracos = [45, 135, 225, 315];
+  const dx = e.droneNoChao ? 190 : 0, dy = e.droneNoChao ? 60 : 0;
+  $('#patio').innerHTML = `
+  <svg viewBox="0 0 640 330" role="img" aria-label="Pátio de operação visto de cima">
+    <g class="alvo ${e.droneNoChao ? '' : 'sel-none'}" data-alvo="drone">
+      <rect x="22" y="72" width="168" height="136" rx="8" fill="var(--metal)" stroke="var(--metal-2)" stroke-width="2"/>
+      <path d="M22 130 h-16 v20 h16" fill="none" stroke="var(--metal-2)" stroke-width="5"/>
+      <rect x="30" y="80" width="152" height="120" rx="5" fill="none" stroke="rgba(255,255,255,.25)"/>
+      <text x="106" y="222" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="14" fill="var(--ink-3)" letter-spacing="1.5">CARRETINHA</text>
+    </g>
+
+    <g class="drone-grupo alvo" data-alvo="drone" style="transform:translate(${dx}px, ${dy}px)">
+      <g transform="translate(106,140)">
+        ${bracos.map((a,i) => `
+          <g class="braco" style="transform:rotate(${arm(a, e.bracos)}deg)">
+            <rect x="14" y="-5" width="62" height="10" rx="5" fill="var(--metal-2)"/>
+            <circle cx="80" cy="0" r="9" fill="#2E3A2C"/>
+            <g class="helice ${e.helices ? '' : 'dobrada'}" style="transform:translate(80px,0) rotate(${e.helices ? 0 : 62}deg)">
+              <rect x="-42" y="-3.4" width="84" height="6.8" rx="3.4" fill="#3E4A3A" opacity=".92"/>
+            </g>
+          </g>`).join('')}
+        <rect x="-30" y="-26" width="60" height="52" rx="9" fill="#D9DDD0" stroke="#9AA292" stroke-width="2"/>
+        <rect x="-19" y="-15" width="38" height="24" rx="4" fill="#5C6A54"/>
+        <circle cx="0" cy="17" r="5" fill="#8E9689"/>
+        <path class="marca-ok" d="M-8 -3 l6 6 l12 -13" fill="none" stroke="var(--verde)" stroke-width="4" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <g class="alvo" data-alvo="baterias">
+      <rect x="248" y="14" width="150" height="62" rx="6" fill="#6E7669" stroke="var(--metal-2)" stroke-width="2"/>
+      ${e.baterias.map((b,i) => `
+        <g transform="translate(${258 + i*35}, 26)">
+          <rect x="0" y="0" width="26" height="38" rx="3" fill="#2E3A2C"/>
+          <rect x="3" y="${3 + 32*(1 - b.pct/100)}" width="20" height="${32*(b.pct/100)}" rx="2"
+                fill="${b.pct >= 100 ? 'var(--verde)' : b.carregando ? 'var(--amarelo)' : 'var(--vermelho)'}"/>
+        </g>`).join('')}
+      <text x="323" y="90" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="14" fill="var(--ink-3)" letter-spacing="1.5">BATERIAS</text>
+    </g>
+
+    <g class="alvo ${e.ger.ligado ? 'ligado-ger' : ''}" data-alvo="gerador">
+      <rect x="452" y="30" width="150" height="96" rx="9" fill="#8E9689" stroke="var(--metal-2)" stroke-width="2"/>
+      <rect x="464" y="42" width="60" height="34" rx="4" fill="#5C6A54"/>
+      <circle cx="576" cy="52" r="9" fill="#3A4136"/>
+      <circle cx="576" cy="52" r="4" fill="${e.ger.ligado ? '#7FE07A' : '#4A5347'}"/>
+      <rect x="464" y="86" width="126" height="28" rx="4" fill="#6E7669"/>
+      <rect x="468" y="90" width="${118 * Math.min(e.ger.combustivel/TANQUE_GER, 1)}" height="20" rx="3" fill="var(--amarelo)" opacity=".85"/>
+      <circle class="fumaca" cx="596" cy="30" r="8" fill="#B9BFB0"/>
+      <text x="527" y="142" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="14" fill="var(--ink-3)" letter-spacing="1.5">GERADOR</text>
+      <path class="marca-ok" d="M519 55 l6 6 l12 -13" fill="none" stroke="var(--verde)" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <g class="alvo" data-alvo="misturador">
+      <circle cx="530" cy="240" r="52" fill="var(--metal)" stroke="var(--metal-2)" stroke-width="2"/>
+      <circle cx="530" cy="240" r="40" fill="${e.mist.aguaOk ? 'var(--agua)' : '#7C8474'}" opacity=".8"/>
+      <g class="${e.mist.ligado ? 'girando-motor' : ''}" style="transform-origin:530px 240px">
+        <rect x="498" y="236" width="64" height="8" rx="4" fill="var(--metal-2)"/>
+      </g>
+      <circle cx="530" cy="240" r="9" fill="#3A4136"/>
+      <path d="M582 240 h26" stroke="#3E4A3A" stroke-width="6" stroke-linecap="round"/>
+      <text x="530" y="308" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="14" fill="var(--ink-3)" letter-spacing="1.5">MISTURADOR</text>
+      <path class="marca-ok" d="M519 236 l6 6 l12 -13" fill="none" stroke="var(--verde)" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+  document.querySelectorAll('#patio .alvo').forEach(g => {
+    g.classList.toggle('sel', g.dataset.alvo === EST.sel);
+    if(g.dataset.alvo === 'drone' && EST.helices) g.classList.add('feito');
+    if(g.dataset.alvo === 'gerador' && EST.ger.ligado && EST.ger.combustivel >= EST.ger.necessario) g.classList.add('feito');
+    if(g.dataset.alvo === 'misturador' && EST.mist.testado) g.classList.add('feito');
+  });
+  renderPainelEq();
+  renderCheckEst();
+}
+
+$('#patio').addEventListener('click', e => {
+  const g = e.target.closest('.alvo'); if(!g) return;
+  EST.sel = g.dataset.alvo;
+  renderPatio();
+});
+
+function renderPainelEq(){
+  const e = EST, p = $('#painelEq');
+  const dica = t => guiada() ? `<p class="sub">${t}</p>` : '';
+  if(e.sel === 'drone'){
+    p.innerHTML = `<h3>Drone pulverizador</h3>
+      ${dica(!e.droneNoChao ? 'Na carretinha não dá para abrir os braços: falta espaço e a hélice bate na grade.'
+        : !e.bracos ? 'Braço aberto é braço travado — vai até o fim e trava sozinho.'
+        : !e.helices ? 'As hélices vêm dobradas do transporte. Abertas e alinhadas, senão desbalanceia no voo.'
+        : 'Drone montado.')}
+      <div class="acoes-eq">
+        <button class="btn" data-ac="descer" ${e.droneNoChao ? 'disabled' : ''}>Descer da carretinha</button>
+        <button class="btn" data-ac="bracos" ${e.bracos || !e.droneNoChao ? 'disabled' : ''}>Abrir os braços</button>
+        <button class="btn" data-ac="helices" ${e.helices || !e.bracos ? 'disabled' : ''}>Destravar as hélices</button>
+      </div>`;
+    return;
+  }
+  if(e.sel === 'baterias'){
+    p.innerHTML = `<h3>Baterias</h3>
+      ${dica('O drone só sai com bateria cheia. As que estiverem abaixo de 100% vão para o carregador — e o carregador só funciona com o gerador ligado.')}
+      <div class="baterias">${e.baterias.map((b,i) => `
+        <div class="bat ${b.pct >= 100 ? 'cheia' : b.carregando ? 'carregando' : ''}">
+          <div class="bat-topo"><span>#${b.id}</span><b>${Math.floor(b.pct)}%</b></div>
+          <div class="barra"><i style="width:${b.pct}%"></i></div>
+          ${b.pct >= 100 ? '<span style="font-size:11.5px;color:var(--verde)">pronta</span>'
+            : b.carregando ? '<span style="font-size:11.5px;color:var(--amarelo)">carregando…</span>'
+            : `<button class="btn sec" data-ac="carregar" data-i="${i}">Pôr no carregador</button>`}
+        </div>`).join('')}</div>`;
+    return;
+  }
+  if(e.sel === 'gerador'){
+    const g = e.ger, falta = Math.max(0, g.necessario - g.combustivel);
+    p.innerHTML = `<h3>Gerador</h3>
+      ${dica('Antes de puxar a partida, olhe o tanque. A conta de combustível você já fez na véspera — é ela que diz quanto tem que ir aqui dentro.')}
+      <div class="medidor-comb">
+        <div class="barra ${g.combustivel >= g.necessario ? 'ok' : ''}">
+          <i style="width:${Math.min(g.combustivel/TANQUE_GER*100,100)}%"></i>
+          <span class="risco" style="left:${Math.min(g.necessario/TANQUE_GER*100,100)}%" title="necessário para a operação"></span>
+        </div>
+        <div class="barra-rot"><span>tanque ${fmt(g.combustivel,1)} L de ${TANQUE_GER} L</span><span>${guiada() ? 'preciso: ' + fmt(g.necessario,1) + ' L' : 'marca = o que a operação pede'}</span></div>
+      </div>
+      <button class="segurar" id="btnGalao" ${g.ligado ? 'disabled' : ''}>Segure para abastecer com o galão</button>
+      <div class="acoes-eq" style="margin-top:9px">
+        <button class="btn" data-ac="partida">${g.ligado ? 'Desligar' : 'Dar a partida'}</button>
+        <button class="btn sec" data-ac="registro">Verificar o registro</button>
+        <button class="btn sec" data-ac="filtro">Verificar o filtro</button>
+      </div>
+      <p class="aviso-linha" id="avGer" ${g.tentativas || g.viuRegistro || g.viuFiltro ? '' : 'hidden'}>${g.msg || ''}</p>`;
+    ligarGalao();
+    return;
+  }
+  if(e.sel === 'misturador'){
+    const m = e.mist;
+    p.innerHTML = `<h3>Misturador</h3>
+      ${dica('Testar agora é barato: liga o motor, abre a água e vê se sai. Descobrir na hora da calda é operação parada com produto na mão.')}
+      <div class="acoes-eq">
+        <button class="btn" data-ac="ligarMist">${m.ligado ? 'Desligar o motor' : 'Ligar o motor'}</button>
+        <button class="btn" data-ac="agua">Abrir a água</button>
+        <button class="btn sec" data-ac="tomada">Verificar a tomada</button>
+        <button class="btn sec" data-ac="bombaV">Verificar a bomba</button>
+        <button class="btn sec" data-ac="mangueiraV">Verificar a mangueira</button>
+      </div>
+      <p class="aviso-linha" id="avMist" ${m.msg ? '' : 'hidden'}>${m.msg || ''}</p>`;
+    return;
+  }
+}
+
+function renderCheckEst(){
+  const e = EST;
+  const itens = guiada() ? [
+    ['Drone no chão, fora da carretinha', e.droneNoChao],
+    ['Braços abertos e travados', e.bracos],
+    ['Hélices destravadas e alinhadas', e.helices],
+    ['Baterias em 100%', e.baterias.every(b => b.pct >= 100)],
+    ['Gerador abastecido para a operação', e.ger.combustivel >= e.ger.necessario],
+    ['Gerador funcionando', e.ger.ligado],
+    ['Misturador testado — motor e água', e.mist.testado]
+  ] : [['Estrutura montada, abastecida e testada', tudoPronto()]];
+  $('#checkEst').innerHTML = itens.map(([t,ok]) =>
+    `<li class="${ok ? 'ok' : ''}"><span class="cx">${ok ? '✓' : ''}</span><span>${t}</span></li>`).join('');
+  $('#btnIrCaldaEst').disabled = !tudoPronto();
+}
+function tudoPronto(){
+  const e = EST;
+  return e.droneNoChao && e.bracos && e.helices && e.baterias.every(b => b.pct >= 100)
+    && e.ger.combustivel >= e.ger.necessario && e.ger.ligado && e.mist.testado;
+}
+
+function ligarGalao(){
+  const btn = document.getElementById('btnGalao'); if(!btn) return;
+  const g = EST.ger;
+  despejo.valor = g.combustivel; despejo.alvo = g.necessario; despejo.max = TANQUE_GER;
+  despejo.onTick = v => {
+    g.combustivel = v;
+    const barra = document.querySelector('#painelEq .barra');
+    if(barra){
+      barra.querySelector('i').style.width = Math.min(v/TANQUE_GER*100,100) + '%';
+      barra.classList.toggle('ok', v >= g.necessario);
+      document.querySelector('.barra-rot span').textContent = `tanque ${fmt(v,1)} L de ${TANQUE_GER} L`;
+    }
+  };
+  despejo.onStop = () => { renderPatio(); };
+  ligaSegurar(btn, () => iniciarDespejo(), () => pararDespejo());
+}
+
+$('#painelEq').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-ac]'); if(!b) return;
+  const ac = b.dataset.ac, e = EST, g = e.ger, m = e.mist;
+
+  if(ac === 'descer'){ e.droneNoChao = true; fala('Drone no chão, com espaço em volta.', 'ok'); }
+  if(ac === 'bracos'){ e.bracos = true; fala('Braços abertos até o fim, travados.', 'ok'); }
+  if(ac === 'helices'){ e.helices = true; fala('Hélices abertas e alinhadas. Drone montado.', 'ok'); }
+
+  if(ac === 'carregar'){
+    if(!g.ligado){
+      penalizar('Carregador sem energia', 4);
+      fala('O carregador não tem energia. Sem gerador ligado, essa bateria não sobe um por cento — resolva a energia primeiro.', 'erro');
+    } else {
+      e.baterias[+b.dataset.i].carregando = true;
+      fala('Bateria no carregador. Vai subindo enquanto você toca o resto do serviço.');
+    }
+  }
+
+  if(ac === 'partida'){
+    if(g.ligado){ g.ligado = false; g.msg = 'Gerador desligado.'; }
+    else if(g.combustivel < 0.15){
+      g.tentativas++; penalizar('Partida no gerador sem combustível', 4);
+      g.msg = 'Puxa e não pega. Nem tenta segurar a partida.';
+      fala(guiada() ? 'Não pega porque não tem o que queimar — o tanque está no fundo. Abasteça antes de puxar de novo.' : 'Não pegou.', 'erro');
+    } else if(!g.registroAberto){
+      g.tentativas++;
+      g.msg = 'Puxa, o motor gira, mas não pega.';
+      fala(g.tentativas >= 2 && guiada()
+        ? 'Motor gira e não pega, com combustível no tanque: o problema está na alimentação. Olhe o registro antes de arrebentar a corda.'
+        : 'Gira e não pega.', 'erro');
+      penalizar('Partida sem diagnosticar o gerador', 3, 'ger-tent');
+    } else if(!g.filtroLimpo){
+      g.tentativas++;
+      g.msg = 'Pega, funciona uns segundos engasgando e morre.';
+      fala(g.tentativas >= 2 && guiada()
+        ? 'Pegou e morreu engasgando. Motor que sufoca assim é ar ou combustível sujo — comece pelo filtro.'
+        : 'Pegou e morreu.', 'erro');
+      penalizar('Partida sem diagnosticar o gerador', 3, 'ger-tent');
+    } else {
+      g.ligado = true; g.msg = 'Gerador funcionando, rotação estável.';
+      fala('Gerador rodando. Agora o carregador tem energia.', 'ok');
+    }
+  }
+  if(ac === 'registro'){
+    g.viuRegistro = true;
+    if(!g.registroAberto){ g.registroAberto = true; g.msg = 'O registro de combustível estava fechado. Aberto agora.'; fala('Achou: registro fechado. É o primeiro lugar de olhar quando o motor gira e não pega.', 'ok'); }
+    else { g.msg = 'Registro aberto, sem novidade aí.'; }
+  }
+  if(ac === 'filtro'){
+    g.viuFiltro = true;
+    if(!g.filtroLimpo){ g.filtroLimpo = true; g.msg = 'Filtro entupido de poeira. Limpo e recolocado.'; fala('Era o filtro, entupido de poeira de lavoura. Limpo, o motor respira e segura a rotação.', 'ok'); }
+    else { g.msg = 'Filtro limpo, sem novidade aí.'; }
+  }
+
+  if(ac === 'ligarMist'){
+    if(m.ligado){ m.ligado = false; m.msg = 'Motor do misturador desligado.'; }
+    else if(!m.tomada){ m.tentativas++; m.msg = 'Aperta o botão e não acontece nada — nem barulho.'; penalizar('Teste do misturador sem diagnosticar', 3, 'mist-tent');
+      fala(m.tentativas >= 2 && guiada() ? 'Nem barulho faz. Quando não dá sinal nenhum de vida, o problema é energia: olhe a tomada.' : 'Não ligou.', 'erro'); }
+    else if(!g.ligado){ m.msg = 'Sem energia: o gerador está desligado.'; fala('O misturador puxa do gerador. Ligue o gerador primeiro.', 'erro'); }
+    else { m.ligado = true; m.msg = 'Motor girando, sem ruído estranho.'; fala('Motor do misturador girando redondo.', 'ok'); }
+  }
+  if(ac === 'agua'){
+    if(!m.bomba){ m.tentativas++; m.msg = 'A torneira abre e não vem água.'; penalizar('Teste do misturador sem diagnosticar', 3, 'mist-tent');
+      fala(m.tentativas >= 2 && guiada() ? 'Torneira aberta e nada de água: ou a bomba está desligada, ou a mangueira está obstruída. Vá por partes.' : 'Não veio água.', 'erro'); }
+    else if(!m.mangueira){ m.tentativas++; m.msg = 'Vem um fio de água e para.'; penalizar('Teste do misturador sem diagnosticar', 3, 'mist-tent');
+      fala(m.tentativas >= 2 && guiada() ? 'Fio de água e para: isso é obstrução. Olhe a mangueira e o filtro dela.' : 'Quase não veio água.', 'erro'); }
+    else if(!m.ligado){ m.msg = 'Água sai, mas teste o motor também antes de dar por bom.'; m.aguaOk = true; }
+    else { m.aguaOk = true; m.testado = true; m.msg = 'Água com vazão cheia e motor girando. Misturador aprovado.'; fala('Misturador testado: motor gira e a água sai com vazão. Pode contar com ele na hora da calda.', 'ok'); }
+  }
+  if(ac === 'tomada'){
+    if(!m.tomada){ m.tomada = true; m.msg = 'A tomada estava fora do encaixe. Conectada.'; fala('Era a tomada, solta atrás do painel. Conectada.', 'ok'); }
+    else m.msg = 'Tomada firme no lugar.';
+  }
+  if(ac === 'bombaV'){
+    if(!m.bomba){ m.bomba = true; m.msg = 'A chave da bomba estava desligada. Ligada agora.'; fala('A bomba estava desligada na chave. Ligada.', 'ok'); }
+    else m.msg = 'Bomba ligada e escorvada.';
+  }
+  if(ac === 'mangueiraV'){
+    if(!m.mangueira){ m.mangueira = true; m.msg = 'Mangueira com sujeira presa no filtro de linha. Desentupida.'; fala('Sujeira presa no filtro de linha. Limpo, a vazão volta.', 'ok'); }
+    else m.msg = 'Mangueira livre, sem dobra.';
+  }
+  renderPatio();
+});
+
+function tickCarga(){
+  if(!EST) return;
+  let mudou = false;
+  if(EST.ger.ligado){
+    EST.baterias.forEach(b => {
+      if(b.carregando && b.pct < 100){
+        b.pct = Math.min(100, b.pct + 1.6);
+        if(b.pct >= 100){ b.carregando = false; fala(`Bateria #${b.id} completou 100%.`, 'ok'); }
+        mudou = true;
+      }
+    });
+  }
+  if(mudou && !$('#estrutura').hidden) renderPatio();
+}
+setInterval(tickCarga, 700);
+
+$('#btnIrCaldaEst').addEventListener('click', () => {
+  $('#estrutura').hidden = true; $('#epi').hidden = false;
+  $('#trE').classList.remove('on'); $('#trE').classList.add('feito');
+  $('#trP').classList.add('on');
+  iniciarEpi();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+
+/* ============ paramentacao de EPI ============ */
+const EPI_ITENS = [
+  {id:'calca', nome:'Calça hidrorrepelente', nota:'Ajustada na cintura, sobre roupa leve',
+   porque:'A calça é a base de tudo: as outras peças se apoiam nela.',
+   feito:'Calça vestida e ajustada na cintura.'},
+  {id:'jaleco', nome:'Jaleco hidrorrepelente', nota:'Sempre por cima da calça',
+   porque:'O jaleco tem que cair por fora da cintura da calça — por dentro, o respingo escorre para a barriga.',
+   feito:'Jaleco por cima da calça, cobrindo a cintura.'},
+  {id:'botas', nome:'Botas de PVC', nota:'Com meia de algodão; barra da calça por fora',
+   porque:'Com a bota calçada antes, você é obrigado a enfiar a barra da calça dentro dela — e a barra por dentro vira funil para o líquido.',
+   feito:'Botas calçadas com meia de algodão, barra da calça caindo por fora.'},
+  {id:'avental', nome:'Avental impermeável', nota:'No preparo da calda, vai na frente',
+   porque:'O avental fecha por cima do jaleco: entra depois dele, nunca antes.',
+   feito:'Avental de PVC na frente, que é onde o respingo bate no preparo.'},
+  {id:'respirador', nome:'Respirador com filtro', nota:'Ajuste as tiras e teste a vedação',
+   porque:'A máscara precisa vedar direto no rosto — nada pode estar cobrindo a cabeça antes dela.',
+   feito:'Respirador ajustado, vedando no rosto.'},
+  {id:'viseira', nome:'Viseira facial', nota:'Logo depois da máscara',
+   porque:'A viseira vai por cima do respirador. Antes dele, você não consegue mais ajustar a vedação.',
+   feito:'Viseira por cima do respirador, rosto protegido.'},
+  {id:'chapeu', nome:'Chapéu árabe', nota:'Cobre as alças da viseira e do respirador',
+   porque:'Ele fecha a cabeça e o pescoço prendendo as alças das outras peças — por isso entra depois delas.',
+   feito:'Chapéu árabe cobrindo cabeça, orelhas e pescoço.'},
+  {id:'luvas', nome:'Luvas nitrílicas 0,4 mm', nota:'No preparo, por dentro das mangas',
+   porque:'Luva é sempre o último item: com ela na mão, qualquer ajuste que você fizer contamina a peça.',
+   feito:'Luvas nitrílicas por dentro das mangas. Paramentação completa.'}
+];
+const EPI_PROIBIDO = {id:'couro', nome:'Luvas de couro', nota:'Não faz parte do kit',
+  motivo:'Couro e algodão absorvem o produto e o seguram encostado na pele. Para defensivo só entra luva nitrílica ou de neoprene, no mínimo 0,4 mm.'};
+
+let EPI = null;
+
+const iconesEpi = {
+  calca:      '<svg viewBox="0 0 30 34"><path d="M7 3h16l2 28h-7l-3-16-3 16H5z" fill="var(--epi)" stroke="var(--epi-linha)"/></svg>',
+  jaleco:     '<svg viewBox="0 0 30 34"><path d="M10 3h10l6 4-3 6-2-1v19H9V12l-2 1-3-6z" fill="var(--epi)" stroke="var(--epi-linha)"/></svg>',
+  botas:      '<svg viewBox="0 0 30 34"><path d="M8 4h7v17l8 4v6H8z" fill="var(--bota)" stroke="#A8871F"/><rect x="7" y="29" width="17" height="4" rx="2" fill="var(--bota-sola)"/></svg>',
+  avental:    '<svg viewBox="0 0 30 34"><path d="M11 3h8v3l6 5v20H5V11l6-5z" fill="#C9CEBF" stroke="#A9B09C"/><path d="M11 3 15 8 19 3" fill="none" stroke="#A9B09C"/></svg>',
+  respirador: '<svg viewBox="0 0 30 34"><path d="M5 12h20v9q0 8-10 8T5 21z" fill="#C9CEBF" stroke="#A9B09C"/><circle cx="10" cy="19" r="4" fill="#8E9689"/><circle cx="20" cy="19" r="4" fill="#8E9689"/><path d="M3 10h24" stroke="#8E9689" stroke-width="2"/></svg>',
+  viseira:    '<svg viewBox="0 0 30 34"><rect x="3" y="7" width="24" height="5" rx="2" fill="#5C6A54"/><path d="M4 12h22v11q0 7-11 7T4 23z" fill="#8FC6E0" opacity=".55" stroke="#5C6A54"/></svg>',
+  chapeu:     '<svg viewBox="0 0 30 34"><path d="M15 5q8 0 8 9h-16q0-9 8-9z" fill="var(--epi)" stroke="var(--epi-linha)"/><path d="M2 14h26v4H2z" fill="var(--epi)" stroke="var(--epi-linha)"/><path d="M7 18h16v12q0 3-8 3t-8-3z" fill="var(--epi)" opacity=".85" stroke="var(--epi-linha)"/></svg>',
+  luvas:      '<svg viewBox="0 0 30 34"><path d="M9 12V6a2 2 0 0 1 4 0v6m0 0V4a2 2 0 0 1 4 0v8m0 0V6a2 2 0 0 1 4 0v10q0 12-8 12T9 18v-6z" fill="var(--luva)" stroke="#1E4A63"/></svg>',
+  couro:      '<svg viewBox="0 0 30 34"><path d="M9 12V6a2 2 0 0 1 4 0v6m0 0V4a2 2 0 0 1 4 0v8m0 0V6a2 2 0 0 1 4 0v10q0 12-8 12T9 18v-6z" fill="#9A6B3F" stroke="#6E4A28"/></svg>'
+};
+
+const SVG_EPI = `
+<svg viewBox="0 0 200 400" role="img" aria-label="Auxiliar vestindo o EPI">
+  <ellipse cx="100" cy="384" rx="52" ry="7" fill="rgba(0,0,0,.13)"/>
+  <!-- pernas e pes -->
+  <rect x="80" y="252" width="17" height="92" rx="7" fill="var(--pele)"/>
+  <rect x="103" y="252" width="17" height="92" rx="7" fill="var(--pele)"/>
+  <g class="p-chinelo">
+    <rect x="74" y="344" width="28" height="10" rx="5" fill="#4A4038"/>
+    <rect x="98" y="344" width="28" height="10" rx="5" fill="#4A4038"/>
+  </g>
+  <g class="p-bermuda"><path d="M66 200h68v46l-6 22h-22l-4-30-4 30H72l-6-22z" fill="#4E6A84"/></g>
+  <!-- calca EPI -->
+  <g class="p-calca"><path d="M64 196h72v58l-5 92h-26l-5-74-5 74H69l-5-92z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
+    <rect x="64" y="196" width="72" height="9" fill="#D5D9CA"/></g>
+  <!-- botas -->
+  <g class="p-botas">
+    <path d="M74 300h26v56a4 4 0 0 1-4 4H78a4 4 0 0 1-4-4z" fill="var(--bota)" stroke="#A8871F"/>
+    <path d="M100 300h26v56a4 4 0 0 1-4 4h-18a4 4 0 0 1-4-4z" fill="var(--bota)" stroke="#A8871F"/>
+    <rect x="72" y="352" width="56" height="10" rx="4" fill="var(--bota-sola)"/>
+  </g>
+  <g class="p-barra"><path d="M70 296h28v14H70z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+    <path d="M102 296h28v14h-28z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/></g>
+  <!-- tronco casual -->
+  <g class="p-camiseta"><path d="M68 104h64v100H68z" fill="#C4693F"/>
+    <path d="M68 104l-14 8 8 20 12-8z" fill="#C4693F"/><path d="M132 104l14 8-8 20-12-8z" fill="#C4693F"/></g>
+  <rect class="p-braco" x="48" y="128" width="15" height="84" rx="7" fill="var(--pele)"/>
+  <rect class="p-braco" x="137" y="128" width="15" height="84" rx="7" fill="var(--pele)"/>
+  <!-- jaleco -->
+  <g class="p-jaleco">
+    <path d="M64 102h72v116H64z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
+    <path d="M64 102l-20 12 12 104h14z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
+    <path d="M136 102l20 12-12 104h-14z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
+    <path d="M100 102v116" stroke="var(--epi-linha)" stroke-width="1.6"/>
+    <rect x="62" y="206" width="76" height="12" fill="#D5D9CA"/>
+  </g>
+  <!-- luvas -->
+  <g class="p-luvas">
+    <rect x="44" y="196" width="20" height="34" rx="9" fill="var(--luva)"/>
+    <rect x="136" y="196" width="20" height="34" rx="9" fill="var(--luva)"/>
+  </g>
+  <g class="p-punho">
+    <rect x="43" y="196" width="22" height="12" rx="4" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+    <rect x="135" y="196" width="22" height="12" rx="4" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+  </g>
+  <g class="p-mao">
+    <circle cx="55" cy="214" r="11" fill="var(--pele)"/><circle cx="145" cy="214" r="11" fill="var(--pele)"/>
+  </g>
+  <!-- avental -->
+  <g class="p-avental">
+    <path d="M80 112h40v8l14 12v104H66V132l14-12z" fill="#C9CEBF" stroke="#A9B09C" stroke-width="1.6"/>
+    <path d="M80 112l20 14 20-14" fill="none" stroke="#A9B09C" stroke-width="1.6"/>
+  </g>
+  <!-- cabeca -->
+  <rect x="92" y="88" width="16" height="14" fill="var(--pele)"/>
+  <ellipse cx="100" cy="62" rx="28" ry="32" fill="var(--pele)"/>
+  <circle cx="72" cy="66" r="6" fill="var(--pele)"/><circle cx="128" cy="66" r="6" fill="var(--pele)"/>
+  <g class="p-cabelo"><path d="M72 52q4-24 28-24t28 24q-10-10-28-10t-28 10z" fill="#3A2A22"/></g>
+  <circle class="p-olho" cx="90" cy="60" r="3" fill="#2C2119"/><circle class="p-olho" cx="110" cy="60" r="3" fill="#2C2119"/>
+  <path class="p-boca" d="M93 75q7 5 14 0" stroke="#2C2119" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <g class="p-bone">
+    <path d="M72 46q2-22 28-22t28 22z" fill="var(--azul)"/>
+    <path d="M128 44q16 2 18 9-20 5-46 2z" fill="#17506C"/>
+  </g>
+  <!-- respirador -->
+  <g class="p-respirador">
+    <path d="M78 62h44v14q0 14-22 14t-22-14z" fill="#C9CEBF" stroke="#A9B09C" stroke-width="1.4"/>
+    <circle cx="86" cy="74" r="7" fill="#8E9689"/><circle cx="114" cy="74" r="7" fill="#8E9689"/>
+    <path d="M70 58h60" stroke="#8E9689" stroke-width="3"/>
+  </g>
+  <!-- viseira -->
+  <g class="p-viseira">
+    <rect x="66" y="26" width="68" height="10" rx="4" fill="#5C6A54"/>
+    <path d="M68 36h64v38q0 16-32 16T68 74z" fill="#8FC6E0" opacity=".5" stroke="#5C6A54" stroke-width="1.4"/>
+  </g>
+  <!-- chapeu arabe -->
+  <g class="p-chapeu">
+    <path d="M64 96h14v26q0 8 22 8t22-8V96h14v30q0 18-36 18T64 126z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4" opacity=".95"/>
+    <path d="M100 14q26 0 28 24H72q2-24 28-24z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+    <path d="M52 38h96v9H52z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+  </g>
+</svg>`;
+
+function iniciarEpi(){
+  if(!EPI) EPI = {vestidos:[], erros:0};
+  $('#bonecoEpi').innerHTML = SVG_EPI;
+  renderEpi();
+  fala(guiada()
+    ? 'Ele está de boné, bermuda e chinelo — do jeito que ninguém pode chegar perto de defensivo. Vista o EPI na ordem certa: comece pela <b>calça</b>, que é a base de tudo.'
+    : 'Vista o EPI antes de abrir qualquer embalagem. A ordem importa.');
+}
+
+function renderEpi(){
+  const v = EPI.vestidos;
+  const box = $('#bonecoEpi');
+  box.className = 'op-corpo ' + v.map(id => 'veste-' + id).join(' ');
+  const cards = EPI_ITENS.map((it,i) => {
+    const posto = v.includes(it.id);
+    return `<button class="epi-item ${posto ? 'vestido' : ''}" data-epi="${it.id}" ${posto ? 'disabled' : ''}>
+      <span class="ca">COM CA</span>${iconesEpi[it.id]}
+      <span><b>${it.nome}</b><i>${it.nota}</i></span>
+      <span class="ordem-epi">${posto ? v.indexOf(it.id)+1 : '·'}</span>
+    </button>`;
+  });
+  cards.splice(7, 0, `<button class="epi-item proibido" data-epi="couro">
+      ${iconesEpi.couro}<span><b>${EPI_PROIBIDO.nome}</b><i>${EPI_PROIBIDO.nota}</i></span>
+    </button>`);
+  $('#cabide').innerHTML = cards.join('');
+  $('#ordemEpi').innerHTML = EPI_ITENS.map((it,i) => {
+    const posto = v.includes(it.id), agora = !posto && v.length === i;
+    const texto = guiada() || posto ? it.nome : '—';
+    return `<li class="${posto ? 'ok' : agora ? 'agora' : ''}"><b>${posto ? '✓' : i+1}</b><span>${texto}</span></li>`;
+  }).join('');
+  $('#legendaEpi').textContent = v.length === 0 ? 'Sem proteção nenhuma'
+    : v.length === EPI_ITENS.length ? 'Paramentação completa' : `${v.length} de ${EPI_ITENS.length} peças`;
+  $('#btnIrCaldaEpi').disabled = v.length < EPI_ITENS.length;
+}
+
+$('#cabide').addEventListener('click', e => {
+  const b = e.target.closest('[data-epi]'); if(!b) return;
+  const id = b.dataset.epi, av = $('#avEpi');
+  if(id === 'couro'){
+    penalizar('EPI — luva de couro no kit de defensivo', 8);
+    av.hidden = false; av.textContent = EPI_PROIBIDO.motivo;
+    fala('Essa luva não. ' + EPI_PROIBIDO.motivo, 'erro');
+    return;
+  }
+  const esperado = EPI_ITENS[EPI.vestidos.length];
+  const item = EPI_ITENS.find(x => x.id === id);
+  if(EPI.vestidos.includes(id)) return;
+  if(id !== esperado.id){
+    penalizar('EPI — ordem de paramentação', 5);
+    av.hidden = false;
+    av.textContent = guiada() || NIVG.diag === 'curto'
+      ? `${item.porque} Agora é a vez de: ${esperado.nome}.`
+      : 'Fora da ordem de paramentação.';
+    fala(guiada() ? item.porque : 'Fora de ordem.', 'erro');
+    return;
+  }
+  EPI.vestidos.push(id);
+  av.hidden = true;
+  renderEpi();
+  const fim = EPI.vestidos.length === EPI_ITENS.length;
+  fala(item.feito + (fim ? ' Agora sim dá para encostar em produto.' : ''), 'ok');
+});
+
+$('#btnIrCaldaEpi').addEventListener('click', () => {
+  $('#epi').hidden = true; $('#calculos').hidden = false;
+  $('#slotCalcCalda').appendChild($('#calculadora'));
+  $('#trP').classList.remove('on'); $('#trP').classList.add('feito');
+  $('#tr1').classList.add('on');
+  fala(guiada()
+    ? 'Paramentado. O piloto voltou do mapeamento com a área real — e atenção: <b>daqui para a frente a conta é pela área do voo</b>, não mais pelos hectares do receituário.'
+    : 'Paramentado. O piloto voltou com a área real do voo.');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ============ navegacao direta entre etapas ============ */
+const FASES = [
+  {id:'vespera',  sec:'#vespera',  pill:'#tr0'},
+  {id:'barracao', sec:'#barracao', pill:'#trB'},
+  {id:'estrutura', sec:'#estrutura', pill:'#trE'},
+  {id:'epi', sec:'#epi', pill:'#trP'},
+  {id:'calculos', sec:'#calculos', pill:'#tr1'},
+  {id:'preparo',  sec:'#preparo',  pill:'#tr2'},
+  {id:'fim',      sec:'#fim',      pill:'#tr3'}
+];
+
+function garantirSessao(){
+  if(!S) S = {erros:0, inicio:Date.now(), nota:100, descontos:[], penalizados:new Set()};
+  if(!NOME){
+    NOME = ($('#inNome').value || '').trim() || 'Teste';
+    const cracha = document.getElementById('crachaAux');
+    if(cracha) cracha.textContent = NOME.split(/\s+/)[0].toUpperCase().slice(0,9);
+    $('#bQuem').textContent = NOME;
+    $('#bNivel').textContent = NIV.rot + (MODO_PROVA ? ' · prova' : '');
+  }
+}
+function garantirArea(){
+  garantirSessao();
+  if(S.area) return;
+  const a = Math.round(R.areaRec * 0.94 * 2) / 2;
+  S.area = a; S.exp = esperados(a);
+  $('#inArea').value = fmt(a,1);
+  $('#inArea').disabled = true; $('#btnArea').disabled = true;
+  $('#inArea').closest('.linha').classList.add('ok');
+  $('#inArea').closest('.linha').querySelector('.sinal').textContent = '✓';
+  $('#linhasCalc').hidden = false; $('#acoesBloco').hidden = false;
+  renderLinhasProduto();
+}
+function preencherCalda(){
+  garantirArea();
+  $('#inTotal').value = fmt(S.exp.total,1);
+  $('#inAgua').value = fmt(S.exp.agua1,1);
+  R.itens.forEach((it,i) => { const el = document.getElementById('inP'+i); if(el) el.value = fmt0(S.exp.qtds[i].v); });
+  $('#btnConferir').disabled = true;
+  $('#btnIrPreparo').hidden = false;
+}
+
+function irPara(fase){
+  garantirSessao();
+  if(MODO_PROVA) S.pulou = true;
+  FASES.forEach(f => {
+    document.querySelector(f.sec).hidden = true;
+    const b = $(f.pill); b.classList.remove('on');
+  });
+  $('#inicio').hidden = true;
+
+  if(fase === 'vespera'){
+    renderVespera(); iniciarGuiaPlano();
+    $('#slotCalcVespera').appendChild($('#calculadora'));
+  }
+  if(fase === 'barracao'){ if(!RET) renderBarracao(); }
+  if(fase === 'estrutura'){ iniciarEstrutura(); }
+  if(fase === 'epi'){ iniciarEpi(); }
+  if(fase === 'calculos'){ $('#slotCalcCalda').appendChild($('#calculadora')); garantirSessao(); }
+  if(fase === 'preparo'){
+    preencherCalda();
+    if(!P) iniciarPreparo();
+  }
+  if(fase === 'fim'){
+    preencherCalda();
+    if(!P) iniciarPreparo();
+    concluir();
+    return;
+  }
+  const f = FASES.find(x => x.id === fase);
+  document.querySelector(f.sec).hidden = false;
+  $(f.pill).classList.add('on');
+  $('#operador').classList.toggle('sem-boneco', fase === 'preparo');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.querySelector('.trilha').addEventListener('click', e => {
+  const b = e.target.closest('[data-fase]'); if(!b) return;
+  irPara(b.dataset.fase);
+});
+document.querySelector('.trilha').addEventListener('keydown', e => {
+  const b = e.target.closest('[data-fase]'); if(!b) return;
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); irPara(b.dataset.fase); }
+});
+$('#btnReiniciar').addEventListener('click', () => location.reload());
+
+/* ============ boot ============ */
+$('#opMesa').innerHTML = SVG_PAULA;
+$('#opBancada').innerHTML = SVG_AUX;
+document.querySelectorAll('#catCalda .niv').forEach(b => b.classList.toggle('on', b.dataset.n === nivelId));
+document.querySelectorAll('#catGeral .niv').forEach(b => b.classList.toggle('on', b.dataset.n === nivelGeralId));
+try{ $('#inNome').value = sessionStorage.getItem('nomeCalda') || ''; }catch(e){}
+aplicarProva();
+R = gerarReceita();
+renderReceita();
+atualizaTanque();
+</script>
+</body>
+</html>

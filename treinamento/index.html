@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Treinamento · XGuri</title>
+<meta name="description" content="Simulador de preparo de calda e quiz de tira-dúvida para equipes de pulverização com drone. Acesso por senha da turma.">
+<link rel="icon" href="../assets/xguri-icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Asap:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../css/estilo.css">
+<style>
+.treino-grade{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:26px}
+.treino-card{background:var(--surface); border:1px solid var(--borda); border-radius:var(--raio); padding:22px; display:flex; flex-direction:column; gap:10px}
+.treino-card h3{margin:0; font-size:22px}
+.treino-card p{margin:0; color:var(--texto-fraco); flex:1}
+.treino-card ul{margin:0; padding-left:18px; color:var(--texto-fraco); font-size:14px}
+.treino-card a.botao{align-self:flex-start; margin-top:4px}
+.treino-selo{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em;
+  background:var(--acento-claro); color:var(--acento-texto); border:1px solid var(--acento-borda); border-radius:4px; padding:3px 8px}
+.treino-aviso{background:var(--marca-claro); border:1px solid var(--marca-borda); border-radius:var(--raio); padding:16px 18px; margin-top:26px; font-size:14.5px}
+.treino-aviso b{color:var(--marca)}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca-link" href="../index.html">
+      <img src="../assets/xguri-icone.png" alt="" width="30" height="30">
+      xguri<i aria-hidden="true"></i>
+    </a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="../index.html#programa">O programa</a>
+      <a href="../index.html#licenca">Licença</a>
+      <a href="../download.html">Baixar</a>
+      <a href="../comprar.html">Comprar</a>
+      <a href="index.html" aria-current="page">Treinamento</a>
+    </nav>
+  </div>
+</header>
+
+<main class="faixa faixa--fundo">
+  <div class="envelope">
+    <span class="treino-selo">ACESSO POR SENHA DA TURMA</span>
+    <h1 style="margin:10px 0 8px">Treinamento de campo</h1>
+    <p style="max-width:62ch; color:var(--texto-fraco)">
+      Material de prática para quem prepara calda e dá apoio ao piloto na operação com drone pulverizador.
+      Roda no navegador do computador ou do celular, sem instalar nada. Para entrar, use a senha que o
+      instrutor passou para a sua turma.
+    </p>
+
+    <div class="treino-grade">
+      <article class="treino-card">
+        <h3>Simulador de preparo de calda</h3>
+        <p>A operação inteira, do planejamento da véspera até a calda pronta no misturador.</p>
+        <ul>
+          <li>Planejamento de água e combustível no dia anterior</li>
+          <li>Retirada de produtos no barracão, escolhendo as embalagens</li>
+          <li>Montagem da estrutura, gerador e teste do misturador</li>
+          <li>Paramentação do EPI na ordem correta</li>
+          <li>Cálculo de dose, ordem de mistura e preparo no tanque</li>
+        </ul>
+        <a class="botao botao--acento" href="simulador.html">Abrir o simulador</a>
+      </article>
+
+      <article class="treino-card">
+        <h3>Tira-dúvida</h3>
+        <p>Quiz de perguntas e respostas para revisar antes da prova, sozinho ou com a turma.</p>
+        <ul>
+          <li>Perguntas de calda, EPI, equipamento e legislação</li>
+          <li>Explicação da resposta a cada pergunta</li>
+          <li>Pontuação por acerto e por velocidade</li>
+        </ul>
+        <a class="botao botao--acento" href="quiz.html">Abrir o tira-dúvida</a>
+      </article>
+    </div>
+
+    <div class="treino-aviso">
+      <b>Material de treinamento.</b> Os produtos aparecem por categoria — inseticida, fungicida, herbicida,
+      adjuvante — e nunca por nome comercial. Nada aqui substitui o receituário agronômico, a bula do produto
+      ou a capacitação obrigatória em uso de defensivos agrícolas.
+    </div>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <p class="sub">XGuri · Treinamento de campo</p>
+  </div>
+</footer>
+
+</body>
+</html>
