@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Simulador de treinamento: planejamento da vespera, retirada de produtos, montagem da estrutura, EPI e preparo de calda para pulverizacao com drone.">
+<meta name="description" content="Simulador de treinamento de preparo de calda para pulverizacao com drone.">
 <meta name="robots" content="noindex">
 <title>Simulador de preparo de calda · XGuri</title>
 <style>
@@ -285,6 +285,27 @@ button{font:inherit; color:inherit}
 @media (max-width:860px){ .grade-estrutura{grid-template-columns:1fr} }
 
 /* paramentacao de EPI */
+/* a pessoa comeca sem nada: toda peca de EPI nasce escondida */
+#bonecoEpi .p-calca,#bonecoEpi .p-jaleco,#bonecoEpi .p-botas,#bonecoEpi .p-barra,
+#bonecoEpi .p-avental,#bonecoEpi .p-respirador,#bonecoEpi .p-viseira,
+#bonecoEpi .p-chapeu,#bonecoEpi .p-luvas,#bonecoEpi .p-punho{display:none}
+#bonecoEpi.veste-calca .p-calca{display:block}
+#bonecoEpi.veste-calca .p-bermuda{display:none}
+#bonecoEpi.veste-jaleco .p-jaleco{display:block}
+#bonecoEpi.veste-jaleco .p-camiseta,#bonecoEpi.veste-jaleco .p-braco{display:none}
+#bonecoEpi.veste-botas .p-botas{display:block}
+#bonecoEpi.veste-botas .p-chinelo{display:none}
+#bonecoEpi.veste-botas.veste-calca .p-barra{display:block}
+#bonecoEpi.veste-avental .p-avental{display:block}
+#bonecoEpi.veste-respirador .p-respirador{display:block}
+#bonecoEpi.veste-respirador .p-boca{display:none}
+#bonecoEpi.veste-viseira .p-viseira{display:block}
+#bonecoEpi.veste-viseira .p-olho{display:none}
+#bonecoEpi.veste-chapeu .p-chapeu{display:block}
+#bonecoEpi.veste-chapeu .p-bone,#bonecoEpi.veste-chapeu .p-cabelo{display:none}
+#bonecoEpi.veste-luvas .p-luvas{display:block}
+#bonecoEpi.veste-luvas .p-mao{display:none}
+#bonecoEpi.veste-luvas.veste-jaleco .p-punho{display:block}
 .grade-epi{display:grid; grid-template-columns:minmax(230px,.85fr) minmax(300px,1.15fr); gap:18px; align-items:start}
 @media (max-width:820px){ .grade-epi{grid-template-columns:1fr} }
 .vestiario{background:var(--surface-2); border:1px solid var(--line); border-radius:3px; padding:14px; box-shadow:var(--sombra);
