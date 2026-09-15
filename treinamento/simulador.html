@@ -308,9 +308,12 @@ button{font:inherit; color:inherit}
 #bonecoEpi.veste-luvas.veste-jaleco .p-punho{display:block}
 .grade-epi{display:grid; grid-template-columns:minmax(230px,.85fr) minmax(300px,1.15fr); gap:18px; align-items:start}
 @media (max-width:820px){ .grade-epi{grid-template-columns:1fr} }
-.vestiario{background:var(--surface-2); border:1px solid var(--line); border-radius:3px; padding:14px; box-shadow:var(--sombra);
-  display:grid; justify-items:center; gap:8px}
-.vestiario svg{display:block; width:100%; max-width:210px; height:auto}
+.vestiario{border:1px solid var(--line); border-radius:3px; padding:18px 14px 12px; box-shadow:var(--sombra);
+  display:grid; justify-items:center; gap:8px; background:var(--surface-2);
+  background-image:radial-gradient(ellipse 70% 45% at 50% 96%, rgba(0,0,0,.09), transparent 70%),
+                   linear-gradient(180deg, color-mix(in srgb, var(--azul) 7%, var(--surface-2)) 0%, var(--surface-2) 55%)}
+#bonecoEpi{width:auto}
+#bonecoEpi svg{display:block; width:auto; max-width:100%; max-height:440px; height:auto; margin:0 auto}
 .vestiario .legenda{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; font-size:12px; color:var(--ink-3)}
 .cabide{display:grid; grid-template-columns:repeat(auto-fit,minmax(154px,1fr)); gap:9px}
 .epi-item{background:var(--surface); border:1.5px solid var(--line); border-radius:3px; padding:9px 10px; cursor:pointer; text-align:left;
@@ -2631,84 +2634,205 @@ const iconesEpi = {
 };
 
 const SVG_EPI = `
-<svg viewBox="0 0 200 400" role="img" aria-label="Auxiliar vestindo o EPI">
-  <ellipse cx="100" cy="384" rx="52" ry="7" fill="rgba(0,0,0,.13)"/>
-  <!-- pernas e pes -->
-  <rect x="80" y="252" width="17" height="92" rx="7" fill="var(--pele)"/>
-  <rect x="103" y="252" width="17" height="92" rx="7" fill="var(--pele)"/>
+<svg viewBox="0 0 260 566" role="img" aria-label="Auxiliar vestindo o EPI">
+  <defs>
+    <linearGradient id="gPele" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E3B189"/><stop offset=".48" stop-color="#C98F63"/><stop offset="1" stop-color="#9E6C45"/>
+    </linearGradient>
+    <linearGradient id="gTec" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E4D8BB"/><stop offset=".42" stop-color="#CDBC98"/><stop offset="1" stop-color="#9E8A63"/>
+    </linearGradient>
+    <linearGradient id="gTecM" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D8CAA8"/><stop offset=".5" stop-color="#C0AD87"/><stop offset="1" stop-color="#8F7B55"/>
+    </linearGradient>
+    <linearGradient id="gPVC" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E6E9DC"/><stop offset=".45" stop-color="#C9CFBA"/><stop offset="1" stop-color="#969C85"/>
+    </linearGradient>
+    <linearGradient id="gBota" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F6D869"/><stop offset=".45" stop-color="#E2B93C"/><stop offset="1" stop-color="#A9811A"/>
+    </linearGradient>
+    <linearGradient id="gLuva" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#78C185"/><stop offset=".5" stop-color="#4E9A5A"/><stop offset="1" stop-color="#2F6B3B"/>
+    </linearGradient>
+    <linearGradient id="gJeans" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5E82A6"/><stop offset=".5" stop-color="#456787"/><stop offset="1" stop-color="#2C4359"/>
+    </linearGradient>
+    <linearGradient id="gCamisa" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D4713F"/><stop offset=".5" stop-color="#B85B2E"/><stop offset="1" stop-color="#8A3F1C"/>
+    </linearGradient>
+    <linearGradient id="gVisor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EAF6FC" stop-opacity=".78"/>
+      <stop offset=".42" stop-color="#A9CFE4" stop-opacity=".42"/>
+      <stop offset=".44" stop-color="#7FB4CE" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#5C93B0" stop-opacity=".55"/>
+    </linearGradient>
+    <linearGradient id="gMetal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C3C9BA"/><stop offset=".5" stop-color="#96A08E"/><stop offset="1" stop-color="#666F60"/>
+    </linearGradient>
+    <radialGradient id="gChao" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#000" stop-opacity=".34"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="trama" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#6E5C3A" stroke-width=".7" opacity=".12"/>
+    </pattern>
+    <filter id="suave" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="130" cy="548" rx="86" ry="16" fill="url(#gChao)"/>
+
+  <!-- ---------- pernas nuas e chinelo ---------- -->
+  <path d="M103 336 q-5 68 1 118 q2 30 3 52 h25 q2-52 4-86 q2-44 0-84z" fill="url(#gPele)"/>
+  <path d="M157 336 q5 68-1 118 q-2 30-3 52h-25 q-2-52-4-86 q-2-44 0-84z" fill="url(#gPele)"/>
   <g class="p-chinelo">
-    <rect x="74" y="344" width="28" height="10" rx="5" fill="#4A4038"/>
-    <rect x="98" y="344" width="28" height="10" rx="5" fill="#4A4038"/>
+    <path d="M95 508 h42 q6 0 6 8 v8 q0 6-7 6 H97 q-8 0-8-7 v-8 q0-7 6-7z" fill="#4A4038"/>
+    <path d="M123 508 h42 q6 0 6 8 v8 q0 6-7 6 h-41 q-8 0-8-7 v-8 q0-7 8-7z" fill="#5A4E43"/>
+    <path d="M100 512 q16-6 30 0" stroke="#2F2823" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M130 512 q16-6 30 0" stroke="#2F2823" stroke-width="4" fill="none" stroke-linecap="round"/>
   </g>
-  <g class="p-bermuda"><path d="M66 200h68v46l-6 22h-22l-4-30-4 30H72l-6-22z" fill="#4E6A84"/></g>
-  <!-- calca EPI -->
-  <g class="p-calca"><path d="M64 196h72v58l-5 92h-26l-5-74-5 74H69l-5-92z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
-    <rect x="64" y="196" width="72" height="9" fill="#D5D9CA"/></g>
-  <!-- botas -->
+
+  <!-- ---------- bermuda ---------- -->
+  <g class="p-bermuda">
+    <path d="M86 268 h88 q4 44-3 74 l-6 34 h-32 l-3-46 -3 46 H95 l-6-34 q-7-30-3-74z" fill="url(#gJeans)"/>
+    <path d="M86 268 h88 v11 H86z" fill="#22364A" opacity=".55"/>
+    <path d="M130 279 v92" stroke="#22364A" stroke-width="2" opacity=".5"/>
+  </g>
+
+  <!-- ---------- calca do EPI ---------- -->
+  <g class="p-calca">
+    <path d="M84 262 q46-9 92 0 q6 60-2 112 l-10 128 h-34 l-5-124 -5 124 H86 L76 374 q-8-52 8-112z" fill="url(#gTec)"/>
+    <path d="M84 262 q46-9 92 0 q6 60-2 112 l-10 128 h-34 l-5-124 -5 124 H86 L76 374 q-8-52 8-112z" fill="url(#trama)"/>
+    <path d="M84 262 q46-9 92 0 q1 10 1 14 q-47-9-94 0 q0-6 1-14z" fill="#B7A47C"/>
+    <path d="M90 276 h80" stroke="#8E7B53" stroke-width="1.4" opacity=".6"/>
+    <path d="M130 292 v210" stroke="#A08C63" stroke-width="1.6" opacity=".55"/>
+    <path d="M92 392 q16 9 30 2 M138 394 q16 7 30-2" stroke="#A08C63" stroke-width="2" fill="none" opacity=".5"/>
+    <path d="M84 300 q-10 46-6 84 l10 118 h6 L84 380 q-4-44 4-80z" fill="#000" opacity=".07"/>
+  </g>
+
+  <!-- ---------- botas ---------- -->
   <g class="p-botas">
-    <path d="M74 300h26v56a4 4 0 0 1-4 4H78a4 4 0 0 1-4-4z" fill="var(--bota)" stroke="#A8871F"/>
-    <path d="M100 300h26v56a4 4 0 0 1-4 4h-18a4 4 0 0 1-4-4z" fill="var(--bota)" stroke="#A8871F"/>
-    <rect x="72" y="352" width="56" height="10" rx="4" fill="var(--bota-sola)"/>
+    <path d="M94 404 h40 v92 q0 10-9 10 h-24 q-9 0-9-10z" fill="url(#gBota)"/>
+    <path d="M126 404 h40 v92 q0 10-9 10 h-24 q-9 0-9-10z" fill="url(#gBota)"/>
+    <path d="M94 404 h40 v10 H94z M126 404 h40 v10h-40z" fill="#F6E08A" opacity=".55"/>
+    <path d="M92 500 h46 q5 0 5 6 v10 q0 6-6 6 H96 q-6 0-6-6 v-12 q0-4 2-4z" fill="#2E2A24"/>
+    <path d="M124 500 h46 q4 0 4 6 v10 q0 6-6 6h-42 q-6 0-6-6 v-12 q0-4 4-4z" fill="#241F1B"/>
+    <path d="M92 514 h50 M124 514 h50" stroke="#151210" stroke-width="3"/>
+    <path d="M104 420 q0 50 2 76" stroke="#B9911F" stroke-width="2" opacity=".45" fill="none"/>
+    <path d="M136 420 q0 50 2 76" stroke="#B9911F" stroke-width="2" opacity=".45" fill="none"/>
   </g>
-  <g class="p-barra"><path d="M70 296h28v14H70z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
-    <path d="M102 296h28v14h-28z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/></g>
-  <!-- tronco casual -->
-  <g class="p-camiseta"><path d="M68 104h64v100H68z" fill="#C4693F"/>
-    <path d="M68 104l-14 8 8 20 12-8z" fill="#C4693F"/><path d="M132 104l14 8-8 20-12-8z" fill="#C4693F"/></g>
-  <rect class="p-braco" x="48" y="128" width="15" height="84" rx="7" fill="var(--pele)"/>
-  <rect class="p-braco" x="137" y="128" width="15" height="84" rx="7" fill="var(--pele)"/>
-  <!-- jaleco -->
+  <g class="p-barra">
+    <path d="M88 388 q22 8 46 0 v26 q-23 8-46 0z" fill="url(#gTecM)"/>
+    <path d="M122 388 q22 8 46 0 v26 q-23 8-46 0z" fill="url(#gTecM)"/>
+    <path d="M88 408 q22 8 46 0 M122 408 q22 8 46 0" stroke="#8E7B53" stroke-width="1.4" fill="none" opacity=".55"/>
+  </g>
+
+  <!-- ---------- bracos nus ---------- -->
+  <g class="p-braco">
+    <path d="M84 146 q-16 10-20 46 q-5 40-4 76 q0 12 3 20 h18 q-3-32 0-62 q3-38 11-58z" fill="url(#gPele)"/>
+    <path d="M176 146 q16 10 20 46 q5 40 4 76 q0 12-3 20h-18 q3-32 0-62 q-3-38-11-58z" fill="url(#gPele)"/>
+  </g>
+
+  <!-- ---------- camiseta ---------- -->
+  <g class="p-camiseta">
+    <path d="M100 124 q30-10 60 0 l22 10 q10 6 12 18 l-8 34 q-10 4-18-2 l-4 92 q-34 8-66 0 l-4-92 q-8 6-18 2 l-8-34 q2-12 12-18z" fill="url(#gCamisa)"/>
+    <path d="M100 124 q30 22 60 0 q-6 16-30 16 q-24 0-30-16z" fill="#8A3F1C" opacity=".65"/>
+    <path d="M160 140 l-4 136 q-14 4-26 4 l2-140 q16 2 28 0z" fill="#000" opacity=".08"/>
+  </g>
+
+  <!-- ---------- jaleco ---------- -->
   <g class="p-jaleco">
-    <path d="M64 102h72v116H64z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
-    <path d="M64 102l-20 12 12 104h14z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
-    <path d="M136 102l20 12-12 104h-14z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.6"/>
-    <path d="M100 102v116" stroke="var(--epi-linha)" stroke-width="1.6"/>
-    <rect x="62" y="206" width="76" height="12" fill="#D5D9CA"/>
+    <path d="M98 118 q32-12 64 0 l26 12 q12 6 14 20 l-10 52 q-1 6-7 6 l-11-3 -5 96 q-38 10-78 0 l-5-96 -11 3 q-6 0-7-6 l-10-52 q2-14 14-20z" fill="url(#gTec)"/>
+    <path d="M98 118 q32-12 64 0 l26 12 q12 6 14 20 l-10 52 q-1 6-7 6 l-11-3 -5 96 q-38 10-78 0 l-5-96 -11 3 q-6 0-7-6 l-10-52 q2-14 14-20z" fill="url(#trama)"/>
+    <path d="M98 118 q32 20 64 0 q-7 18-32 18 q-25 0-32-18z" fill="#A18E66" opacity=".8"/>
+    <path d="M130 136 v166" stroke="#A08C63" stroke-width="2" opacity=".6"/>
+    <path d="M126 136 h8 v166 h-8z" fill="#000" opacity=".05"/>
+    <path d="M162 130 l-6 176 q-12 4-22 4 l4-180 q13 2 24 0z" fill="#000" opacity=".07"/>
+    <path d="M78 286 q52 14 104 0 v12 q-52 14-104 0z" fill="#B7A47C"/>
+    <path d="M100 196 h26 v30 h-26z" fill="none" stroke="#A08C63" stroke-width="1.6" opacity=".7"/>
   </g>
-  <!-- luvas -->
+
+  <!-- ---------- luvas e punhos ---------- -->
   <g class="p-luvas">
-    <rect x="44" y="196" width="20" height="34" rx="9" fill="var(--luva)"/>
-    <rect x="136" y="196" width="20" height="34" rx="9" fill="var(--luva)"/>
+    <path d="M62 264 q22-6 26 6 q4 34-2 52 q-3 10-14 10 q-11 0-14-10 q-6-24 4-58z" fill="url(#gLuva)"/>
+    <path d="M198 264 q-22-6-26 6 q-4 34 2 52 q3 10 14 10 q11 0 14-10 q6-24-4-58z" fill="url(#gLuva)"/>
+    <path d="M66 300 q14 6 22 0 M172 300 q14 6 22 0" stroke="#2F6B3B" stroke-width="1.6" fill="none" opacity=".6"/>
   </g>
   <g class="p-punho">
-    <rect x="43" y="196" width="22" height="12" rx="4" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
-    <rect x="135" y="196" width="22" height="12" rx="4" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+    <path d="M60 258 q16 8 32 0 v18 q-16 8-32 0z" fill="url(#gTecM)"/>
+    <path d="M168 258 q16 8 32 0 v18 q-16 8-32 0z" fill="url(#gTecM)"/>
   </g>
   <g class="p-mao">
-    <circle cx="55" cy="214" r="11" fill="var(--pele)"/><circle cx="145" cy="214" r="11" fill="var(--pele)"/>
+    <ellipse cx="76" cy="292" rx="16" ry="20" fill="url(#gPele)"/>
+    <ellipse cx="184" cy="292" rx="16" ry="20" fill="url(#gPele)"/>
   </g>
-  <!-- avental -->
+
+  <!-- ---------- avental ---------- -->
   <g class="p-avental">
-    <path d="M80 112h40v8l14 12v104H66V132l14-12z" fill="#C9CEBF" stroke="#A9B09C" stroke-width="1.6"/>
-    <path d="M80 112l20 14 20-14" fill="none" stroke="#A9B09C" stroke-width="1.6"/>
+    <path d="M104 140 q26 16 52 0 l16 16 q10 10 10 26 v190 q-52 12-104 0 V182 q0-16 10-26z" fill="url(#gPVC)"/>
+    <path d="M104 140 q26 16 52 0 l4 6 q-30 16-60 0z" fill="#A9B09C"/>
+    <path d="M170 168 q12 8 12 24 v186 q-12 4-24 4 V176 q6-6 12-8z" fill="#000" opacity=".08"/>
+    <path d="M82 214 q-14 6-14 18 M178 214 q14 6 14 18" stroke="#A9B09C" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M78 352 q52 12 104 0" stroke="#A9B09C" stroke-width="1.6" fill="none" opacity=".7"/>
   </g>
-  <!-- cabeca -->
-  <rect x="92" y="88" width="16" height="14" fill="var(--pele)"/>
-  <ellipse cx="100" cy="62" rx="28" ry="32" fill="var(--pele)"/>
-  <circle cx="72" cy="66" r="6" fill="var(--pele)"/><circle cx="128" cy="66" r="6" fill="var(--pele)"/>
-  <g class="p-cabelo"><path d="M72 52q4-24 28-24t28 24q-10-10-28-10t-28 10z" fill="#3A2A22"/></g>
-  <circle class="p-olho" cx="90" cy="60" r="3" fill="#2C2119"/><circle class="p-olho" cx="110" cy="60" r="3" fill="#2C2119"/>
-  <path class="p-boca" d="M93 75q7 5 14 0" stroke="#2C2119" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- ---------- cabeca ---------- -->
+  <path d="M116 96 h28 v26 h-28z" fill="url(#gPele)"/>
+  <path d="M116 96 h28 v12 q-14 8-28 0z" fill="#9E6C45" opacity=".5"/>
+  <ellipse cx="130" cy="64" rx="38" ry="44" fill="url(#gPele)"/>
+  <ellipse cx="92" cy="68" rx="8" ry="11" fill="url(#gPele)"/>
+  <ellipse cx="168" cy="68" rx="8" ry="11" fill="url(#gPele)"/>
+  <path d="M155 30 q17 14 15 42 q-2 20-12 28 q8-38-10-64z" fill="#000" opacity=".1"/>
+  <g class="p-cabelo">
+    <path d="M92 52 q4-34 38-34 q34 0 38 34 q-14-14-38-14 q-24 0-38 14z" fill="#33251E"/>
+    <path d="M92 52 q10-10 20-12 q-6 8-8 16z" fill="#4A362B"/>
+  </g>
+  <g class="p-olho">
+    <ellipse cx="114" cy="62" rx="5.5" ry="4" fill="#FBFBF6"/>
+    <ellipse cx="146" cy="62" rx="5.5" ry="4" fill="#FBFBF6"/>
+    <circle cx="114.5" cy="62" r="3" fill="#3A2A22"/><circle cx="146.5" cy="62" r="3" fill="#3A2A22"/>
+    <path d="M106 54 q8-5 16-1 M138 53 q8-4 16 1" stroke="#33251E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  </g>
+  <path class="p-boca" d="M120 86 q10 7 20 0" stroke="#7A4B33" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+
+  <!-- ---------- bone ---------- -->
   <g class="p-bone">
-    <path d="M72 46q2-22 28-22t28 22z" fill="var(--azul)"/>
-    <path d="M128 44q16 2 18 9-20 5-46 2z" fill="#17506C"/>
+    <path d="M92 44 q2-32 38-32 q36 0 38 32 q-38-12-76 0z" fill="#2C6E92"/>
+    <path d="M130 12 q22 2 32 18 q-16-8-32-8z" fill="#3E86AC" opacity=".8"/>
+    <path d="M88 42 q-16 2-20 10 q22 8 50 4 q28-4 50-4 q-4-8-20-10z" fill="#1D4E69"/>
+    <circle cx="130" cy="16" r="3.5" fill="#1D4E69"/>
   </g>
-  <!-- respirador -->
+
+  <!-- ---------- respirador ---------- -->
   <g class="p-respirador">
-    <path d="M78 62h44v14q0 14-22 14t-22-14z" fill="#C9CEBF" stroke="#A9B09C" stroke-width="1.4"/>
-    <circle cx="86" cy="74" r="7" fill="#8E9689"/><circle cx="114" cy="74" r="7" fill="#8E9689"/>
-    <path d="M70 58h60" stroke="#8E9689" stroke-width="3"/>
+    <path d="M96 60 q34-8 68 0 q4 18-2 32 q-8 20-32 20 q-24 0-32-20 q-6-14-2-32z" fill="url(#gPVC)"/>
+    <path d="M164 60 q4 18-2 32 q-6 16-22 19 q14-8 18-24 q4-16 0-28z" fill="#000" opacity=".1"/>
+    <ellipse cx="108" cy="82" rx="13" ry="12" fill="url(#gMetal)"/>
+    <ellipse cx="152" cy="82" rx="13" ry="12" fill="url(#gMetal)"/>
+    <ellipse cx="108" cy="82" rx="6" ry="5.5" fill="#5C6A54"/>
+    <ellipse cx="152" cy="82" rx="6" ry="5.5" fill="#5C6A54"/>
+    <path d="M86 56 h88" stroke="#7E8873" stroke-width="5" stroke-linecap="round"/>
+    <path d="M86 70 h88" stroke="#7E8873" stroke-width="4" stroke-linecap="round" opacity=".8"/>
   </g>
-  <!-- viseira -->
+
+  <!-- ---------- viseira ---------- -->
   <g class="p-viseira">
-    <rect x="66" y="26" width="68" height="10" rx="4" fill="#5C6A54"/>
-    <path d="M68 36h64v38q0 16-32 16T68 74z" fill="#8FC6E0" opacity=".5" stroke="#5C6A54" stroke-width="1.4"/>
+    <path d="M84 24 h92 q8 0 8 8 v10 q0 8-8 8 H84 q-8 0-8-8 V32 q0-8 8-8z" fill="url(#gMetal)"/>
+    <path d="M84 30 h92 v6 H84z" fill="#E6E9DC" opacity=".5"/>
+    <path d="M80 50 h100 v58 q0 30-50 30 q-50 0-50-30z" fill="url(#gVisor)" stroke="#8A9484" stroke-width="1.6"/>
+    <path d="M92 52 l-8 66 q0 14 10 20 q-14-6-14-22z" fill="#FFF" opacity=".42"/>
+    <path d="M150 52 l14 4 -10 74 q-4 6-10 8z" fill="#FFF" opacity=".16"/>
   </g>
-  <!-- chapeu arabe -->
+
+  <!-- ---------- chapeu arabe ---------- -->
   <g class="p-chapeu">
-    <path d="M64 96h14v26q0 8 22 8t22-8V96h14v30q0 18-36 18T64 126z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4" opacity=".95"/>
-    <path d="M100 14q26 0 28 24H72q2-24 28-24z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
-    <path d="M52 38h96v9H52z" fill="var(--epi)" stroke="var(--epi-linha)" stroke-width="1.4"/>
+    <path d="M82 96 h18 v34 q0 16 30 16 q30 0 30-16 V96 h18 v40 q0 26-48 26 q-48 0-48-26z" fill="url(#gTecM)"/>
+    <path d="M160 96 h18 v40 q0 18-24 24 q14-10 14-26z" fill="#000" opacity=".1"/>
+    <path d="M130 8 q34 0 38 32 q1 6 0 10 H92 q-1-4 0-10 q4-32 38-32z" fill="url(#gTec)"/>
+    <path d="M130 8 q26 0 34 22 q-16-10-34-10 q-18 0-34 10 q8-22 34-22z" fill="#E4D8BB" opacity=".55"/>
+    <path d="M62 50 q68-12 136 0 q0 10-10 12 q-58 8-116 0 q-10-2-10-12z" fill="url(#gTec)"/>
+    <path d="M62 50 q68-12 136 0 q0 4-2 6 q-66-10-132 0 q-2-2-2-6z" fill="#F0E7CE" opacity=".5"/>
+    <path d="M78 58 q52 8 104 0" stroke="#8E7B53" stroke-width="1.4" fill="none" opacity=".5"/>
   </g>
 </svg>`;
 
