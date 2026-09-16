@@ -23,7 +23,7 @@ window.XGURI = {
   // O instalador de teste e um arquivo diferente, e maior: o pacote do
   // PyInstaller ja vem compactado, entao o instalador quase nao encolhe.
   // Usado so na teste.html.
-  tamanhoTeste: "501 MB",
+  tamanhoTeste: "552 MB",
 
   // Link direto do instalador (XGuri_Setup_1.0.0.exe).
   // Depois de criar o Release no GitHub, o link tem esta cara:

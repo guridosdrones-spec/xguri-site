@@ -89,6 +89,20 @@
            href="#" download>
           Baixar versão para teste
         </a>
+        <a class="botao botao--linha" data-download="portaoTeste" data-portao-liberado
+           href="#atualizar" download>
+          Já instalei: baixar atualização
+        </a>
+      </div>
+
+      <!-- Nesta versao a atualizacao e o mesmo arquivo do instalador: quem tinha a
+           1.0.0 nao tem o motor de processamento, e ela precisa leva-lo. O botao
+           separado existe para a pessoa saber que roda por cima, sem desinstalar. -->
+      <div class="aviso" id="atualizar" data-portao-liberado>
+        <strong>Já tinha instalado o teste antes?</strong>
+        Baixe a atualização e rode por cima — <strong>não desinstale nada</strong>. Ela
+        grava na mesma pasta, traz o motor de processamento que faltava na versão
+        anterior e mantém seus projetos e o prazo dos 3 dias como estavam.
       </div>
 
       <!-- só aparece se a senha do teste ainda não foi configurada -->
@@ -104,7 +118,7 @@
       </p>
 
       <p class="sub" style="font-size:.93rem;">
-        Windows 10 ou 11, 64 bits &middot; <span data-cfg="tamanhoTeste">501 MB</span>
+        Windows 10 ou 11, 64 bits &middot; <span data-cfg="tamanhoTeste">552 MB</span>
         &middot; arquivo <span class="mono">XGuri_Teste_3dias.exe</span>
       </p>
     </div>
