@@ -116,13 +116,20 @@ window.XGURI = {
   // Escreva o preco como voce quer que apareça, por exemplo "R$ 1.800".
   // Deixe null enquanto nao quiser publicar o valor: o site mostra
   // "Sob consulta" e continua funcionando.
+  //
+  // Os nomes sao os PERIODOS de licenca/chave.py (PLANOS). Quem manda no
+  // que a licenca libera e a lista de recursos dentro dela, nao o
+  // periodo: da para vender o mapa HD por um dia ou a calibracao por um
+  // ano. Por isso aqui e "a partir de" - o valor final depende de
+  // quantos modulos a pessoa quer.
   precos: {
-    assinatura: null,   // 1 ano, todos os modulos
-    vitalicia:  null,   // sem validade
-    modulo:     null,   // um modulo avulso, por ano
+    diaria:    null,
+    mensal:    null,
+    anual:     null,
+    vitalicia: null,
   },
 
-  // Dias de avaliacao gratuita. Tem que ser igual ao
-  // DIAS_DE_AVALIACAO de licenca/armazenamento.py no programa.
-  diasAvaliacao: 15,
+  // Horas com TUDO liberado na primeira abertura. Tem que ser igual ao
+  // HORAS_DE_AVALIACAO de licenca/edicao.py no programa.
+  horasAvaliacao: 24,
 };

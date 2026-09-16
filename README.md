@@ -45,7 +45,8 @@ Abra `js/config.js` e preencha:
 | `email`      | opcional — vazio esconde o e-mail do site                    |
 | `instagram`  | opcional, sem o @                                           |
 | `pix`        | opcional — vazio esconde o bloco de pagamento                |
-| `precos`     | escreva como quer que apareça: `"R$ 1.800"`                 |
+| `precos`     | um valor por período (`diaria`, `mensal`, `anual`, `vitalicia`): `"R$ 1.800"`. `null` = "Sob consulta" |
+| `horasAvaliacao` | horas com tudo liberado na primeira abertura. Igual ao `HORAS_DE_AVALIACAO` de `licenca/edicao.py` |
 | `portao`     | senha do download — gerado pela ferramenta, veja o passo 3.1 |
 
 Enquanto faltar o `whatsapp`, ou faltar como o cliente baixa (`download`
@@ -168,6 +169,22 @@ gh release create v1.0.0-teste "D:/Area de trabalho/xguri/installer_output/XGuri
 Dica de uso: trocar a senha a cada turma ou a cada cliente (por exemplo
 `teste-outubro`) deixa voce fechar a torneira depois, sem mexer no resto do
 site.
+
+## 3.3 Os textos e o programa andam juntos
+
+Os textos do site descrevem o modelo comercial que esta no codigo. Se o
+programa mudar, estes pontos do site mudam tambem:
+
+| No programa | No site |
+| --- | --- |
+| `HORAS_DE_AVALIACAO` (`licenca/edicao.py`) | `horasAvaliacao` no config |
+| `RECURSOS` e `RECURSOS_GRATUITOS` (`licenca/chave.py`) | secao "Gratis e pago" da index e os modulos do formulario em `comprar.html` |
+| `PLANOS` (`licenca/chave.py`) | `precos` no config, secao de planos da index e o campo "Por quanto tempo" |
+| Processamento Online (`paginas/processamento_online.py`) | o cartao "Servidor, so se voce quiser" e a pergunta sobre nuvem |
+
+Em 16/09/2026 o site foi acertado para: gratuito permanente (processar as
+fotos + mapa de aplicacao), 24 horas com tudo liberado na primeira
+abertura, 6 modulos pagos e 4 periodos.
 
 ## 4. Ligar o GitHub Pages
 

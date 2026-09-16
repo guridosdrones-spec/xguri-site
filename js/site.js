@@ -304,6 +304,24 @@
     form.addEventListener("submit", function (ev) { ev.preventDefault(); tentar(); });
   }
 
+  /*
+     Botao de download sem link nenhum (instalador ainda nao publicado) nao
+     pode ficar na tela fingindo que funciona: sai de cena e entra um
+     recado com o WhatsApp.
+  */
+
+  function avisarSemDownload() {
+    if (texto(C.download) || portaoAtivo("portao")) return;
+
+    var daPagina = nomeDoPortaoDaPagina();
+
+    // A pagina de teste tem o aviso dela, em [data-sem-portao].
+    if (daPagina && daPagina !== "portao") return;
+
+    botoesDeDownload(null).forEach(function (el) { el.classList.add("oculto"); });
+    todos("[data-sem-download]").forEach(function (el) { el.classList.remove("oculto"); });
+  }
+
   function preencherConferencia() {
     var sha = texto(C.sha256);
     if (!sha) return;
@@ -457,15 +475,23 @@
     var linkEmail = document.getElementById("botao-email");
     var avisoFalta = document.getElementById("aviso-falta");
 
+    // Os periodos de licenca/chave.py (PLANOS). O que a licenca libera
+    // vem da lista de modulos, nao do periodo.
     var NOMES_DE_PLANO = {
-      assinatura: "Assinatura de 1 ano – todos os módulos",
-      vitalicia: "Licença vitalícia – todos os módulos",
-      modulos: "Módulos avulsos, 1 ano",
+      diaria: "Diária (24 horas)",
+      mensal: "Mensal (30 dias)",
+      anual: "Anual (12 meses)",
+      vitalicia: "Vitalícia (não vence)",
     };
 
     function planoEscolhido() {
       var marcado = form.querySelector('input[name="plano"]:checked');
-      return marcado ? marcado.value : "assinatura";
+      return marcado ? marcado.value : "anual";
+    }
+
+    function querTudo() {
+      var tudo = document.getElementById("mod-tudo");
+      return !!(tudo && tudo.checked);
     }
 
     function modulosEscolhidos() {
@@ -489,10 +515,12 @@
         "Cidade / UF: " + (valor("cidade") || "-"),
         "WhatsApp: " + (valor("fone") || "-"),
         "Código da máquina: " + codigo,
-        "Plano: " + NOMES_DE_PLANO[plano],
+        "Período: " + (NOMES_DE_PLANO[plano] || plano),
       ];
 
-      if (plano === "modulos") {
+      if (querTudo()) {
+        linhas.push("Módulos: todos os pagos");
+      } else {
         var lista = modulosEscolhidos();
         linhas.push("Módulos: " + (lista.length
           ? lista.map(function (m) { return m.nome; }).join(", ")
@@ -512,8 +540,8 @@
 
       if (!valor("nome")) pendencias.push("seu nome ou o nome da fazenda");
       if (!codigo) pendencias.push("o código da máquina completo (XG-XXXX-XXXX-XXXX-XXXX)");
-      if (planoEscolhido() === "modulos" && !modulosEscolhidos().length) {
-        pendencias.push("pelo menos um módulo");
+      if (!querTudo() && !modulosEscolhidos().length) {
+        pendencias.push("pelo menos um módulo, ou “Tudo liberado”");
       }
 
       return pendencias;
@@ -541,8 +569,12 @@
         campoCodigo.setAttribute("aria-invalid", "true");
       }
 
-      // modulos so aparecem no plano de modulos avulsos
-      blocoModulos.classList.toggle("oculto", planoEscolhido() !== "modulos");
+      // "Tudo liberado" manda: as escolhas soltas saem de cena.
+      if (blocoModulos) blocoModulos.classList.remove("oculto");
+
+      var listaSolta = document.getElementById("modulos-soltos");
+
+      if (listaSolta) listaSolta.classList.toggle("oculto", querTudo());
 
       var pendencias = faltando(codigo);
       var mensagem = textoDoPedido(codigo || "(nao informado)");
@@ -632,6 +664,7 @@
     preencherTextos();
     preencherDownloads();
     montarPortao();
+    avisarSemDownload();
     preencherConferencia();
     preencherWhatsapp();
     preencherContatos();

@@ -39,9 +39,9 @@
     <p class="olho">Pedido de licença</p>
     <h1 style="font-size:clamp(1.8rem,5vw,2.5rem);">Monte seu pedido em um minuto.</h1>
     <p class="sub" style="max-width:60ch;">
-      Preencha aqui e o site abre o WhatsApp com o pedido já escrito e com o código da
-      sua máquina conferido. Nada é enviado para servidor nenhum: a mensagem sai do seu
-      próprio WhatsApp, direto para mim.
+      Escolha o período e o que você quer liberar. O site abre o WhatsApp com o pedido
+      já escrito e com o código da sua máquina conferido. Nada é enviado para servidor
+      nenhum: a mensagem sai do seu próprio WhatsApp, direto para mim.
     </p>
   </div>
 </section>
@@ -111,13 +111,29 @@
       </div>
 
       <fieldset class="campo" style="border:0; padding:0; margin:0;">
-        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">Plano</legend>
+        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">Por quanto tempo</legend>
         <div class="opcoes">
-          <label class="opcao" for="plano-assinatura">
-            <input type="radio" name="plano" id="plano-assinatura" value="assinatura" checked>
+          <label class="opcao" for="plano-diaria">
+            <input type="radio" name="plano" id="plano-diaria" value="diaria">
             <span>
-              <span class="opcao__nome">Assinatura de 1 ano &middot; <span data-preco="assinatura">Sob consulta</span></span>
-              <span class="opcao__texto">Todos os cinco módulos liberados por doze meses.</span>
+              <span class="opcao__nome">Diária &middot; <span data-preco="diaria">Sob consulta</span></span>
+              <span class="opcao__texto">24 horas, contadas da hora que eu emito. Para o serviço de um dia só.</span>
+            </span>
+          </label>
+
+          <label class="opcao" for="plano-mensal">
+            <input type="radio" name="plano" id="plano-mensal" value="mensal">
+            <span>
+              <span class="opcao__nome">Mensal &middot; <span data-preco="mensal">Sob consulta</span></span>
+              <span class="opcao__texto">30 dias. Bom para safra curta ou para experimentar antes do anual.</span>
+            </span>
+          </label>
+
+          <label class="opcao" for="plano-anual">
+            <input type="radio" name="plano" id="plano-anual" value="anual" checked>
+            <span>
+              <span class="opcao__nome">Anual &middot; <span data-preco="anual">Sob consulta</span></span>
+              <span class="opcao__texto">12 meses. É o que a maioria leva.</span>
             </span>
           </label>
 
@@ -125,35 +141,31 @@
             <input type="radio" name="plano" id="plano-vitalicia" value="vitalicia">
             <span>
               <span class="opcao__nome">Vitalícia &middot; <span data-preco="vitalicia">Sob consulta</span></span>
-              <span class="opcao__texto">Pagamento único, sem data de vencimento, para este computador.</span>
-            </span>
-          </label>
-
-          <label class="opcao" for="plano-modulos">
-            <input type="radio" name="plano" id="plano-modulos" value="modulos">
-            <span>
-              <span class="opcao__nome">Módulos avulsos &middot; <span data-preco="modulo">Sob consulta</span> cada</span>
-              <span class="opcao__texto">Só as telas que você usa, por um ano. Dá para somar mais depois.</span>
+              <span class="opcao__texto">Pagamento único, sem data de vencimento, neste computador.</span>
             </span>
           </label>
         </div>
       </fieldset>
 
-      <fieldset class="campo oculto" id="bloco-modulos" style="border:0; padding:0; margin:0;">
-        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">Quais módulos</legend>
+      <fieldset class="campo" id="bloco-modulos" style="border:0; padding:0; margin:0;">
+        <legend style="font-weight:600; font-size:.97rem; padding:0 0 6px;">O que liberar</legend>
+
         <div class="opcoes">
+          <label class="opcao" for="mod-tudo">
+            <input type="checkbox" name="tudo" id="mod-tudo">
+            <span>
+              <span class="opcao__nome">Tudo liberado</span>
+              <span class="opcao__texto">Todos os módulos pagos, no período escolhido acima.</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="opcoes" id="modulos-soltos" style="margin-top:10px;">
           <label class="opcao" for="mod-hd">
             <input type="checkbox" name="modulo" id="mod-hd" value="mapa_hd" data-nome="Gerar mapa HD">
             <span>
               <span class="opcao__nome">Gerar mapa HD</span>
-              <span class="opcao__texto">Processa as fotos e monta o ortomosaico do talhão.</span>
-            </span>
-          </label>
-          <label class="opcao" for="mod-aplicacao">
-            <input type="checkbox" name="modulo" id="mod-aplicacao" value="mapa_aplicacao" data-nome="Criar mapa de aplicação">
-            <span>
-              <span class="opcao__nome">Criar mapa de aplicação</span>
-              <span class="opcao__texto">Contorno, obstáculos e rota de pulverização.</span>
+              <span class="opcao__texto">O ortomosaico em alta resolução, o modelo de superfície e a nuvem de pontos.</span>
             </span>
           </label>
           <label class="opcao" for="mod-taxa">
@@ -163,21 +175,40 @@
               <span class="opcao__texto">Zonas com taxa diferente dentro do mesmo talhão.</span>
             </span>
           </label>
-          <label class="opcao" for="mod-rota">
-            <input type="checkbox" name="modulo" id="mod-rota" value="rota_personalizada" data-nome="Criar rota personalizada">
-            <span>
-              <span class="opcao__nome">Criar rota personalizada</span>
-              <span class="opcao__texto">Rota desenhada na mão, do jeito que o talhão pede.</span>
-            </span>
-          </label>
           <label class="opcao" for="mod-localizada">
             <input type="checkbox" name="modulo" id="mod-localizada" value="aplicacao_localizada" data-nome="Aplicação localizada">
             <span>
               <span class="opcao__nome">Aplicação localizada</span>
-              <span class="opcao__texto">Aplicação só nas manchas marcadas sobre o mapa.</span>
+              <span class="opcao__texto">Aplicação só nas manchas de daninha marcadas sobre o mapa.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-rota">
+            <input type="checkbox" name="modulo" id="mod-rota" value="rota_personalizada" data-nome="Criar rota personalizada">
+            <span>
+              <span class="opcao__nome">Criar rota personalizada</span>
+              <span class="opcao__texto">Rota desenhada na mão: sentido das linhas, entrada, saída e desvios.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-calibracao">
+            <input type="checkbox" name="modulo" id="mod-calibracao" value="calibracao" data-nome="Ponto de calibração do mapa">
+            <span>
+              <span class="opcao__nome">Ponto de calibração do mapa</span>
+              <span class="opcao__texto">Corrige o deslocamento do mapa a partir de um ponto conhecido no terreno.</span>
+            </span>
+          </label>
+          <label class="opcao" for="mod-rapido">
+            <input type="checkbox" name="modulo" id="mod-rapido" value="processamento_rapido" data-nome="Processamento rápido">
+            <span>
+              <span class="opcao__nome">Processamento rápido</span>
+              <span class="opcao__texto">Os perfis Pix4D aproximado, Ultra Rápida e Rápida. Sem ele, o processamento é o mesmo, só mais demorado.</span>
             </span>
           </label>
         </div>
+
+        <p class="dica" style="margin-top:10px;">
+          Processar as fotos e criar o mapa de aplicação são gratuitos para sempre — não
+          precisa pedir licença para isso.
+        </p>
       </fieldset>
 
       <div class="campo">
