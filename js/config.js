@@ -96,7 +96,7 @@ window.XGURI = {
 
   // WhatsApp que recebe os pedidos. SO NUMEROS, com 55 e DDD.
   // Exemplo: "5555999998888"
-  whatsapp: "",
+  whatsapp: "5555996898432",
 
   // E-mail de contato (opcional). Vazio = o site nao mostra e-mail.
   email: "",
