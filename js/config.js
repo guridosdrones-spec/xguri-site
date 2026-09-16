@@ -14,11 +14,11 @@ window.XGURI = {
   /* ---------------------------------------------------------- o programa */
 
   // Versao que esta no ar e a data em que voce publicou.
-  versao: "1.0.2",
+  versao: "1.0.3",
   lancamento: "2026-09-16",
 
   // Tamanho aproximado do instalador, do jeito que o cliente le.
-  tamanho: "570 MB",
+  tamanho: "578 MB",
 
   // O instalador de teste e um arquivo diferente, e maior: o pacote do
   // PyInstaller ja vem compactado, entao o instalador quase nao encolhe.
@@ -28,7 +28,7 @@ window.XGURI = {
   // Link direto do instalador (XGuri_Setup_1.0.0.exe).
   // Depois de criar o Release no GitHub, o link tem esta cara:
   // https://github.com/USUARIO/xguri-site/releases/download/v1.0.0/XGuri_Setup_1.0.0.exe
-  download: "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.2/XGuri_Setup_1.0.2.exe",
+  download: "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.3/XGuri_Setup_1.0.3.exe",
 
   // -------------------------------------------------------------------
   // PORTAO DE SENHA DO DOWNLOAD
@@ -116,7 +116,7 @@ window.XGURI = {
   // baixou o arquivo original. Para descobrir, no PowerShell:
   //   Get-FileHash .\installer_output\XGuri_Setup_1.0.0.exe -Algorithm SHA256
   // Vazio = o site nao mostra essa linha.
-  sha256: "cb602ea33214fce36ac56d5337c39d7f8e39a8534a23e51c16844f23c58cd07d",
+  sha256: "72c1d883f5eb667ee55bd35096c24da0988d28200a97cee295d5d8bf49ee5d88",
 
   /* ------------------------------------------------------------- contato */
 
