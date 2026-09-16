@@ -606,6 +606,20 @@ p { margin: 0; }
 }
 .aviso strong { font-weight: 600; }
 
+/* O aviso tem fundo claro. Dentro de faixa escura ele herdava a cor de texto
+   clara da faixa e ficava branco sobre branco - invisivel. */
+.faixa--escura .aviso { color: var(--texto); }
+
+/* Botao de download que depende de senha: fica com cara de clicavel mesmo
+   antes da senha, porque tocar nele leva para o campo de senha. O visual
+   apagado de aria-disabled faria a pessoa achar que nao existe. */
+.botao[data-download]:not([data-download=""])[aria-disabled="true"] {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.dica-trancado { font-size: .9rem; }
+
 /* o codigo da maquina, do jeito que ele aparece na tela do XGuri */
 .codigo-maquina {
   font-family: var(--mono);

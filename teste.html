@@ -53,8 +53,45 @@
         </p>
       </div>
 
-      <!-- portao: aparece quando portaoTeste esta configurado em js/config.js -->
-      <form class="portao oculto" id="form-portao" data-portao="portaoTeste" novalidate>
+      <!-- Celular, tablet ou Mac: o XGuri e programa de Windows. Nesses aparelhos
+           a pagina nao oferece download nenhum - so este recado. -->
+      <div class="aviso oculto" data-nao-windows>
+        <strong data-nao-windows-titulo>Você está no celular.</strong>
+        O XGuri é um programa para computador com Windows, e o celular não instala ele.
+        Abra este mesmo link no computador para baixar.
+        <div class="botoes" style="margin-top:12px;">
+          <a class="botao botao--acento botao--pequeno" data-enviar-link href="#"
+             target="_blank" rel="noopener">Mandar o link para mim no WhatsApp</a>
+          <button type="button" class="botao botao--linha botao--pequeno" data-copiar-link>
+            Copiar o link
+          </button>
+        </div>
+      </div>
+
+      <!-- Os dois botoes ficam visiveis desde o inicio. Antes da senha, tocar
+           neles leva para o campo de senha logo abaixo. -->
+      <div class="botoes" data-so-windows>
+        <a class="botao botao--acento" data-download="portaoTeste" href="#" download>
+          Baixar versão para teste
+        </a>
+        <a class="botao botao--linha" data-download="portaoTeste" href="#" download>
+          Já instalei: baixar atualização
+        </a>
+      </div>
+
+      <p class="sub dica-trancado" data-so-windows data-some-ao-liberar>
+        Os dois botões liberam com a senha que eu te passei — digite logo abaixo.
+      </p>
+
+      <div class="aviso" id="atualizar">
+        <strong>Já tinha instalado o teste antes?</strong>
+        Use o botão de atualização e rode o arquivo por cima —
+        <strong>não desinstale nada</strong>. Ele grava na mesma pasta, traz o motor de
+        processamento que faltava na versão anterior e mantém seus projetos e o prazo
+        dos 3 dias como estavam.
+      </div>
+
+      <form class="portao oculto" id="form-portao" data-portao="portaoTeste" data-so-windows novalidate>
         <div class="portao__topo">
           <svg class="portao__chave" viewBox="0 0 48 48" aria-hidden="true">
             <circle cx="17" cy="17" r="11" fill="none" stroke="#9FE072" stroke-width="4"/>
@@ -83,27 +120,6 @@
           <a data-wa data-wa-texto="Olá! Preciso da senha para baixar o XGuri de teste." href="#">Me chame no WhatsApp</a>.
         </p>
       </form>
-
-      <div class="botoes">
-        <a class="botao botao--acento" data-download="portaoTeste" data-portao-liberado
-           href="#" download>
-          Baixar versão para teste
-        </a>
-        <a class="botao botao--linha" data-download="portaoTeste" data-portao-liberado
-           href="#atualizar" download>
-          Já instalei: baixar atualização
-        </a>
-      </div>
-
-      <!-- Nesta versao a atualizacao e o mesmo arquivo do instalador: quem tinha a
-           1.0.0 nao tem o motor de processamento, e ela precisa leva-lo. O botao
-           separado existe para a pessoa saber que roda por cima, sem desinstalar. -->
-      <div class="aviso" id="atualizar" data-portao-liberado>
-        <strong>Já tinha instalado o teste antes?</strong>
-        Baixe a atualização e rode por cima — <strong>não desinstale nada</strong>. Ela
-        grava na mesma pasta, traz o motor de processamento que faltava na versão
-        anterior e mantém seus projetos e o prazo dos 3 dias como estavam.
-      </div>
 
       <!-- só aparece se a senha do teste ainda não foi configurada -->
       <div class="aviso oculto" data-sem-portao>

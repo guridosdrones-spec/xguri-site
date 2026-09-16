@@ -212,6 +212,97 @@
 
     todos("[data-portao]").forEach(function (el) { el.classList.add("oculto"); });
     todos("[data-portao-liberado]").forEach(function (el) { el.classList.remove("oculto"); });
+    todos("[data-some-ao-liberar]").forEach(function (el) { el.classList.add("oculto"); });
+  }
+
+  /*
+     Botao de download que depende de senha fica visivel desde o inicio.
+     Tocar nele antes da senha nao baixa nada: leva para o campo de senha,
+     com um recado. Assim quem abre o link ve logo o botao que procura.
+  */
+
+  function prepararBotoesTrancados() {
+    var campo = document.getElementById("senha-download");
+    var erro = document.getElementById("erro-portao");
+    var form = document.getElementById("form-portao");
+
+    if (!campo || !form) return;
+
+    todos("[data-download]").forEach(function (el) {
+      if (!(el.getAttribute("data-download") || "").trim()) return;
+
+      el.addEventListener("click", function (ev) {
+        if (el.getAttribute("aria-disabled") !== "true") return;
+        if (form.classList.contains("oculto")) return;
+
+        ev.preventDefault();
+        campo.scrollIntoView({ behavior: "smooth", block: "center" });
+        campo.focus();
+        if (erro) erro.textContent = "Digite aqui a senha para liberar o download.";
+      });
+    });
+  }
+
+  /*
+     O XGuri so instala em Windows. No celular, no tablet ou no Mac a pagina
+     nao oferece download nenhum: esconde botoes e senha e mostra um recado
+     para abrir o link no computador, com atalho para mandar o link pelo
+     WhatsApp para si mesmo.
+  */
+
+  function avisarSeNaoForWindows() {
+    var avisos = todos("[data-nao-windows]");
+
+    if (!avisos.length) return;
+
+    var agente = navigator.userAgent || "";
+
+    if (/Windows/i.test(agente)) return;
+
+    var celular = /iPhone|iPad|iPod|Android|Mobile/i.test(agente) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    var link = location.origin + location.pathname;
+
+    todos("[data-so-windows]").forEach(function (el) { el.classList.add("oculto"); });
+
+    avisos.forEach(function (aviso) {
+      var titulo = aviso.querySelector("[data-nao-windows-titulo]");
+      if (titulo) {
+        titulo.textContent = celular
+          ? "Você está no celular."
+          : "Este computador não é Windows.";
+      }
+
+      var enviar = aviso.querySelector("[data-enviar-link]");
+      if (enviar) {
+        enviar.setAttribute(
+          "href",
+          "https://wa.me/?text=" + encodeURIComponent(
+            "Link do XGuri para abrir no computador: " + link
+          )
+        );
+      }
+
+      var copiar = aviso.querySelector("[data-copiar-link]");
+      if (copiar) {
+        copiar.addEventListener("click", function () {
+          var pronto = function (ok) {
+            copiar.textContent = ok ? "Link copiado" : link;
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(link).then(
+              function () { pronto(true); },
+              function () { pronto(false); }
+            );
+          } else {
+            pronto(false);
+          }
+        });
+      }
+
+      aviso.classList.remove("oculto");
+    });
   }
 
   function montarPortao() {
@@ -664,7 +755,10 @@
     preencherTextos();
     preencherDownloads();
     montarPortao();
+    prepararBotoesTrancados();
     avisarSemDownload();
+    // Por ultimo: no celular ele esconde o que o portao acabou de mostrar.
+    avisarSeNaoForWindows();
     preencherConferencia();
     preencherWhatsapp();
     preencherContatos();
