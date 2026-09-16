@@ -20,10 +20,71 @@ window.XGURI = {
   // Tamanho aproximado do instalador, do jeito que o cliente le.
   tamanho: "480 MB",
 
+  // O instalador de teste e um arquivo diferente, e maior: o pacote do
+  // PyInstaller ja vem compactado, entao o instalador quase nao encolhe.
+  // Usado so na teste.html.
+  tamanhoTeste: "501 MB",
+
   // Link direto do instalador (XGuri_Setup_1.0.0.exe).
   // Depois de criar o Release no GitHub, o link tem esta cara:
   // https://github.com/USUARIO/xguri-site/releases/download/v1.0.0/XGuri_Setup_1.0.0.exe
   download: "",
+
+  // -------------------------------------------------------------------
+  // PORTAO DE SENHA DO DOWNLOAD
+  //
+  // Com o portao ativo, o campo `download` acima fica VAZIO: o link do
+  // instalador mora aqui embaixo cifrado com a sua senha, e o navegador
+  // so consegue monta-lo quando alguem digita a senha certa. Quem abrir
+  // o codigo-fonte do site ve um embaralhado, nao a senha nem o link.
+  //
+  // Para gerar este bloco (ou trocar a senha depois), abra
+  // _ferramenta-senha.html no seu computador, secao "Senha do download".
+  //
+  // ATENCAO, para nao se enganar: o instalador continua sendo um arquivo
+  // publico no GitHub Releases. Quem procurar a aba Releases do
+  // repositorio baixa sem passar pela senha. Isto aqui filtra curioso,
+  // nao e cofre - quem protege o XGuri e a licenca.
+  // -------------------------------------------------------------------
+  portao: {
+    ativo: false,
+    iter: 200000,
+    sal: "",
+    iv: "",
+    link: "",
+
+    // Texto que aparece embaixo do campo de senha.
+    dica: "Peça a senha no WhatsApp.",
+  },
+
+  // -------------------------------------------------------------------
+  // PORTAO DA PAGINA DE TESTE (teste.html)
+  //
+  // Senha e link SEPARADOS do download geral, de proposito: a pagina de
+  // teste entrega o XGuri_Teste_3dias, que abre completo por 3 dias e
+  // depois se remove da maquina. Se dividisse o link com o portao de
+  // cima, voce mandaria a versao definitiva a quem pediu avaliacao.
+  //
+  // Gere na _ferramenta-senha.html, secao "Senha do download",
+  // escolhendo "Pagina de teste" no seletor.
+  //
+  // Enquanto isto estiver desligado, teste.html nao mostra link nenhum -
+  // e nao existe atalho pelo campo `download`.
+  // -------------------------------------------------------------------
+  portaoTeste: {
+    ativo: true,
+    iter: 200000,
+    sal: "fe821adf7a510ef5d8214bdf230c594e",
+    iv: "bc92262ad614c664e938bbc8",
+    link: "gIdJR9kSkysn4uoAgW1crj4fS+bxn5QUqsy4WvRm+qU8gSu+PErsLL9GCcATADFyS8Yty6pSt5PGFLxMnbVi7762h+GTKUC6UOaRmSsTs46touDfqFkFZibZK6Ul43hVPL9qvT2XYD3knpzftx+Hg2IUgyeIEG8kahS6",
+
+    dica: "Use a senha que eu te passei.",
+  },
+
+  // Dias que a versao de teste dura antes de se remover sozinha. Tem que
+  // bater com "horas" em edicao_teste.json, no projeto do XGuri
+  // (72 horas = 3 dias).
+  diasDeTeste: 3,
 
   // SHA-256 do instalador (opcional). Serve para o cliente conferir que
   // baixou o arquivo original. Para descobrir, no PowerShell:

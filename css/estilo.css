@@ -504,6 +504,51 @@ p { margin: 0; }
 }
 .plano .botao { margin-top: auto; }
 
+/* --------------------------------------------------------------- portao -- */
+/* Caixa de senha do download. Vive dentro da faixa escura da pagina de
+   download, por isso as cores sao proprias e nao as dos tokens claros. */
+
+.portao {
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: var(--raio-g);
+  padding: 22px;
+  display: grid;
+  gap: 14px;
+  max-width: 480px;
+}
+
+.portao__topo { display: flex; align-items: flex-start; gap: 14px; }
+.portao__chave { width: 38px; height: 38px; flex: none; margin-top: 2px; }
+.portao__titulo {
+  font-family: var(--display);
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: var(--texto-inverso);
+  margin: 0 0 3px;
+}
+.portao__dica { font-size: .95rem; color: #B9C8BB; }
+
+.portao__linha { display: flex; flex-wrap: wrap; gap: 10px; }
+.portao__linha input {
+  flex: 1 1 170px;
+  min-width: 0;
+  background: rgba(0, 0, 0, .3);
+  border: 1.5px solid rgba(255, 255, 255, .24);
+  color: var(--texto-inverso);
+  font-size: 1.05rem;
+  letter-spacing: .04em;
+}
+.portao__linha input::placeholder { color: #8EA391; letter-spacing: 0; }
+.portao__linha input:focus-visible { outline-color: var(--acento); }
+.portao__linha .botao { flex: 0 1 auto; }
+
+.portao .estado { min-height: 0; }
+.portao .estado--erro { color: #FF9A8F; }
+
+.portao__rodape { font-size: .9rem; color: #A9BCAB; }
+.portao__rodape a { color: #9FE072; }
+
 /* --------------------------------------------------------------- avisos -- */
 
 .aviso {

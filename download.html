@@ -47,8 +47,37 @@
         </p>
       </div>
 
+      <!-- portao: aparece quando portao.ativo esta ligado em js/config.js -->
+      <form class="portao oculto" id="form-portao" data-portao novalidate>
+        <div class="portao__topo">
+          <svg class="portao__chave" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="17" cy="17" r="11" fill="none" stroke="#9FE072" stroke-width="4"/>
+            <path d="M25 25 L41 41 M35 35 l5 -5 M30 30 l4 -4" stroke="#9FE072" stroke-width="4"
+                  fill="none" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h2 class="portao__titulo">Download liberado por senha</h2>
+            <p class="portao__dica" data-portao-dica>Peça a senha no WhatsApp.</p>
+          </div>
+        </div>
+
+        <label class="so-leitor" for="senha-download">Senha do download</label>
+        <div class="portao__linha">
+          <input type="password" id="senha-download" name="senha" autocomplete="current-password"
+                 placeholder="Senha" spellcheck="false" aria-describedby="erro-portao">
+          <button type="submit" class="botao botao--acento" id="botao-portao">Liberar o download</button>
+        </div>
+
+        <p class="estado estado--erro" id="erro-portao" role="status"></p>
+
+        <p class="portao__rodape">
+          Não tem a senha? <a data-wa data-wa-texto="Olá! Queria a senha para baixar o XGuri." href="#">Me chame no WhatsApp</a>
+          que eu passo na hora.
+        </p>
+      </form>
+
       <div class="botoes">
-        <a class="botao botao--acento" data-download href="#" download>
+        <a class="botao botao--acento" data-download data-portao-liberado href="#" download>
           Baixar o instalador (<span data-cfg="tamanho">480 MB</span>)
         </a>
         <a class="botao botao--linha" href="manual.html">Ler o manual</a>

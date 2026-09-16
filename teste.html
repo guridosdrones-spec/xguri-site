@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XGuri para testar</title>
+<meta name="description" content="Versão de teste do XGuri: abre completa por 3 dias e depois se remove sozinha do computador. Acesso por senha.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E1A14">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/xguri-icone.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/xguri-icone.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Asap:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca-link" href="index.html">
+      <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+      xguri<i aria-hidden="true"></i>
+    </a>
+    <nav class="menu" aria-label="Atalhos">
+      <a href="index.html">Conhecer o XGuri</a>
+      <a href="manual.html">Manual</a>
+    </nav>
+  </div>
+</header>
+
+<!-- --------------------------------------------------- convite e senha -- -->
+<section class="faixa faixa--escura" style="padding-block:clamp(44px,8vw,76px);">
+  <div class="envelope grade grade--2" style="gap:36px; align-items:start;">
+
+    <div class="pilha pilha--20">
+      <div class="pilha pilha--12">
+        <p class="olho">Teste de 3 dias</p>
+        <h1 style="font-size:clamp(1.9rem,5vw,2.7rem);">
+          O XGuri completo na sua máquina por <span data-cfg="diasDeTeste">3</span> dias.
+        </h1>
+        <p class="sub">
+          É o programa inteiro, para você rodar um voo de verdade antes de decidir
+          qualquer coisa. Tudo liberado, sem licença, sem cadastro e sem cartão: você
+          baixa, instala e usa.
+        </p>
+        <p class="sub">
+          Passados os <span data-cfg="diasDeTeste">3</span> dias, ela sai sozinha do seu
+          computador. É proposital — assim você não fica com um programa vencido
+          entulhando a máquina, e eu não fico com cópias de teste espalhadas por aí.
+        </p>
+      </div>
+
+      <!-- portao: aparece quando portaoTeste esta configurado em js/config.js -->
+      <form class="portao oculto" id="form-portao" data-portao="portaoTeste" novalidate>
+        <div class="portao__topo">
+          <svg class="portao__chave" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="17" cy="17" r="11" fill="none" stroke="#9FE072" stroke-width="4"/>
+            <path d="M25 25 L41 41 M35 35 l5 -5 M30 30 l4 -4" stroke="#9FE072" stroke-width="4"
+                  fill="none" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h2 class="portao__titulo">Digite a senha do teste</h2>
+            <p class="portao__dica" data-portao-dica>
+              Use a senha que eu te passei.
+            </p>
+          </div>
+        </div>
+
+        <label class="so-leitor" for="senha-download">Senha do teste</label>
+        <div class="portao__linha">
+          <input type="password" id="senha-download" name="senha" autocomplete="current-password"
+                 placeholder="Senha" spellcheck="false" aria-describedby="erro-portao">
+          <button type="submit" class="botao botao--acento" id="botao-portao">Liberar o download</button>
+        </div>
+
+        <p class="estado estado--erro" id="erro-portao" role="status"></p>
+
+        <p class="portao__rodape">
+          Senha errada ou não recebeu?
+          <a data-wa data-wa-texto="Olá! Preciso da senha para baixar o XGuri de teste." href="#">Me chame no WhatsApp</a>.
+        </p>
+      </form>
+
+      <div class="botoes">
+        <a class="botao botao--acento" data-download="portaoTeste" data-portao-liberado
+           href="#" download>
+          Baixar versão para teste
+        </a>
+      </div>
+
+      <!-- só aparece se a senha do teste ainda não foi configurada -->
+      <div class="aviso oculto" data-sem-portao>
+        <strong>O download deste teste ainda não está liberado.</strong>
+        Me chame no WhatsApp que eu te passo o arquivo e a senha na hora.
+      </div>
+
+      <p class="sub" style="font-size:.93rem;">
+        Windows 10 ou 11, 64 bits &middot; <span data-cfg="tamanhoTeste">501 MB</span>
+        &middot; arquivo <span class="mono">XGuri_Teste_3dias.exe</span>
+      </p>
+    </div>
+
+    <!-- o ponto que não pode ficar escondido em letra miúda -->
+    <div class="cartao pilha pilha--12"
+         style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18);">
+      <h3 style="color:var(--texto-inverso);">
+        O que acontece no <span data-cfg="diasDeTeste">3</span>º dia
+      </h3>
+      <ul class="plano__itens" style="color:#C4D3C6;">
+        <li>Se você abrir o XGuri, ele avisa na tela e se remove ali mesmo.</li>
+        <li>Se você não abrir mais, o Windows remove por conta própria, numa tarefa
+            que o instalador agendou.</li>
+        <li>Sai <strong>só o programa</strong>. Suas fotos, mapas, projetos e arquivos
+            .kml continuam exatamente onde estão.</li>
+        <li>Se você já tem um XGuri definitivo instalado, ele não é tocado: os dois
+            ficam em pastas separadas.</li>
+      </ul>
+      <p class="sub" style="font-size:.92rem; color:#A9BCAB;">
+        A remoção é feita pelo desinstalador oficial, o mesmo que você acharia em
+        Configurações &rsaquo; Aplicativos. Nada é apagado por fora disso.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------ o que testar -- -->
+<section class="faixa faixa--clara">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">O teste por dentro</p>
+      <h2>Três dias com o programa inteiro, sem pegadinha.</h2>
+      <p class="sub">
+        Não é versão reduzida nem demonstração com botão desligado. É o XGuri completo:
+        o que você conseguir fazer nesses dias é exatamente o que ele faz no dia a dia.
+      </p>
+    </div>
+
+    <ol class="passos">
+      <li class="passo">
+        <h3>Baixe e instale</h3>
+        <p>
+          Um arquivo só, com tudo dentro. O Windows vai pedir confirmação — é o aviso
+          normal para programa de desenvolvedor pequeno, sem assinatura de código
+          comprada. Em &ldquo;Mais informações &rsaquo; Executar assim mesmo&rdquo; a
+          instalação segue.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Rode um voo de verdade</h3>
+        <p>
+          Descarregue o cartão do drone numa pasta, aponte essa pasta no XGuri e vá até
+          o fim: mapa HD do talhão, mapa de aplicação, taxa variável, aplicação
+          localizada e a rota saindo para o XAG One ou em .kml. Tudo liberado.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>No terceiro dia, ele se despede</h3>
+        <p>
+          O prazo conta da primeira vez que o programa abre, não do download. Quando
+          acabar, o XGuri de teste se remove do computador e você me diz o que achou.
+        </p>
+      </li>
+    </ol>
+
+    <div class="aviso">
+      <strong>Quer mais tempo?</strong>
+      Se três dias não deram para pegar uma janela de voo, me chame no WhatsApp. Eu mando
+      um teste novo, sem problema — é melhor você testar com calma do que decidir no
+      escuro.
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------- requisitos --- -->
+<section class="faixa faixa--fundo">
+  <div class="envelope grade grade--2" style="gap:36px; align-items:start;">
+    <div class="pilha pilha--12">
+      <p class="olho">Antes de baixar</p>
+      <h2>O que o computador precisa ter.</h2>
+      <p class="sub">
+        Windows 10 ou 11 de 64 bits, 8 GB de memória para o serviço do dia a dia e 16 GB
+        ou mais para mapa HD de área grande. Deixe uns 10 GB livres no disco durante o
+        processamento, e instale com permissão de administrador.
+      </p>
+      <p class="sub">
+        Não existe versão para Mac, Linux ou celular. O próprio XGuri mede a sua máquina
+        e avisa, antes de começar, quantas fotos ela aguenta naquele serviço.
+      </p>
+    </div>
+
+    <div class="pilha pilha--20">
+      <div class="cartao pilha pilha--12">
+        <h3>Depois do teste</h3>
+        <p class="sub" style="font-size:.95rem;">
+          Se fizer sentido para o seu serviço, a licença definitiva é emitida para o
+          código do seu computador e não tem prazo nenhum. O pedido leva um minuto.
+        </p>
+        <a class="botao botao--escuro" href="comprar.html">Ver planos e pedir licença</a>
+      </div>
+
+      <div class="cartao pilha pilha--12">
+        <h3>Achou um problema?</h3>
+        <p class="sub" style="font-size:.95rem;">
+          É justamente para isso que o teste existe. Me manda print da tela e o que você
+          estava fazendo — me ajuda mais do que você imagina.
+        </p>
+        <a class="botao botao--linha" data-wa
+           data-wa-texto="Olá! Estou testando o XGuri e encontrei o seguinte:" href="#">
+          Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <div>
+      <a class="marca-link" href="index.html" style="margin-bottom:12px;">
+        <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+        xguri<i aria-hidden="true"></i>
+      </a>
+      <p>Sistema de mapeamento para drone agrícola.<br>Guri dos Drones.</p>
+    </div>
+    <div>
+      <h4>Esta página</h4>
+      <ul>
+        <li><a href="index.html">Conhecer o XGuri</a></li>
+        <li><a href="manual.html">Manual</a></li>
+        <li><a href="comprar.html">Pedir licença</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li><a data-wa href="#">WhatsApp <span data-wa-numero></span></a></li>
+        <li data-some-sem-email><a data-email data-email-texto href="#">E-mail</a></li>
+        <li><a data-instagram data-instagram-texto href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape__fim">
+    Versão de teste de <span data-cfg="diasDeTeste">3</span> dias &middot;
+    &copy; <span data-ano>2026</span> Guri dos Drones &middot;
+    XAG é marca da XAG Co., Ltd., sem vínculo com este produto.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
