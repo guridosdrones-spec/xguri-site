@@ -142,13 +142,11 @@
         </p>
       </li>
       <li class="passo">
-        <h3>O Windows vai pedir confirmação</h3>
+        <h3>O Windows vai mostrar uma tela azul</h3>
         <p>
-          Programa de desenvolvedor pequeno ainda não tem assinatura de código
-          comprada, então aparece o aviso azul do Windows. Clique em
-          &ldquo;Mais informações&rdquo; e depois em &ldquo;Executar assim mesmo&rdquo;.
-          Baixe sempre pelo link deste site para ter certeza de que o arquivo é o
-          original.
+          É o aviso do SmartScreen, e acontece com todo programa sem certificado de
+          assinatura. Logo abaixo está exatamente onde clicar. Baixe sempre pelo link
+          deste site para ter certeza de que o arquivo é o original.
         </p>
       </li>
       <li class="passo">
@@ -167,6 +165,76 @@
         </p>
       </li>
     </ol>
+
+    <div class="telaazul" id="tela-azul">
+      <div class="telaazul__passos">
+        <p>
+          <strong>N&atilde;o &eacute; v&iacute;rus, e n&atilde;o &eacute; erro do arquivo.</strong>
+          O XGuri ainda n&atilde;o tem certificado de assinatura de c&oacute;digo &mdash;
+          aquele que as empresas grandes pagam por ano. Sem ele, o Windows mostra essa tela
+          azul para qualquer programa de desenvolvedor pequeno, na primeira vez que roda.
+        </p>
+        <p>
+          O caminho &eacute;: clicar em <span class="telaazul__clique">Mais informa&ccedil;&otilde;es</span>
+          e depois em <span class="telaazul__clique">Executar assim mesmo</span>. O bot&atilde;o
+          do passo 2 <strong>s&oacute; aparece depois do passo 1</strong> &mdash; &eacute; a&iacute;
+          que a maioria desiste sem precisar.
+        </p>
+        <p>
+          Se o navegador avisar que o arquivo &ldquo;n&atilde;o &eacute; baixado com
+          frequ&ecirc;ncia&rdquo;, clique em <span class="telaazul__clique">Manter</span>.
+          E se depois aparecer uma janela pedindo permiss&atilde;o de administrador, &eacute;
+          a instala&ccedil;&atilde;o normal: clique em <span class="telaazul__clique">Sim</span>.
+        </p>
+      </div>
+
+      <div>
+        <svg viewBox="0 0 340 250" role="img"
+             aria-label="Desenho da janela azul do Windows: clique em Mais informacoes e depois em Executar assim mesmo">
+          <rect x="6" y="6" width="328" height="150" rx="8" fill="#FFFFFF" stroke="#C9D3DF"/>
+          <rect x="6" y="6" width="328" height="34" rx="8" fill="#0F62A8"/>
+          <rect x="6" y="30" width="328" height="10" fill="#0F62A8"/>
+          <text x="20" y="28" font-family="Asap, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF">
+            O Windows protegeu seu PC
+          </text>
+
+          <text x="20" y="64" font-family="Asap, sans-serif" font-size="11" fill="#5A6B7A">
+            O Microsoft Defender SmartScreen impediu
+          </text>
+          <text x="20" y="79" font-family="Asap, sans-serif" font-size="11" fill="#5A6B7A">
+            a inicializa&#231;&#227;o de um aplicativo n&#227;o
+          </text>
+          <text x="20" y="94" font-family="Asap, sans-serif" font-size="11" fill="#5A6B7A">
+            reconhecido.
+          </text>
+
+          <rect x="16" y="106" width="116" height="22" rx="4" fill="#E7F0FB" stroke="#1F6FD0"/>
+          <text x="24" y="121" font-family="Asap, sans-serif" font-size="12" font-weight="600" fill="#0F62A8">
+            Mais informa&#231;&#245;es
+          </text>
+          <circle cx="146" cy="117" r="10" fill="#1F6FD0"/>
+          <text x="146" y="121" text-anchor="middle" font-family="Outfit, sans-serif"
+                font-size="12" font-weight="700" fill="#FFFFFF">1</text>
+
+          <rect x="248" y="124" width="76" height="22" rx="4" fill="#F1F3F6" stroke="#C9D3DF"/>
+          <text x="286" y="139" text-anchor="middle" font-family="Asap, sans-serif"
+                font-size="11" fill="#7A8794">N&#227;o executar</text>
+
+          <path d="M170 168 L170 186" stroke="#98A1AC" stroke-width="2" stroke-linecap="round"/>
+          <path d="M165 181 L170 187 L175 181" fill="none" stroke="#98A1AC"
+                stroke-width="2" stroke-linecap="round"/>
+
+          <rect x="52" y="196" width="196" height="40" rx="8" fill="#FFFFFF" stroke="#C9D3DF"/>
+          <rect x="62" y="206" width="140" height="20" rx="4" fill="#E7F0FB" stroke="#1F6FD0"/>
+          <text x="70" y="220" font-family="Asap, sans-serif" font-size="12" font-weight="600" fill="#0F62A8">
+            Executar assim mesmo
+          </text>
+          <circle cx="228" cy="216" r="10" fill="#1F6FD0"/>
+          <text x="228" y="220" text-anchor="middle" font-family="Outfit, sans-serif"
+                font-size="12" font-weight="700" fill="#FFFFFF">2</text>
+        </svg>
+      </div>
+    </div>
   </div>
 </section>
 

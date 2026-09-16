@@ -549,6 +549,45 @@ p { margin: 0; }
 .portao__rodape { font-size: .9rem; color: #A9BCAB; }
 .portao__rodape a { color: #9FE072; }
 
+/* --------------------------------------- o aviso azul do Windows -------- */
+/* A caixa que ensina a passar pelo SmartScreen. O desenho da janela tem
+   cores proprias, fixas: ele representa uma janela do Windows, que e
+   clara nos dois temas. O texto em volta usa os tokens do site. */
+
+.telaazul {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: minmax(260px, 1.1fr) minmax(240px, 1fr);
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--borda);
+  border-left: 4px solid #1F6FD0;
+  border-radius: var(--raio-g);
+  padding: 22px;
+}
+.faixa--clara .telaazul { background: var(--ground); }
+
+.telaazul__passos { display: grid; gap: 12px; }
+.telaazul__passos p { color: var(--texto-fraco); font-size: .97rem; }
+.telaazul__passos strong { color: var(--texto); }
+
+.telaazul__clique {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--texto);
+  background: #E7F0FB;
+  border: 1px solid #A8CBF4;
+  border-radius: 5px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+.telaazul svg { width: 100%; height: auto; max-width: 340px; }
+
+@media (max-width: 620px) {
+  .telaazul { grid-template-columns: 1fr; }
+}
+
 /* --------------------------------------------------------------- avisos -- */
 
 .aviso {
