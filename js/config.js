@@ -81,6 +81,32 @@ window.XGURI = {
     dica: "Use a senha que eu te passei.",
   },
 
+  // -------------------------------------------------------------------
+  // XGURI PORTATIL (portatil.html) - app Android de mapeamento com drone
+  //
+  // Senha propria, separada dos portoes do programa de Windows. O APK
+  // mora nas Releases de guridosdrones-spec/xguri-portatil-atualizacoes
+  // (o mesmo lugar de onde o app busca as atualizacoes sozinho).
+  //
+  // Versao nova: troque portatilVersao/Tamanho/Sha256 e gere o bloco de
+  // novo na _ferramenta-senha.html, escolhendo "XGuri Portatil". Ou
+  // aponte o link para .../releases/latest/download/... e nao precisa
+  // mexer no bloco a cada versao (so se mudar o nome do arquivo).
+  // -------------------------------------------------------------------
+  portaoPortatil: {
+    ativo: true,
+    iter: 200000,
+    sal: "44c7b6e749beeb87524fa3019e03b642",
+    iv: "625290fc34f5d7e48afb41b7",
+    link: "+ArMhsO5dfalyy23epPMuP/zR1JZkgeiuwbl5j/RHxGI664Nz7jsuoDavZgH8jsW3ogIyI2G8yXPUJXecgcLv47ykJuhWHKRodR31UIQqnvm0Q4Xt/kG1W7rNY9PkbZqfTR+21p3PfGpJgURb6iec2pW3SBfoLwvruo/oKdsY94Y67g=",
+
+    dica: "Peça a senha no WhatsApp.",
+  },
+
+  portatilVersao: "0.2.0",
+  portatilTamanho: "86 MB",
+  portatilSha256: "b87a3e18b36b7817f622d42b5d9816f116a2af0660b5f8cf19e31689837643e1",
+
   // Dias que a versao de teste dura antes de se remover sozinha. Tem que
   // bater com "horas" em edicao_teste.json, no projeto do XGuri
   // (72 horas = 3 dias).

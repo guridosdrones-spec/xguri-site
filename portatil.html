@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XGuri Portátil</title>
+<meta name="description" content="XGuri Portátil: app Android para planejar o voo de mapeamento do drone DJI, baixar as fotos, gerar o ortomosaico e desenhar o mapa de aplicação no celular.">
+<meta name="theme-color" content="#0E1A14">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/xguri-icone.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/xguri-icone.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Asap:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca-link" href="index.html">
+      <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+      xguri<i aria-hidden="true"></i>
+    </a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="index.html#programa">O programa</a>
+      <a href="index.html#modulos">Módulos</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="download.html">Baixar</a>
+      <a href="portatil.html" aria-current="page">App Portátil</a>
+      <a href="comprar.html">Comprar</a>
+      <a href="treinamento/index.html">Treinamento</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ---------------------------------------------------------- download -- -->
+<section class="faixa faixa--escura">
+  <div class="envelope grade grade--2" style="gap:36px; align-items:start;">
+    <div class="pilha pilha--20">
+      <div class="pilha pilha--12">
+        <p class="olho">XGuri Portátil &middot; Android</p>
+        <h1 style="font-size:clamp(1.9rem,5vw,2.7rem);">O mapeamento inteiro no celular, do voo ao mapa.</h1>
+        <p class="sub">
+          Desenhe a área, deixe o app voar o drone tirando as fotos na sobreposição certa,
+          baixe as fotos direto do cartão e monte o ortomosaico com o mapa de aplicação,
+          sem passar pelo computador.
+        </p>
+      </div>
+
+      <form class="portao oculto" id="form-portao" data-portao="portaoPortatil" novalidate>
+        <div class="portao__topo">
+          <svg class="portao__chave" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="17" cy="17" r="11" fill="none" stroke="#9FE072" stroke-width="4"/>
+            <path d="M25 25 L41 41 M35 35 l5 -5 M30 30 l4 -4" stroke="#9FE072" stroke-width="4"
+                  fill="none" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h2 class="portao__titulo">Download liberado por senha</h2>
+            <p class="portao__dica" data-portao-dica>Peça a senha no WhatsApp.</p>
+          </div>
+        </div>
+
+        <label class="so-leitor" for="senha-download">Senha do download</label>
+        <div class="portao__linha">
+          <input type="password" id="senha-download" name="senha" autocomplete="current-password"
+                 placeholder="Senha" spellcheck="false" aria-describedby="erro-portao">
+          <button type="submit" class="botao botao--acento" id="botao-portao">Liberar o download</button>
+        </div>
+
+        <p class="estado estado--erro" id="erro-portao" role="status"></p>
+
+        <p class="portao__rodape">
+          Não tem a senha? <a data-wa data-wa-texto="Olá! Queria a senha para baixar o XGuri Portátil." href="#">Me chame no WhatsApp</a>
+          que eu passo na hora.
+        </p>
+      </form>
+
+      <div class="botoes">
+        <a class="botao botao--acento oculto" data-download="portaoPortatil" data-portao-liberado href="#">
+          Baixar o app (<span data-cfg="portatilTamanho">86 MB</span>)
+        </a>
+      </div>
+
+      <div class="aviso oculto" data-sem-portao>
+        <strong>O download do app está fechado no momento.</strong>
+        <a data-wa data-wa-texto="Olá! Queria baixar o XGuri Portátil." href="#">Me chame no WhatsApp</a>
+        que eu te mando o arquivo.
+      </div>
+
+      <p class="sub" style="font-size:.93rem;">
+        Versão <span data-cfg="portatilVersao">0.2.0</span> &middot; arquivo
+        <span class="mono">.apk</span> &middot; Android 8 ou mais novo
+      </p>
+
+      <div>
+        <p class="sub" style="font-size:.9rem; margin-bottom:4px;">
+          Conferência do arquivo (SHA-256):
+        </p>
+        <div class="codigo-maquina" style="font-size:.78rem; letter-spacing:0; word-break:break-all;" data-cfg="portatilSha256"></div>
+      </div>
+    </div>
+
+    <div class="cartao pilha pilha--12" style="background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.16);">
+      <h3 style="color:var(--texto-inverso);">O que precisa ter</h3>
+      <ul class="plano__itens" style="color:#C4D3C6;">
+        <li>Celular <strong>Android 8</strong> ou mais novo</li>
+        <li>Drone DJI compatível com o SDK, como <strong>Mini 2</strong> e <strong>Air 2S</strong></li>
+        <li>Cabo ligando o celular ao controle</li>
+        <li>Internet na primeira abertura, para registrar o SDK da DJI</li>
+        <li>Espaço livre no celular para as fotos do voo</li>
+      </ul>
+      <p class="sub" style="font-size:.92rem; color:#A9BCAB;">
+        Não funciona em iPhone. Feche o DJI Fly antes de conectar: só um app por vez
+        consegue falar com o drone.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ recursos -- -->
+<section class="faixa faixa--clara">
+  <div class="envelope pilha pilha--32">
+    <div class="prosa pilha pilha--12">
+      <p class="olho">O que o app faz</p>
+      <h2>Do desenho da área ao mapa de aplicação.</h2>
+    </div>
+
+    <ol class="passos">
+      <li class="passo">
+        <h3>Desenha a área no satélite</h3>
+        <p>
+          Área de aplicação, obstáculos e rede de energia, com a altura sobre a rede
+          escolhida por você. Dá para mapear a área toda ou só a borda e os obstáculos.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Voa automático ou guiado</h3>
+        <p>
+          No automático, o drone sobe reto, baixa a câmera e segue as linhas. No manual,
+          a tela mostra o que falta cobrir e avisa quando virar, como o GPS do trator.
+          A altura fica limitada a 120 m e dá para acompanhar o terreno.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Cuida da foto</h3>
+        <p>
+          Trava a exposição na altura do voo e segura a velocidade no limite da câmera,
+          para a foto não sair borrada, mesmo se você mexer no manche.
+        </p>
+      </li>
+      <li class="passo">
+        <h3>Baixa as fotos e monta o mapa</h3>
+        <p>
+          As fotos da missão descem do cartão do drone para o celular, o ortomosaico
+          é montado ali mesmo e o mapa de aplicação sai em KML para o XAG One.
+        </p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- instalação -- -->
+<section class="faixa faixa--fundo">
+  <div class="envelope grade grade--2" style="gap:36px; align-items:start;">
+    <div class="pilha pilha--12">
+      <p class="olho">Instalação</p>
+      <h2>Como instalar o APK.</h2>
+      <ol class="plano__itens">
+        <li>Abra esta página <strong>no próprio celular</strong>, digite a senha e toque em <strong>Baixar o app</strong>.</li>
+        <li>Se o navegador avisar que o arquivo pode ser perigoso, toque em <strong>Baixar mesmo assim</strong>.</li>
+        <li>Abra o arquivo baixado. Na primeira vez o Android pede para liberar <strong>Instalar apps desconhecidos</strong> para o navegador: libere e volte.</li>
+        <li>Toque em <strong>Instalar</strong>. Se aparecer o aviso do Play Protect, toque em <strong>Instalar sem verificar</strong>.</li>
+      </ol>
+    </div>
+
+    <div class="pilha pilha--20">
+      <div class="aviso aviso--marca">
+        <strong>Depois de instalado, ele se atualiza sozinho.</strong>
+        Quando sair versão nova, o app avisa na abertura e baixa a atualização. Não
+        precisa voltar aqui.
+      </div>
+      <div class="aviso">
+        <strong>Voe com responsabilidade.</strong>
+        Confira a área antes de decolar, respeite o limite de altura e as regras da ANAC
+        e do DECEA, e fique sempre pronto para assumir o controle do drone.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <div>
+      <a class="marca-link" href="index.html" style="margin-bottom:12px;">
+        <img src="assets/xguri-icone.png" alt="" width="30" height="30">
+        xguri<i aria-hidden="true"></i>
+      </a>
+      <p>Sistema de mapeamento para drone agrícola.<br>Guri dos Drones.</p>
+    </div>
+    <div>
+      <h4>Os programas</h4>
+      <ul>
+        <li><a href="download.html">XGuri para Windows</a></li>
+        <li><a href="portatil.html">XGuri Portátil</a></li>
+        <li><a href="manual.html">Manual</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Licença</h4>
+      <ul>
+        <li><a href="index.html#licenca">Como funciona</a></li>
+        <li><a href="comprar.html">Montar pedido</a></li>
+        <li><a href="index.html#perguntas">Perguntas frequentes</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li><a data-wa href="#">WhatsApp <span data-wa-numero></span></a></li>
+        <li data-some-sem-email><a data-email data-email-texto href="#">E-mail</a></li>
+        <li><a data-instagram data-instagram-texto href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape__fim">
+    XGuri Portátil versão <span data-cfg="portatilVersao">0.2.0</span> &middot; &copy; <span data-ano>2026</span>
+    Guri dos Drones &middot; DJI é marca da SZ DJI Technology Co., Ltd., sem vínculo com este produto.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
