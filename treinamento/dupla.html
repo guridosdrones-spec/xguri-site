@@ -1,0 +1,1669 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operação em Dupla · XGuri</title>
+<link rel="icon" href="../assets/xguri-icone.png">
+<style>
+  :root{--fundo:rgba(14,16,20,.86);--fundo2:rgba(20,23,29,.95);--linha:rgba(255,255,255,.12);--texto:#EEF2F6;--fraco:#9AA5B1;
+    --azul:#2F80ED;--azul2:#4A94F5;--laranja:#F08A24;--alerta:#F5A524;--perigo:#F04438;--ok:#32D583}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#0c1014;font-family:Roboto,"Segoe UI",system-ui,sans-serif;color:var(--texto)}
+  #c3d{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+  button{font:inherit;color:inherit;border:none;background:none;cursor:pointer}
+  button:disabled{opacity:.42;cursor:default}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--azul2);outline-offset:2px}
+  [hidden]{display:none!important}
+  .mono{font-family:"Roboto Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
+
+  /* ---------- sala (antes de começar) ---------- */
+  #lobby{position:fixed;inset:0;display:grid;place-items:center;padding:16px;overflow:auto;
+    background:linear-gradient(90deg,rgba(8,10,13,.85),rgba(8,10,13,.4))}
+  .cartao{width:min(470px,100%);background:var(--fundo2);border:1px solid var(--linha);border-radius:14px;padding:22px 22px 18px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45)}
+  .selo{margin:0 0 4px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fraco)}
+  h1{margin:0 0 8px;font-size:26px;font-weight:600;letter-spacing:-.01em}
+  h2{margin:0 0 6px;font-size:22px;font-weight:600}
+  h3{margin:18px 0 8px;font-size:13px;font-weight:600;color:var(--fraco);letter-spacing:.04em;text-transform:uppercase}
+  .sub{margin:0 0 14px;color:var(--fraco);font-size:14px;line-height:1.45}
+  label{display:block;font-size:12.5px;color:var(--fraco);margin:12px 0 6px}
+  input{width:100%;font:inherit;font-size:15px;color:var(--texto);background:rgba(255,255,255,.06);border:1px solid var(--linha);border-radius:8px;padding:10px 12px}
+  .seg{display:flex;border:1px solid var(--linha);border-radius:8px;overflow:hidden}
+  .seg button{flex:1;padding:9px 10px;font-size:13.5px}
+  .seg button+button{border-left:1px solid var(--linha)}
+  .seg button[aria-pressed="true"]{background:var(--azul)}
+  .ajuda{font-size:12.5px;color:var(--fraco);margin:6px 0 0;line-height:1.4}
+  .linha2{display:flex;gap:8px;margin-top:14px;align-items:center}
+  .linha2 .sp{flex:1}
+  .btn{padding:10px 16px;border-radius:8px;border:1px solid var(--linha);background:rgba(255,255,255,.05);font-weight:500;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:rgba(255,255,255,.3)}
+  .btn.pri{background:var(--azul);border-color:var(--azul)}
+  .btn.pri:hover:not(:disabled){background:var(--azul2)}
+  .erro{color:#ffb4ae;font-size:13.5px;margin:10px 0 0;min-height:1em}
+  .ou{display:flex;align-items:center;gap:10px;color:var(--fraco);font-size:12.5px;margin:18px 0 0}
+  .ou::before,.ou::after{content:"";flex:1;height:1px;background:var(--linha)}
+  #inCodigo{text-transform:uppercase;letter-spacing:.3em;font-family:"Roboto Mono",Consolas,monospace;text-align:center;max-width:170px}
+
+  .codigoSala{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2)}
+  .codigoSala span{font-size:12.5px;color:var(--fraco);line-height:1.3}
+  .codigoSala b{font-family:"Roboto Mono",Consolas,monospace;font-size:30px;letter-spacing:.18em;font-weight:600;flex:1}
+  .papeis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .papel{text-align:left;padding:12px;border-radius:10px;border:1px solid var(--linha);background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:5px;min-height:150px;position:relative}
+  .papel::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--cor)}
+  .papel[data-p="piloto"]{--cor:var(--azul2)} .papel[data-p="auxiliar"]{--cor:var(--laranja)}
+  .papel:hover:not(:disabled){border-color:rgba(255,255,255,.3)}
+  .papel b{font-size:16px}
+  .papel small{color:var(--fraco);font-size:12.5px;line-height:1.35}
+  .papel em{margin-top:auto;font-style:normal;font-size:13px}
+  .papel em i{font-style:normal;color:var(--fraco)}
+  .papel.meu{border-color:var(--cor);background:rgba(255,255,255,.06)}
+  .pronto{color:var(--ok)}
+  @media (max-width:420px){.papeis{grid-template-columns:1fr}.papel{min-height:0}}
+
+  /* ---------- HUD do jogo ---------- */
+  .painel{background:var(--fundo);border:1px solid var(--linha);border-radius:10px;backdrop-filter:blur(6px)}
+  #salaChip{position:fixed;left:12px;top:12px;display:flex;gap:12px;align-items:center;padding:7px 12px;font-size:13px}
+  #salaChip b{letter-spacing:.14em}
+  #salaChip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;vertical-align:1px}
+  #salaChip .dot.fora{background:var(--perigo)}
+  #salaChip span{color:var(--fraco)}
+  #feed{position:fixed;left:50%;top:12px;transform:translateX(-50%);display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;width:min(560px,70vw)}
+  #feed div{padding:5px 12px;border-radius:999px;background:rgba(10,12,16,.78);border:1px solid var(--linha);font-size:13.5px;transition:opacity .6s;max-width:100%}
+  #feed div b{font-weight:600}
+  #feed .pil b{color:#8fbaff} #feed .aux b{color:#ffb56b} #feed .sis{color:var(--fraco)}
+  #banner{position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);padding:16px 22px;border-radius:12px;background:rgba(20,22,27,.92);border:1px solid var(--linha);font-size:16px;max-width:min(560px,90vw);text-align:center;line-height:1.4}
+  #banner.grave{background:rgba(160,24,20,.92);border-color:#ff8a80;font-weight:600}
+  #radioOn{position:fixed;left:50%;top:128px;transform:translateX(-50%);padding:6px 14px;border-radius:999px;background:rgba(50,213,131,.16);border:1px solid rgba(50,213,131,.55);font-size:13.5px}
+
+  #papelCard{position:fixed;left:12px;top:56px;width:min(320px,calc(100vw - 24px));padding:14px 14px 12px}
+  #papelCard b{font-size:15px}
+  #papelCard p{margin:6px 0 10px;color:#c9d1d9;font-size:13.5px;line-height:1.45}
+
+  #controle{position:fixed;right:12px;top:12px;width:300px;padding:10px;display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 24px);overflow:auto}
+  #controle .ctTopo b{display:block;font-size:15px;font-weight:600}
+  #controle .ctTopo small{color:var(--fraco);font-size:12px}
+  #ctMapa{width:100%;height:auto;border-radius:8px;background:#1b251b;display:block}
+  .ctDados{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13px}
+  .ctDados span{color:var(--fraco)} .ctDados b{text-align:right;font-weight:500}
+  .ctDados b.al{color:var(--alerta)} .ctDados b.cr{color:var(--perigo)}
+  #ctMsg{margin:0;min-height:1.3em;font-size:13px;line-height:1.35}
+  #ctMsg.erro{color:#ffb4ae} #ctMsg.ok{color:var(--ok)} #ctMsg.info{color:#cfe0ff}
+  .ctBts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .ctBts .btn{padding:9px 8px;font-size:13.5px}
+  .ctBts .btn:first-child{grid-column:1/-1}
+  .fraco{font-size:12.5px;color:var(--fraco);text-decoration:underline;align-self:flex-start;padding:2px 0}
+
+  #maos{position:fixed;left:12px;bottom:12px;padding:8px 12px;font-size:13.5px}
+  #maos span{color:var(--fraco)}
+  #prompt{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);min-width:260px;max-width:min(460px,92vw);padding:10px 12px}
+  #prompt .tit{font-weight:600;font-size:14px}
+  #prompt .inf{color:var(--fraco);font-size:12.5px;margin:2px 0 6px}
+  #prompt .op{position:relative;display:flex;align-items:center;gap:10px;width:100%;padding:6px 8px;border-radius:7px;font-size:14px;text-align:left;overflow:hidden;user-select:none}
+  #prompt .op:hover{background:rgba(255,255,255,.06)}
+  #prompt .op kbd{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);font:600 12.5px "Roboto Mono",Consolas,monospace}
+  #prompt .op i{position:absolute;left:0;bottom:0;height:3px;background:var(--ok);width:0}
+
+  #rodape{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 24px)}
+  #rodape .btn{padding:7px 10px;font-size:12.5px;background:var(--fundo)}
+  #rodape .btn kbd{font:600 11px "Roboto Mono",Consolas,monospace;color:var(--fraco);margin-right:5px}
+  #bPtt{border-color:rgba(50,213,131,.5)!important}
+  #bPtt.on{background:rgba(50,213,131,.3)!important}
+
+  #ajudaTec{position:fixed;left:12px;bottom:56px;padding:10px 12px;font-size:12.5px;line-height:1.7;color:#c9d1d9;width:250px}
+  #ajudaTec kbd{font:600 11px "Roboto Mono",Consolas,monospace;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.12)}
+
+  .rot{position:fixed;left:0;top:0;transform:translate(-50%,-100%);pointer-events:none;text-align:center;white-space:nowrap}
+  .rot .nm{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(10,12,16,.7);border:1px solid rgba(255,255,255,.25);font-size:12px}
+  .rot .nm.pil{border-color:rgba(74,148,245,.8)} .rot .nm.aux{border-color:rgba(240,138,36,.85)}
+  .rot .bal{display:block;margin:0 auto 4px;padding:5px 10px;border-radius:10px;background:#fff;color:#111;font-size:13px;font-weight:500;max-width:220px;white-space:normal}
+
+  #fim{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:rgba(6,8,10,.7);overflow:auto}
+  #fim .cartao{width:min(600px,100%)}
+  .nota{display:flex;align-items:baseline;gap:8px;margin:8px 0 4px}
+  .nota b{font-size:46px;font-weight:600;font-family:"Roboto Mono",Consolas,monospace}
+  .nota span{color:var(--fraco)}
+  .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+  .grade div{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.05)}
+  .grade span{display:block;font-size:11.5px;color:var(--fraco)} .grade b{font-size:17px;font-weight:500}
+  #fInc{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+  #fInc li{padding:6px 10px;border-radius:7px;background:rgba(255,255,255,.04);border-left:3px solid var(--alerta)}
+  #fInc li.grave{border-color:var(--perigo)} #fInc li.forcado{border-color:#b692f6}
+  #fInc li small{color:var(--fraco);margin-right:8px}
+  @media (max-width:520px){.grade{grid-template-columns:1fr 1fr}#controle{width:calc(100vw - 24px);top:auto;bottom:120px;max-height:45vh}}
+
+/* ===== portaria de acesso ===== */
+html.travado body > *:not(#portaria){display:none!important}
+#portaria{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;
+  background:#101418;background-image:radial-gradient(circle at 50% 8%,rgba(47,128,237,.16),transparent 55%);color:var(--texto)}
+#portaria .caixa{width:100%;max-width:430px;background:var(--fundo2);border:1px solid var(--linha);border-radius:12px;padding:26px}
+#portaria .selo{margin:0 0 4px}
+#portaria h2{font-size:26px;margin:4px 0 6px}
+#portaria p{margin:0 0 18px;font-size:14.5px;color:var(--fraco);line-height:1.45}
+#portaria label{margin:0 0 6px}
+#portaria button{width:100%;margin-top:12px;background:var(--azul);border-radius:8px;padding:12px;font-weight:500}
+#portaria button:disabled{opacity:.5;cursor:wait}
+#portaria .erro{color:#ffb4ae;font-size:13.5px;margin:10px 0 0;min-height:19px}
+#portaria .rodape{margin-top:18px;padding-top:14px;border-top:1px solid var(--linha);font-size:12px;color:var(--fraco)}
+</style>
+<body>
+<div id="portaria">
+  <div class="caixa">
+    <p class="selo">XGuri · Treinamento de campo</p>
+    <h2>Operação em dupla</h2>
+    <p>Este material é liberado por senha. Use a senha que o instrutor passou para a sua turma.</p>
+    <label for="portaSenha">Senha de acesso</label>
+    <input id="portaSenha" type="password" autocomplete="current-password" placeholder="••••••••" autofocus>
+    <button id="portaBtn">Entrar</button>
+    <p class="erro" id="portaErro"></p>
+    <p class="rodape">Se você não tem a senha, fale com o instrutor responsável pelo curso.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var ACESSO = {
+    iter: 200000,
+    chaves: [
+      {nome: "Senha geral", sal: "4b7a8dbbef93f0ee96ee67a26643355e",
+       hash: "dfadde86a724aead7438dd73e4b7068280499fe9200ea5dac3f4eea49a886d33"}
+    ]
+  };
+  var LEMBRAR = "xguri_acesso_v1";
+  var raiz = document.documentElement;
+  raiz.classList.add("travado");
+
+  function liberar(nome){
+    try{ localStorage.setItem(LEMBRAR, nome); }catch(e){}
+    raiz.classList.remove("travado");
+    var p = document.getElementById("portaria");
+    if(p) p.remove();
+    window.dispatchEvent(new Event("acesso-liberado"));
+  }
+  try{ if(localStorage.getItem(LEMBRAR)) { liberar(localStorage.getItem(LEMBRAR)); return; } }catch(e){}
+
+  function hex(buf){
+    return Array.prototype.map.call(new Uint8Array(buf), function(b){
+      return ("0" + b.toString(16)).slice(-2); }).join("");
+  }
+  function bytes(h){
+    var a = new Uint8Array(h.length/2);
+    for(var i=0;i<a.length;i++) a[i] = parseInt(h.substr(i*2,2),16);
+    return a;
+  }
+  async function conferir(senha){
+    var enc = new TextEncoder();
+    var base = await crypto.subtle.importKey("raw", enc.encode(senha), "PBKDF2", false, ["deriveBits"]);
+    for(var i=0;i<ACESSO.chaves.length;i++){
+      var k = ACESSO.chaves[i];
+      var bits = await crypto.subtle.deriveBits(
+        {name:"PBKDF2", salt:bytes(k.sal), iterations:ACESSO.iter, hash:"SHA-256"}, base, 256);
+      if(hex(bits) === k.hash) return k.nome;
+    }
+    return null;
+  }
+
+  var btn = document.getElementById("portaBtn");
+  var campo = document.getElementById("portaSenha");
+  var erro = document.getElementById("portaErro");
+  var tentando = false;
+
+  async function tentar(){
+    if(tentando) return;
+    var s = campo.value.trim();
+    if(!s){ erro.textContent = "Digite a senha."; return; }
+    tentando = true; btn.disabled = true; btn.textContent = "Conferindo…"; erro.textContent = "";
+    try{
+      var nome = await conferir(s);
+      if(nome){ liberar(nome); return; }
+      erro.textContent = "Senha incorreta.";
+    }catch(e){
+      erro.textContent = "Não consegui conferir a senha neste navegador.";
+    }
+    tentando = false; btn.disabled = false; btn.textContent = "Entrar"; campo.select();
+  }
+  btn.addEventListener("click", tentar);
+  campo.addEventListener("keydown", function(e){ if(e.key === "Enter") tentar(); });
+})();
+</script>
+
+<canvas id="c3d"></canvas>
+
+<!-- ======================= SALA ======================= -->
+<div id="lobby">
+  <div class="cartao" id="telaEntrada">
+    <p class="selo">XGuri · Treinamento</p>
+    <h1>Operação em dupla</h1>
+    <p class="sub">Piloto e auxiliar na mesma sala, cada um no seu computador. Um fica no controle, o outro cuida da base: calda, baterias, gerador e a segurança em volta da aeronave.</p>
+    <label for="inNome">Seu nome</label>
+    <input id="inNome" maxlength="24" autocomplete="given-name" placeholder="Como a dupla vai te chamar">
+    <label id="lbModo">Conexão</label>
+    <div class="seg" id="segModo" role="group" aria-labelledby="lbModo">
+      <button data-v="internet" aria-pressed="true">Pela internet</button>
+      <button data-v="local" aria-pressed="false">Neste computador (teste)</button>
+    </div>
+    <p class="ajuda" id="ajModo"></p>
+    <div class="linha2"><button class="btn pri" id="bCriar">Criar sala</button></div>
+    <div class="ou">ou entre na sala de alguém</div>
+    <div class="linha2">
+      <input id="inCodigo" maxlength="4" placeholder="CÓDIGO" autocomplete="off" aria-label="Código da sala">
+      <button class="btn" id="bEntrar">Entrar</button>
+    </div>
+    <p class="erro" id="erroEntrada" role="alert"></p>
+  </div>
+
+  <div class="cartao" id="telaSala" hidden>
+    <div class="codigoSala">
+      <span>Código<br>da sala</span><b id="cod">----</b>
+      <button class="btn" id="bCopiar">Copiar</button>
+    </div>
+    <p class="sub" id="salaStatus" style="margin-top:12px"></p>
+    <div class="papeis">
+      <button class="papel" data-p="piloto"><b>Piloto</b>
+        <small>Fica no controle: decola, acompanha a aplicação e chama a base pelo rádio.</small><em></em></button>
+      <button class="papel" data-p="auxiliar"><b>Auxiliar</b>
+        <small>Cuida da base: prepara calda, troca bateria, abastece e mantém o gerador rodando.</small><em></em></button>
+    </div>
+    <div id="cfgHost">
+      <label id="lbRitmo">Ritmo do tempo (voo, carga da bateria, combustível)</label>
+      <div class="seg" id="segRitmo" role="group" aria-labelledby="lbRitmo">
+        <button data-v="1" aria-pressed="false">Real</button>
+        <button data-v="2" aria-pressed="true">2× mais rápido</button>
+        <button data-v="4" aria-pressed="false">4×</button>
+      </div>
+    </div>
+    <div id="cfgRadio">
+      <label>Rádio de voz</label>
+      <div class="linha2" style="margin-top:0"><button class="btn" id="bMic">Ligar microfone</button><span class="ajuda" id="micStatus" style="margin:0">Aperte e segure V para falar durante a operação.</span></div>
+    </div>
+    <div class="linha2">
+      <button class="btn" id="bSair">Sair</button><span class="sp"></span>
+      <button class="btn pri" id="bPronto" hidden>Estou pronto</button>
+      <button class="btn pri" id="bComecar" hidden disabled>Começar operação</button>
+    </div>
+    <p class="erro" id="erroSala" role="alert"></p>
+  </div>
+</div>
+
+<!-- ======================= HUD ======================= -->
+<div id="hud" hidden>
+  <div id="salaChip" class="painel"><b id="hCod" class="mono"></b><span id="hParc"></span><span id="hPing" class="mono"></span><span id="hRel" class="mono"></span></div>
+  <div id="feed" aria-live="polite"></div>
+  <div id="radioOn" hidden></div>
+  <div id="papelCard" class="painel"><b id="pcTit"></b><p id="pcTxt"></p><button class="btn" id="pcOk">Entendi</button></div>
+
+  <aside id="controle" class="painel" hidden aria-label="Controle remoto">
+    <div class="ctTopo"><b id="ctEstado">—</b><small id="ctSub"></small></div>
+    <canvas id="ctMapa" width="560" height="470" aria-label="Mapa do talhão"></canvas>
+    <div class="ctDados">
+      <span>Bateria</span><b id="cBat" class="mono"></b>
+      <span>Tanque</span><b id="cTq" class="mono"></b>
+      <span>Altura · velocidade</span><b id="cAlt" class="mono"></b>
+      <span>Vazão real / planejada</span><b id="cVaz" class="mono"></b>
+      <span>Área aplicada</span><b id="cPct" class="mono"></b>
+    </div>
+    <p id="ctMsg" role="status"></p>
+    <div class="ctBts">
+      <button class="btn pri" id="bDecolar">Decolar e iniciar</button>
+      <button class="btn" id="bPausar">Pausar</button>
+      <button class="btn" id="bCasa">Voltar para casa</button>
+    </div>
+  </aside>
+  <button class="fraco" id="bEncerrar" hidden style="position:fixed;right:14px;bottom:14px">Encerrar rodada</button>
+
+  <div id="maos" class="painel" hidden></div>
+  <div id="prompt" class="painel" hidden></div>
+  <div id="ajudaTec" class="painel" hidden></div>
+  <div id="rodape"></div>
+  <div id="rotulos"></div>
+  <div id="banner" hidden></div>
+</div>
+
+<div id="fim" hidden><div class="cartao">
+  <p class="selo">Boletim da dupla</p>
+  <h2 id="fTit"></h2>
+  <p class="sub" id="fSub" style="margin:0"></p>
+  <div class="nota"><b id="fNota"></b><span>de 100</span></div>
+  <div class="grade" id="fGrade"></div>
+  <h3>Falha sorteada nesta rodada</h3>
+  <p class="sub" id="fFalha" style="margin:0"></p>
+  <h3>Ocorrências</h3>
+  <ul id="fInc"></ul>
+  <div class="linha2"><span class="sp"></span><button class="btn pri" id="fSala">Voltar para a sala</button></div>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const r1=v=>Math.round(v*10)/10, r2=v=>Math.round(v*100)/100;
+function angLerp(a,b,t){const d=((b-a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;return a+d*t}
+function mmss(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+/* ===================================================================
+   MEDIDAS DO MUNDO (metros). Talhão à frente da base, no -z.
+   =================================================================== */
+const PREFIXO="xguri-dupla-v1-";
+const LETRAS="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const CAMPO={x0:-100,x1:100,z0:-175,z1:-25};          /* 200 × 150 m = 3 ha */
+const CEL=2.5, NX=80, NZ=60;
+const PAD={x:0,z:-8};
+const EST={carregador:{x:9,z:3},gerador:{x:15,z:1},misturador:{x:4,z:10},galao:{x:9.8,z:10}};
+const SLOTS=[{x:8.5,z:3},{x:9.5,z:3}];
+const INICIO={piloto:{x:-9,z:7,ry:Math.PI},auxiliar:{x:6,z:5.5,ry:Math.PI*.8}};
+const MANGUEIRA=22;
+/* aeronave de pulverização genérica classe 40 L */
+const AERO={tanque:40,taxa:25,vel:7,velT:9,altA:3,altT:10,autonomia:360};
+const NFAIXAS=Math.ceil((CAMPO.x1-CAMPO.x0)/7.5), ESP=(CAMPO.x1-CAMPO.x0)/NFAIXAS;
+const VAZAO_PLAN=AERO.taxa*ESP*AERO.vel/10000*60;      /* L/min */
+const ROTA=(()=>{const p=[],zA=CAMPO.z1-2,zB=CAMPO.z0+2;
+  for(let i=0;i<NFAIXAS;i++){const x=CAMPO.x0+ESP*(i+.5);if(i%2===0)p.push({x,z:zA},{x,z:zB});else p.push({x,z:zB},{x,z:zA})}
+  return p})();
+/* obstáculos da base para quem anda (caixas alinhadas aos eixos) */
+const CAIXAS=[
+  {x0:8,x1:10,z0:2.6,z1:3.4},        /* mesa do carregador */
+  {x0:14.45,x1:15.55,z0:.6,z1:1.4},  /* gerador */
+  {x0:3.5,x1:4.5,z0:9.5,z1:10.5},    /* misturador */
+  {x0:10.4,x1:15.6,z0:9,z1:11}       /* caminhonete */
+];
+const NOME_EST={solo:["Pousado","motores desligados"],armando:["Armando motores","hélices em marcha lenta"],subindo:["Decolando",""],
+  indo:["Indo para o ponto de início",""],baixando:["Descendo para a altura de aplicação",""],aplicando:["Aplicando",""],
+  pausado:["Pairando","operação pausada"],voltando:["Voltando para casa",""],pousando:["Pousando",""],forcado:["Pouso forçado","descendo no local"]};
+const NO_AR=["subindo","indo","baixando","aplicando","pausado"];
+
+const CHAMADAS={
+  piloto:["Vou decolar, afasta!","Preciso de bateria","Preciso de calda","Pousando, fica longe","Motor desligado, pode vir"],
+  auxiliar:["Liberado, pode decolar!","Espera!","Bateria trocada","Tanque cheio","Tem bateria com defeito"]
+};
+
+/* ===================================================================
+   ESTADO DO APLICATIVO / SALA
+   =================================================================== */
+const APP={nome:"",modo:"internet",host:false,codigo:"",rede:null,
+  vagas:{piloto:null,auxiliar:null},ritmo:2,nomeHost:"",nomeParc:"",
+  meuPapel:null,papelConv:null,nomes:{piloto:"",auxiliar:""},
+  parceiro:false,ultimoMsg:0,ping:null,jogo:false,R:null,
+  timerSim:null,ultSim:0,ticks:0,timerOla:null,tentativa:null,esperaSala:null,tentativasCodigo:0};
+
+/* ===================================================================
+   REDE — duas formas de ligar as duas pessoas, com a mesma interface:
+   · local: BroadcastChannel (duas abas/janelas no mesmo computador)
+   · internet: PeerJS (WebRTC direto entre os dois, com servidor público
+     só para se acharem). A voz do rádio também vai por aqui.
+   =================================================================== */
+function redeLocal(codigo,souHost,cb){
+  const nada={modo:"local",enviar(){},fechar(){},liberar(){},ola(){}};
+  if(typeof BroadcastChannel==="undefined"){setTimeout(()=>cb.erro("Este navegador não tem canal entre abas."),0);return nada}
+  const eu=Math.random().toString(36).slice(2,10);
+  const bc=new BroadcastChannel(PREFIXO+codigo);
+  let par=null;
+  const r={modo:"local",
+    enviar(m){if(!par)return;m.de=eu;m.para=par;bc.postMessage(m)},
+    ola(d){bc.postMessage(Object.assign({t:"ola",de:eu},d))},
+    fechar(){try{bc.close()}catch(e){}},
+    liberar(){if(souHost)par=null}};
+  bc.onmessage=e=>{
+    const m=e.data;if(!m||m.de===eu)return;
+    if(souHost){
+      if(m.t==="ola"){
+        if(par&&par!==m.de){bc.postMessage({t:"cheia",de:eu,para:m.de});return}
+        par=m.de;
+      }else if(m.de!==par)return;
+    }else{
+      if(m.para!==eu)return;
+      if(m.t==="cheia"){cb.cheia();return}
+      if(!par)par=m.de;
+      if(m.de!==par)return;
+    }
+    cb.msg(m);
+  };
+  if(souHost)setTimeout(()=>cb.aberta(),0);
+  return r;
+}
+
+function redeInternet(codigo,souHost,cb){
+  const nada={modo:"internet",enviar(){},fechar(){},liberar(){},ola(){},reconectar(){}};
+  if(typeof Peer==="undefined"){setTimeout(()=>cb.erro("A biblioteca de conexão não carregou. Verifique a internet."),0);return nada}
+  const opc={config:{iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]}};
+  const peer=souHost?new Peer(PREFIXO+codigo,opc):new Peer(opc);
+  let conn=null,destruido=false;
+  const r={modo:"internet",
+    enviar(m){if(conn&&conn.open)try{conn.send(m)}catch(e){}},
+    ola(d){r.enviar(Object.assign({t:"ola"},d))},
+    fechar(){destruido=true;try{peer.destroy()}catch(e){}},
+    liberar(){if(conn){const c=conn;conn=null;try{c.close()}catch(e){}}},
+    reconectar(){if(!souHost&&!destruido&&peer.open&&!(conn&&conn.open))conectar()},
+    ligarVoz(stream){if(conn&&conn.open)try{peer.call(conn.peer,stream)}catch(e){}}};
+  function ligar(c){
+    c.on("data",m=>{if(c===conn)cb.msg(m)});
+    c.on("close",()=>{if(c===conn){conn=null;cb.caiu()}});
+    c.on("error",()=>{});
+  }
+  function conectar(){
+    if(conn)try{conn.close()}catch(e){}
+    const c=peer.connect(PREFIXO+codigo,{reliable:true,serialization:"json"});
+    conn=c;ligar(c);
+    c.on("open",()=>{if(c===conn)cb.conectado()});
+  }
+  peer.on("open",()=>{if(souHost)cb.aberta();else conectar()});
+  if(souHost)peer.on("connection",c=>{
+    if(conn&&conn.open){c.on("open",()=>{try{c.send({t:"cheia"})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},400)});return}
+    conn=c;ligar(c);
+  });
+  peer.on("call",call=>{call.answer();call.on("stream",s=>cb.voz(s))});
+  peer.on("disconnected",()=>{if(!destruido)setTimeout(()=>{try{if(!peer.destroyed)peer.reconnect()}catch(e){}},1500)});
+  peer.on("error",e=>{
+    const t={"unavailable-id":"codigo","peer-unavailable":"Sala não encontrada. Confira o código e se quem criou ainda está com a página aberta.",
+      "network":"Sem conexão com o servidor de salas.","server-error":"O servidor de salas não respondeu. Tente de novo.",
+      "socket-error":"A conexão com o servidor de salas caiu.","socket-closed":"A conexão com o servidor de salas caiu.",
+      "browser-incompatible":"Este navegador não faz conexão direta (WebRTC).","webrtc":"A conexão direta falhou. A rede pode estar bloqueando WebRTC."}[e.type];
+    cb.erro(t||("Falha de conexão ("+e.type+")"),e.type);
+  });
+  return r;
+}
+
+function abrirRede(codigo,souHost){
+  const cb={
+    aberta:()=>{if(APP.host)mostrarSala()},
+    conectado:()=>{if(!APP.host)APP.rede.ola({nome:APP.nome})},
+    msg:m=>receber(m),
+    caiu:()=>parceiroCaiu(false),
+    cheia:()=>{if(!APP.jogo)voltarEntrada("Essa sala já tem duas pessoas.")},
+    voz:s=>receberVoz(s),
+    erro:(txt,tipo)=>{
+      if(txt==="codigo"&&APP.host&&APP.tentativasCodigo<4){APP.tentativasCodigo++;APP.rede.fechar();APP.codigo=gerarCodigo();APP.rede=abrirRede(APP.codigo,true);return}
+      if(APP.jogo||(APP.tentativa&&tipo==="peer-unavailable"))return;     /* reconectando: segue tentando */
+      if($("telaSala").hidden)voltarEntrada(txt);else $("erroSala").textContent=txt;
+    }};
+  return APP.modo==="local"?redeLocal(codigo,souHost,cb):redeInternet(codigo,souHost,cb);
+}
+
+function gerarCodigo(){let c="";for(let i=0;i<4;i++)c+=LETRAS[Math.floor(Math.random()*LETRAS.length)];return c}
+
+/* ---------- tela de entrada ---------- */
+try{$("inNome").value=localStorage.getItem("xguri_dupla_nome")||""}catch(e){}
+function ajudaModo(){
+  $("ajModo").textContent=APP.modo==="internet"
+    ?"Cada pessoa no seu computador, em qualquer lugar. A conexão é direta entre os dois; o rádio de voz funciona."
+    :"Para testar sozinho: abra esta página em duas janelas lado a lado, crie a sala numa e entre na outra. Sem rádio de voz.";
+}
+ajudaModo();
+$("segModo").onclick=e=>{const b=e.target.closest("button");if(!b)return;APP.modo=b.dataset.v;
+  [...$("segModo").children].forEach(x=>x.setAttribute("aria-pressed",x===b));ajudaModo()};
+$("segRitmo").onclick=e=>{const b=e.target.closest("button");if(!b||!APP.host)return;APP.ritmo=+b.dataset.v;enviarSala()};
+$("inCodigo").addEventListener("input",()=>{$("inCodigo").value=$("inCodigo").value.toUpperCase().replace(/[^A-Z0-9]/g,"")});
+$("inCodigo").addEventListener("keydown",e=>{if(e.key==="Enter")$("bEntrar").click()});
+
+function lerNome(){
+  const n=$("inNome").value.trim();
+  if(!n){$("erroEntrada").textContent="Escreva seu nome para a dupla saber quem é quem.";$("inNome").focus();return null}
+  try{localStorage.setItem("xguri_dupla_nome",n)}catch(e){}
+  return n.slice(0,24);
+}
+$("bCriar").onclick=()=>{
+  const n=lerNome();if(!n)return;SOM.iniciar();
+  APP.nome=n;APP.host=true;APP.codigo=gerarCodigo();APP.tentativasCodigo=0;
+  APP.vagas={piloto:null,auxiliar:null};APP.nomeHost=n;
+  $("erroEntrada").textContent="Criando a sala…";
+  APP.rede=abrirRede(APP.codigo,true);
+};
+$("bEntrar").onclick=()=>{
+  const n=lerNome();if(!n)return;
+  const c=$("inCodigo").value.trim().toUpperCase();
+  if(c.length!==4){$("erroEntrada").textContent="O código tem 4 letras.";$("inCodigo").focus();return}
+  SOM.iniciar();
+  APP.nome=n;APP.host=false;APP.codigo=c;
+  $("erroEntrada").textContent="Procurando a sala…";
+  APP.rede=abrirRede(c,false);
+  if(APP.modo==="local"){
+    APP.rede.ola({nome:n});
+    APP.timerOla=setInterval(()=>APP.rede.ola({nome:APP.nome}),1200);
+    APP.esperaSala=setTimeout(()=>{if(!APP.parceiro)voltarEntrada("Sala não encontrada. A outra janela precisa estar com a sala aberta.")},4500);
+  }
+};
+function voltarEntrada(msg){
+  clearInterval(APP.timerOla);clearTimeout(APP.esperaSala);clearInterval(APP.tentativa);APP.tentativa=null;
+  if(APP.rede){APP.rede.fechar();APP.rede=null}
+  APP.parceiro=false;APP.host=false;APP.meuPapel=null;
+  $("telaSala").hidden=true;$("telaEntrada").hidden=false;$("lobby").hidden=false;
+  $("erroEntrada").textContent=msg||"";
+}
+function mostrarSala(){
+  clearInterval(APP.timerOla);clearTimeout(APP.esperaSala);
+  $("telaEntrada").hidden=true;$("telaSala").hidden=false;$("erroEntrada").textContent="";
+  $("cod").textContent=APP.codigo;
+  $("cfgRadio").hidden=APP.modo!=="internet";
+  renderSala();
+}
+$("bCopiar").onclick=()=>{navigator.clipboard?.writeText(APP.codigo).then(()=>{$("bCopiar").textContent="Copiado";setTimeout(()=>$("bCopiar").textContent="Copiar",1500)}).catch(()=>{})};
+$("bSair").onclick=()=>{if(APP.rede)APP.rede.enviar({t:"sair"});setTimeout(()=>voltarEntrada(""),80)};
+document.querySelectorAll(".papel").forEach(b=>b.onclick=()=>{
+  const p=b.dataset.p;
+  if(APP.host)escolherPapel("host",p);else APP.rede.enviar({t:"papel",p});
+});
+$("bPronto").onclick=()=>{const v=minhaVaga();if(!v)return;APP.rede.enviar({t:"pronto",v:!v.pronto})};
+$("bComecar").onclick=()=>comecar();
+
+function minhaVaga(){const q=APP.host?"host":"conv";for(const p in APP.vagas)if(APP.vagas[p]&&APP.vagas[p].quem===q)return APP.vagas[p];return null}
+function escolherPapel(quem,p){
+  if(APP.jogo||!(p in APP.vagas))return;
+  const v=APP.vagas[p];if(v&&v.quem!==quem)return;
+  for(const k in APP.vagas)if(APP.vagas[k]&&APP.vagas[k].quem===quem)APP.vagas[k]=null;
+  APP.vagas[p]={quem,nome:quem==="host"?APP.nome:APP.nomeParc,pronto:false};
+  enviarSala();
+}
+function enviarSala(){
+  if(!APP.host)return;
+  if(APP.rede)APP.rede.enviar({t:"sala",vagas:APP.vagas,ritmo:APP.ritmo,nomeHost:APP.nome,jogo:APP.jogo});
+  renderSala();
+}
+function renderSala(){
+  const q=APP.host?"host":"conv";
+  document.querySelectorAll(".papel").forEach(b=>{
+    const v=APP.vagas[b.dataset.p];
+    b.classList.toggle("meu",!!v&&v.quem===q);
+    b.disabled=!!v&&v.quem!==q;
+    b.querySelector("em").innerHTML=v?`${esc(v.nome)}${v.quem===q?" <i>(você)</i>":""}${v.quem==="conv"&&v.pronto?' · <span class="pronto">pronto</span>':""}`:'<i>vaga livre</i>';
+  });
+  [...$("segRitmo").children].forEach(x=>{x.setAttribute("aria-pressed",+x.dataset.v===APP.ritmo);x.disabled=!APP.host});
+  const conv=Object.entries(APP.vagas).find(([,v])=>v&&v.quem==="conv"), hst=Object.entries(APP.vagas).find(([,v])=>v&&v.quem==="host");
+  if(APP.host){
+    $("salaStatus").textContent=APP.parceiro
+      ?`${APP.nomeParc} está na sala. ${conv?(conv[1].pronto?"Pronto para começar.":"Esperando confirmar que está pronto."):"Esperando escolher o papel."}`
+      :"Passe o código para a outra pessoa, ou comece sozinho: durante a operação você troca de papel com Tab, e quem entrar depois fica com o papel livre.";
+    $("bComecar").hidden=false;$("bPronto").hidden=true;
+    $("bComecar").textContent=APP.parceiro?"Começar operação":"Começar sozinho";
+    $("bComecar").disabled=!(hst&&(!APP.parceiro||(conv&&conv[1].pronto)));
+  }else{
+    const mv=minhaVaga();
+    $("salaStatus").textContent=APP.parceiro?`Você está na sala de ${APP.nomeHost}. Escolha um papel livre${mv?" e confirme que está pronto":""}.`:"Reconectando à sala…";
+    $("bPronto").hidden=false;$("bComecar").hidden=true;
+    $("bPronto").disabled=!mv;
+    $("bPronto").textContent=mv&&mv.pronto?"Não estou pronto":"Estou pronto";
+  }
+}
+
+/* ---------- mensagens ---------- */
+function receber(m){
+  APP.ultimoMsg=performance.now();
+  if(!APP.parceiro){APP.parceiro=true;aoParceiroChegar()}
+  switch(m.t){
+    case "pulso":APP.rede.enviar({t:"eco",ts:m.ts});return;
+    case "eco":APP.ping=Math.round(performance.now()-m.ts);return;
+    case "chamada":mostrarChamada(outroPapel(),m.txt);return;
+    case "radio":radioParceiro(m.on);return;
+    case "sair":parceiroCaiu(true);return;
+  }
+  if(APP.host)msgHost(m);else msgConvidado(m);
+}
+function msgHost(m){
+  switch(m.t){
+    case "ola":
+      APP.nomeParc=String(m.nome||"Parceiro").slice(0,24);
+      if(APP.jogo){
+        const p=outroPapel(),voltou=APP.papelConv===p&&APP.nomes[p]===APP.nomeParc;
+        APP.papelConv=p;APP.nomes[p]=APP.nomeParc;
+        APP.vagas={[APP.meuPapel]:{quem:"host",nome:APP.nome,pronto:false},[p]:{quem:"conv",nome:APP.nomeParc,pronto:false}};
+        if(S&&!S.fim){S.pausado=false;esconderBanner()}
+        enviarInicio(true);aplicarPapelHud();
+        feed("sis",`${APP.nomeParc} ${voltou?"voltou":"entrou"} na sala como ${p}.`);
+      }else{
+        for(const k in APP.vagas)if(APP.vagas[k]&&APP.vagas[k].quem==="conv")APP.vagas[k].nome=APP.nomeParc;
+        enviarSala();
+      }
+      return;
+    case "papel":escolherPapel("conv",m.p);return;
+    case "pronto":for(const k in APP.vagas)if(APP.vagas[k]&&APP.vagas[k].quem==="conv")APP.vagas[k].pronto=!!m.v;enviarSala();return;
+    case "pose":if(S&&APP.papelConv){const j=S.j[APP.papelConv];j.x=+m.x||0;j.z=+m.z||0;j.ry=+m.ry||0;j.anda=+m.anda||0}return;
+    case "acao":if(S&&APP.papelConv&&m.a)acao(APP.papelConv,m.a);return;
+    case "voltarSala":if(S&&S.fim)voltarSala();return;
+  }
+}
+function msgConvidado(m){
+  switch(m.t){
+    case "sala":
+      clearInterval(APP.timerOla);clearTimeout(APP.esperaSala);
+      APP.vagas=m.vagas;APP.ritmo=m.ritmo;APP.nomeHost=m.nomeHost;
+      if(!m.jogo&&APP.jogo)sairDoJogo();
+      if(!APP.jogo){if($("telaSala").hidden)mostrarSala();else renderSala()}
+      return;
+    case "inicio":
+      clearInterval(APP.timerOla);clearTimeout(APP.esperaSala);
+      const antigo=APP.meuPapel;
+      APP.meuPapel=m.seuPapel;APP.nomes=m.nomes;APP.ritmo=m.ritmo;
+      if(!APP.jogo||antigo!==APP.meuPapel)entrarJogo(m.pose,!m.cob);
+      else aplicarPapelHud();
+      if(m.cob)aplicarCobTudo(m.cob);
+      esconderBanner();
+      return;
+    case "est":
+      if(!APP.jogo)return;
+      if(m.cob)for(let i=0;i<m.cob.length;i+=2)pintarCelula(m.cob[i],m.cob[i+1]);
+      APP.R=m;return;
+    case "aviso":mostrarAviso(m.txt,m.tipo);return;
+    case "ev":eventoLocal(m);return;
+    case "fim":mostrarFim(m.bol);return;
+  }
+}
+function outroPapel(){return APP.meuPapel==="piloto"?"auxiliar":"piloto"}
+function aoParceiroChegar(){
+  clearInterval(APP.tentativa);APP.tentativa=null;
+  if(VOZ.stream&&APP.rede.ligarVoz)setTimeout(()=>APP.rede&&APP.rede.ligarVoz(VOZ.stream),300);
+  if(!APP.host&&APP.jogo)esconderBanner();
+  if(!APP.jogo&&!$("telaSala").hidden)renderSala();
+  if(APP.jogo)atualizarRodape();
+}
+function parceiroCaiu(saiu){
+  if(!APP.parceiro&&!saiu)return;
+  APP.parceiro=false;radioParceiro(false);
+  if(APP.host){
+    if(APP.rede)APP.rede.liberar();
+    if(APP.jogo){
+      if(S&&!S.fim){feed("sis",`${APP.nomeParc||"A outra pessoa"} saiu da sala. Continue sozinho (Tab troca de papel) ou espere voltar com o mesmo código.`);aplicarPapelHud()}
+    }else{
+      for(const k in APP.vagas)if(APP.vagas[k]&&APP.vagas[k].quem==="conv")APP.vagas[k]=null;
+      renderSala();
+    }
+  }else{
+    if(saiu&&!APP.jogo){voltarEntrada("Quem criou a sala saiu.");return}
+    if(APP.jogo)banner("Conexão com a sala perdida. Tentando voltar…");else renderSala();
+    clearInterval(APP.tentativa);
+    APP.tentativa=setInterval(()=>{
+      if(APP.parceiro||!APP.rede){clearInterval(APP.tentativa);APP.tentativa=null;return}
+      if(APP.rede.modo==="local")APP.rede.ola({nome:APP.nome});else APP.rede.reconectar();
+    },3000);
+  }
+}
+/* pulso: mede o atraso e percebe queda mesmo quando o WebRTC não avisa */
+setInterval(()=>{
+  if(!APP.rede||!APP.parceiro)return;
+  APP.rede.enviar({t:"pulso",ts:performance.now()});
+  if(performance.now()-APP.ultimoMsg>7000)parceiroCaiu(false);
+},1000);
+addEventListener("beforeunload",()=>{if(APP.rede)APP.rede.enviar({t:"sair"})});
+
+/* ===================================================================
+   SIMULAÇÃO — só quem criou a sala roda. O outro recebe o estado.
+   =================================================================== */
+let S=null;
+function novoEstado(semente){
+  const rnd=mulberry32(semente);
+  const falha=rnd()<.5?"bico":"bateria";
+  return {tm:0,pausado:false,fim:false,concluida:false,falha,
+    d:{x:PAD.x,y:0,z:PAD.z,vx:0,vz:0,yaw:0,st:"solo",t:0,fase:0,rot:0,bat:"A",tanque:0,bicoOk:falha!=="bico",
+      sp:false,vaz:0,ri:0,retomar:null,antes:null,alvo:null,perto:{},graveMarc:false},
+    b:{A:{c:100,loc:"drone",def:false},B:{c:100,loc:"s0",def:false},
+       C:{c:falha==="bateria"?54:47,loc:"s1",def:falha==="bateria"}},
+    g:{on:false,comb:15+Math.round(rnd()*15),marca:false},
+    m:{calda:0},gal:"caminhao",
+    j:{piloto:Object.assign({anda:0,mao:null},INICIO.piloto),auxiliar:Object.assign({anda:0,mao:null},INICIO.auxiliar)},
+    cob:new Uint8Array(NX*NZ),bons:0,falhos:0,novas:[],
+    inc:[],voos:0,trocas:0,caldaPrep:0,caldaAplic:0,secoSeg:0,tentouDefeito:false};
+}
+function registrar(g,txt){S.inc.push({tm:S.tm,g,txt})}
+function nomeDe(p){return APP.nomes[p]||(p==="piloto"?"O piloto":"O auxiliar")}
+
+function mover(d,tx,tz,vmax,dt){
+  const dx=tx-d.x,dz=tz-d.z,dist=Math.hypot(dx,dz);
+  const vdes=Math.min(vmax,Math.sqrt(2*2.5*dist));
+  const ux=dist>1e-3?dx/dist:0,uz=dist>1e-3?dz/dist:0;
+  const ax=ux*vdes-d.vx,az=uz*vdes-d.vz,am=Math.hypot(ax,az),lim=3.5*dt,k=am>lim?lim/am:1;
+  d.vx+=ax*k;d.vz+=az*k;d.x+=d.vx*dt;d.z+=d.vz*dt;
+  return Math.hypot(tx-d.x,tz-d.z);
+}
+function frear(d,dt){const k=Math.max(0,1-dt*2.5);d.vx*=k;d.vz*=k;d.x+=d.vx*dt;d.z+=d.vz*dt}
+function subir(d,ty,vmax,dt){const v=clamp((ty-d.y)*1.8,-vmax,vmax);d.y=Math.max(0,d.y+v*dt);return Math.abs(ty-d.y)}
+function salvarRetomada(){const d=S.d;if(d.st==="aplicando"||(d.st==="pausado"&&d.antes==="aplicando"))d.retomar={x:r2(d.x),z:r2(d.z),ri:d.ri}}
+function voltar(txt,tipo){const d=S.d;salvarRetomada();d.st="voltando";d.fase=0;if(txt)avisar("piloto",txt,tipo||"info")}
+
+function pintar(x,z,v){
+  const R=ESP/2+.05;
+  const ix0=Math.max(0,Math.floor((x-R-CAMPO.x0)/CEL)),ix1=Math.min(NX-1,Math.floor((x+R-CAMPO.x0)/CEL));
+  const l0=Math.max(0,Math.floor((CAMPO.z1-(z+R))/CEL)),l1=Math.min(NZ-1,Math.floor((CAMPO.z1-(z-R))/CEL));
+  for(let l=l0;l<=l1;l++)for(let ix=ix0;ix<=ix1;ix++){
+    const cx=CAMPO.x0+(ix+.5)*CEL,cz=CAMPO.z1-(l+.5)*CEL;
+    if((cx-x)**2+(cz-z)**2>R*R)continue;
+    const i=l*NX+ix,atual=S.cob[i];
+    if(atual===1||atual===v)continue;
+    if(atual===2)S.falhos--;
+    if(v===1)S.bons++;else S.falhos++;
+    S.cob[i]=v;S.novas.push(i,v);pintarCelula(i,v);
+  }
+}
+
+function simular(dt){
+  const d=S.d,g=S.g;
+  S.tm+=dt;
+  /* gerador e carregador */
+  if(g.on){g.comb=Math.max(0,g.comb-dt/6);if(g.comb<=0)g.on=false}
+  let esperando=false;
+  for(const k in S.b){const b=S.b[k];if(b.loc[0]==="s"&&!b.def&&b.c<100){esperando=true;if(g.on)b.c=Math.min(100,b.c+dt*100/480)}}
+  if(esperando&&!g.on&&g.comb<=0)S.secoSeg+=dt;
+  /* aeronave */
+  const bat=d.bat?S.b[d.bat]:null;
+  const rotAlvo=d.st==="solo"?0:d.st==="armando"?.35:1;
+  d.rot+=(rotAlvo-d.rot)*Math.min(1,dt*3);
+  if(d.st!=="solo"&&bat)bat.c=Math.max(0,bat.c-(d.y>.05?100/AERO.autonomia*(.8+.2*d.tanque/AERO.tanque):.06)*dt);
+  d.sp=false;d.vaz=0;
+  switch(d.st){
+    case "armando":d.t+=dt;if(d.t>=2){d.st="subindo"}break;
+    case "subindo":
+      frear(d,dt);
+      if(subir(d,AERO.altT,2.5,dt)<.25){const a=d.retomar||ROTA[0];d.alvo={x:a.x,z:a.z};d.ri=d.retomar?d.retomar.ri:0;d.st="indo"}
+      break;
+    case "indo":
+      subir(d,AERO.altT,2.5,dt);
+      if(mover(d,d.alvo.x,d.alvo.z,AERO.velT,dt)<.6)d.st="baixando";
+      break;
+    case "baixando":
+      frear(d,dt);
+      if(subir(d,AERO.altA,2,dt)<.12){d.st="aplicando";d.retomar=null}
+      break;
+    case "aplicando":{
+      if(d.ri>=ROTA.length){S.concluida=true;voltar("Rota concluída. Voltando para casa.","ok");break}
+      const p=ROTA[d.ri];
+      subir(d,AERO.altA,1.5,dt);
+      if(mover(d,p.x,p.z,AERO.vel,dt)<.6)d.ri++;
+      if(d.tanque>0){
+        let vaz=AERO.taxa*ESP*Math.hypot(d.vx,d.vz)/10000;
+        if(!d.bicoOk)vaz*=.55;
+        const gasto=Math.min(d.tanque,vaz*dt);
+        d.tanque-=gasto;S.caldaAplic+=gasto;d.vaz=vaz;d.sp=true;
+        if(d.x>CAMPO.x0-3&&d.x<CAMPO.x1+3&&d.z>CAMPO.z0-3&&d.z<CAMPO.z1+3)pintar(d.x,d.z,d.bicoOk?1:2);
+      }
+      if(d.tanque<=.001){d.tanque=0;voltar("Líquido esgotado. Ponto de retomada salvo, voltando para casa.")}
+      break;}
+    case "pausado":frear(d,dt);break;
+    case "voltando":
+      if(d.fase===0){frear(d,dt);if(subir(d,AERO.altT,2.5,dt)<.3)d.fase=1}
+      else if(mover(d,PAD.x,PAD.z,AERO.velT,dt)<.4)d.st="pousando";
+      break;
+    case "pousando":
+      mover(d,PAD.x,PAD.z,.8,dt);
+      if(subir(d,0,1.4,dt)<.03){d.y=0;d.vx=d.vz=0;d.st="solo"}
+      break;
+    case "forcado":
+      frear(d,dt);
+      if(subir(d,0,2,dt)<.03){d.y=0;d.vx=d.vz=0;d.st="solo"}
+      break;
+  }
+  if(bat&&d.y>.05){
+    if(bat.c<=8&&d.st!=="forcado"&&d.st!=="pousando"){
+      salvarRetomada();d.st="forcado";
+      registrar("forcado",`Pouso forçado com a bateria ${d.bat} em ${Math.round(bat.c)}%, longe da base.`);
+      avisar("piloto","Bateria crítica! Pouso forçado no local.","erro");
+    }else if(bat.c<=25&&NO_AR.includes(d.st)){voltar(`Bateria baixa (${Math.round(bat.c)}%). Ponto de retomada salvo, voltando para casa.`)}
+  }
+  if(Math.hypot(d.vx,d.vz)>.6)d.yaw=angLerp(d.yaw,Math.atan2(d.vx,d.vz),Math.min(1,dt*3));
+  seguranca();
+  if(S.concluida&&d.st==="solo"&&Math.hypot(d.x-PAD.x,d.z-PAD.z)<6&&!S.fim)terminar(null);
+}
+
+/* distância de gente com motor ligado — nada avisa na hora, só aparece no boletim */
+function seguranca(){
+  const d=S.d;
+  if(d.st==="solo")return;
+  for(const p of ["piloto","auxiliar"]){
+    const j=S.j[p],dist=Math.hypot(j.x-d.x,j.z-d.z);
+    if(d.y<4&&dist<5&&!d.perto[p]){d.perto[p]=true;registrar("leve",`${nomeDe(p)} ficou a ${dist.toFixed(1)} m da aeronave com os motores ligados.`)}
+    if(dist<1.5&&d.y<2&&d.rot>.2&&!d.graveMarc){
+      d.graveMarc=true;
+      registrar("grave",`${nomeDe(p)} encostou na aeronave com as hélices girando.`);
+      d.st=d.y<.2?"solo":"forcado";
+      eventoTodos({k:"grave",txt:`ACIDENTE: ${nomeDe(p)} encostou na hélice girando. Motores cortados.`});
+    }
+  }
+}
+function tocouArmado(o){
+  const d=S.d;if(d.st==="solo")return false;
+  if(!d.graveMarc){d.graveMarc=true;registrar("grave",`${nomeDe("auxiliar")} ${o} com os motores armados.`);
+    eventoTodos({k:"grave",txt:`ACIDENTE: mexeram na aeronave com os motores armados.`})}
+  return true;
+}
+
+function acao(papel,a){
+  if(!S||S.fim||!a)return;
+  const d=S.d,j=S.j[papel],mao=j.mao,aux=papel==="auxiliar",pil=papel==="piloto";
+  const perto=(p,r)=>Math.hypot(j.x-p.x,j.z-p.z)<=r;
+  const batEm=loc=>Object.keys(S.b).find(k=>S.b[k].loc===loc);
+  switch(a.tipo){
+    case "decolar":{
+      if(!pil||d.st!=="solo")return;
+      if(S.concluida)return avisar(papel,"A rota já foi concluída.","info");
+      if(!d.bat)return avisar(papel,"Sem bateria na aeronave.","erro");
+      const b=S.b[d.bat];
+      if(b.def){S.tentouDefeito=true;return avisar(papel,`Erro na bateria ${d.bat}: tensão das células desbalanceada. Substitua a bateria.`,"erro")}
+      if(b.c<30)return avisar(papel,`Bateria ${d.bat} em ${Math.round(b.c)}%: carga insuficiente para a operação.`,"erro");
+      if(d.tanque<.5)return avisar(papel,"Tanque vazio. Não é possível iniciar a aplicação.","erro");
+      d.st="armando";d.t=0;d.perto={};d.graveMarc=false;d.antes=null;S.voos++;
+      avisar(papel,d.retomar?"Armando motores. Retomando do ponto salvo.":"Armando motores.","info");
+      return;}
+    case "pausar":if(pil&&["subindo","indo","baixando","aplicando"].includes(d.st)){d.antes=d.st;d.st="pausado"}return;
+    case "retomar":if(pil&&d.st==="pausado")d.st=d.antes||"indo";return;
+    case "casa":if(pil&&NO_AR.includes(d.st))voltar("Voltando para casa.");return;
+
+    case "pegarBat":{if(!aux||mao||!SLOTS[a.slot]||!perto(SLOTS[a.slot],1.8))return;const k=batEm("s"+a.slot);if(!k)return;S.b[k].loc="mao";j.mao="bat:"+k;return}
+    case "porBat":{if(!aux||!mao||!mao.startsWith("bat:")||!SLOTS[a.slot]||!perto(SLOTS[a.slot],1.8)||batEm("s"+a.slot))return;S.b[mao.slice(4)].loc="s"+a.slot;j.mao=null;return}
+    case "trocarBat":{if(!aux||!mao||!mao.startsWith("bat:")||!SLOTS[a.slot]||!perto(SLOTS[a.slot],1.8))return;const k=batEm("s"+a.slot);if(!k)return;
+      S.b[mao.slice(4)].loc="s"+a.slot;S.b[k].loc="mao";j.mao="bat:"+k;return}
+    case "tirarBatDrone":if(!aux||mao||!d.bat||d.y>.3||!perto(d,2.8))return;if(tocouArmado("retirou a bateria"))return;
+      S.b[d.bat].loc="mao";j.mao="bat:"+d.bat;d.bat=null;return;
+    case "porBatDrone":if(!aux||!mao||!mao.startsWith("bat:")||d.bat||d.y>.3||!perto(d,2.8))return;if(tocouArmado("encaixou a bateria"))return;
+      d.bat=mao.slice(4);S.b[d.bat].loc="drone";j.mao=null;S.trocas++;return;
+    case "abastecer":{
+      if(!aux||mao||d.y>.3||!perto(d,2.8))return;if(tocouArmado("abasteceu o tanque"))return;
+      if(Math.hypot(d.x-EST.misturador.x,d.z-EST.misturador.z)>MANGUEIRA)return avisar(papel,"A mangueira do misturador não alcança a aeronave aqui.","erro");
+      if(S.m.calda<=0)return avisar(papel,"O misturador está vazio.","erro");
+      const l=Math.min(+a.l||0,S.m.calda,AERO.tanque-d.tanque);if(l<=0)return;
+      S.m.calda-=l;d.tanque+=l;return;}
+    case "bicos":if(!aux||d.y>.3||!perto(d,2.8))return;if(tocouArmado("mexeu nos bicos"))return;
+      if(!d.bicoOk){d.bicoOk=true;avisar(papel,"Um bico estava entupido com resíduo de produto. Limpo.","ok")}else avisar(papel,"Bicos limpos, sem entupimento.","ok");return;
+    case "pegarGalao":if(!aux||mao||S.gal!=="caminhao"||!perto(EST.galao,2.2))return;S.gal="mao";j.mao="galao";return;
+    case "porGalao":if(!aux||mao!=="galao"||!perto(EST.galao,2.2))return;S.gal="caminhao";j.mao=null;return;
+    case "gerador":if(!aux||mao||!perto(EST.gerador,2.6))return;
+      if(S.g.on){S.g.on=false;S.g.marca=false}else if(S.g.comb>.3)S.g.on=true;else avisar(papel,"O motor gira, mas não pega.","erro");return;
+    case "combustivel":if(!aux||mao!=="galao"||!perto(EST.gerador,2.6))return;
+      if(S.g.on&&!S.g.marca){S.g.marca=true;registrar("leve","Abasteceu o gerador com o motor ligado.")}
+      S.g.comb=Math.min(100,S.g.comb+clamp(+a.p||0,0,5));return;
+    case "calda":if(!aux||mao||!perto(EST.misturador,2.6))return;
+      if(S.m.calda>40)return avisar(papel,"Ainda tem calda demais no misturador para outra batelada.","erro");
+      S.m.calda+=40;S.caldaPrep+=40;return;
+  }
+}
+
+function avisar(papel,txt,tipo){if(papel===APP.meuPapel)mostrarAviso(txt,tipo);else if(APP.rede)APP.rede.enviar({t:"aviso",txt,tipo})}
+function eventoTodos(ev){ev.t="ev";eventoLocal(ev);if(APP.rede)APP.rede.enviar(ev)}
+
+function instantaneo(){
+  const d=S.d,b={};
+  for(const k in S.b){const x=S.b[k];b[k]={c:r1(x.c),loc:x.loc,def:x.def}}
+  const pose=j=>({x:r2(j.x),z:r2(j.z),ry:r2(j.ry),anda:r1(j.anda),mao:j.mao});
+  return {tm:r1(S.tm),pausado:S.pausado,
+    d:{x:r2(d.x),y:r2(d.y),z:r2(d.z),yaw:r2(d.yaw),st:d.st,rot:r2(d.rot),sp:d.sp,bat:d.bat,tq:r1(d.tanque),
+       vaz:r1(d.vaz*60),ret:d.retomar,vel:r1(Math.hypot(d.vx,d.vz))},
+    b,g:{on:S.g.on,comb:r1(S.g.comb)},m:{calda:r1(S.m.calda)},gal:S.gal,
+    j:{piloto:pose(S.j.piloto),auxiliar:pose(S.j.auxiliar)},
+    pct:r1(S.bons/(NX*NZ)*100),fal:r1(S.falhos/(NX*NZ)*100)};
+}
+
+function comecar(){
+  const conv=Object.entries(APP.vagas).find(([,v])=>v&&v.quem==="conv"),hst=Object.entries(APP.vagas).find(([,v])=>v&&v.quem==="host");
+  if(!APP.host||!hst||(APP.parceiro&&!(conv&&conv[1].pronto)))return;
+  const dupla=APP.parceiro&&!!conv;
+  APP.meuPapel=hst[0];APP.papelConv=dupla?conv[0]:null;
+  APP.nomes={piloto:APP.vagas.piloto?APP.vagas.piloto.nome:APP.nome,auxiliar:APP.vagas.auxiliar?APP.vagas.auxiliar.nome:APP.nome};
+  S=novoEstado((Math.random()*2**31)|0);
+  APP.jogo=true;
+  if(dupla)enviarInicio(false);
+  entrarJogo(INICIO[APP.meuPapel],true);
+  APP.ultSim=performance.now();
+  clearInterval(APP.timerSim);
+  APP.timerSim=setInterval(tickHost,50);
+}
+function enviarInicio(reentrada){
+  const j=S.j[APP.papelConv];
+  APP.rede.enviar({t:"inicio",seuPapel:APP.papelConv,nomes:APP.nomes,ritmo:APP.ritmo,
+    pose:{x:j.x,z:j.z,ry:j.ry},cob:reentrada?Array.from(S.cob).join(""):null});
+}
+function tickHost(){
+  if(!S)return;
+  const agora=performance.now(),real=Math.min(2,(agora-APP.ultSim)/1000);APP.ultSim=agora;
+  if(!S.pausado&&!S.fim){let resto=real*APP.ritmo;while(resto>1e-6){const h=Math.min(.05,resto);simular(h);resto-=h}}
+  if(APP.parceiro){
+    if(++APP.ticks%2===0){const e=instantaneo();e.t="est";e.cob=S.novas;S.novas=[];APP.rede.enviar(e)}
+  }else S.novas.length=0;
+}
+function terminar(motivo){
+  if(!S||S.fim)return;S.fim=true;
+  const n=g=>S.inc.filter(i=>i.g===g).length;
+  const graves=n("grave"),leves=n("leve"),forc=n("forcado");
+  const cob=S.bons/(NX*NZ)*100,fal=S.falhos/(NX*NZ)*100;
+  let nota=100-graves*35-leves*8-forc*15-Math.min(30,Math.max(0,95-cob))-Math.min(15,fal*1.5)-(S.secoSeg>20?5:0);
+  nota=Math.max(0,Math.round(nota));
+  const falha=S.falha==="bico"
+    ?(S.d.bicoOk?"Bico entupido na aeronave. A dupla achou e limpou.":"Bico entupido na aeronave. Ninguém verificou, e a vazão ficou abaixo da planejada.")
+    :(S.tentouDefeito?"Bateria C com célula desbalanceada. Chegaram a colocar na aeronave e o controle recusou.":"Bateria C com célula desbalanceada. Ficou fora da aeronave.");
+  const bol={motivo,tempo:S.tm,cob:r1(cob),fal:r1(fal),voos:S.voos,trocas:S.trocas,caldaPrep:S.caldaPrep,caldaAplic:r1(S.caldaAplic),
+    secoSeg:Math.round(S.secoSeg),inc:S.inc.map(i=>({tm:mmss(i.tm),g:i.g,txt:i.txt})),nota,aprovado:nota>=70&&graves===0,falha,nomes:APP.nomes};
+  if(APP.rede)APP.rede.enviar({t:"fim",bol});
+  mostrarFim(bol);
+}
+function voltarSala(){
+  if(!APP.host)return;
+  clearInterval(APP.timerSim);S=null;
+  for(const k in APP.vagas)if(APP.vagas[k])APP.vagas[k].pronto=false;
+  sairDoJogo();
+  enviarSala();
+}
+
+/* ===================================================================
+   CENA 3D
+   =================================================================== */
+const renderer=new THREE.WebGLRenderer({canvas:$("c3d"),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const cena=new THREE.Scene();
+cena.background=new THREE.Color(0xa8c6e2);cena.fog=new THREE.Fog(0xa8c6e2,160,560);
+const cam=new THREE.PerspectiveCamera(60,1,.1,1500);
+cena.add(new THREE.HemisphereLight(0xe3f0ff,0x5a6a3c,.8));
+const sol=new THREE.DirectionalLight(0xfff1d8,.9);
+sol.castShadow=true;sol.shadow.mapSize.set(2048,2048);
+Object.assign(sol.shadow.camera,{left:-35,right:35,top:35,bottom:-35,near:1,far:250});
+cena.add(sol,sol.target);
+const mat=(c,o)=>new THREE.MeshLambertMaterial(Object.assign({color:c},o||{}));
+const matB=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c},o||{}));
+function caixa(w,h,p,m,x,y,z){const e=new THREE.Mesh(new THREE.BoxGeometry(w,h,p),m);e.position.set(x||0,y||0,z||0);e.castShadow=true;e.receiveShadow=true;return e}
+function cilindro(r1,r2,h,m,seg){const e=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,seg||16),m);e.castShadow=true;e.receiveShadow=true;return e}
+function texCanvas(w,h,desenho){const c=document.createElement("canvas");c.width=w;c.height=h;desenho(c.getContext("2d"),w,h);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t}
+
+/* chão */
+(function(){
+  const rnd=mulberry32(7);
+  const tGrama=texCanvas(512,512,(g,w,h)=>{g.fillStyle="#6c8c44";g.fillRect(0,0,w,h);
+    for(let i=0;i<9000;i++){const v=rnd();g.fillStyle=v<.5?"rgba(70,98,40,.22)":"rgba(140,165,85,.18)";g.beginPath();g.arc(rnd()*w,rnd()*h,.8+rnd()*2.2,0,7);g.fill()}});
+  tGrama.wrapS=tGrama.wrapT=THREE.RepeatWrapping;tGrama.repeat.set(160,160);
+  const chao=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.MeshLambertMaterial({map:tGrama}));
+  chao.rotation.x=-Math.PI/2;chao.receiveShadow=true;cena.add(chao);
+  /* estrada de terra em volta do talhão */
+  const terra=new THREE.Mesh(new THREE.PlaneGeometry(CAMPO.x1-CAMPO.x0+14,CAMPO.z1-CAMPO.z0+14),mat(0x9b7b55));
+  terra.rotation.x=-Math.PI/2;terra.position.set((CAMPO.x0+CAMPO.x1)/2,.01,(CAMPO.z0+CAMPO.z1)/2);terra.receiveShadow=true;cena.add(terra);
+  /* lavoura em linhas, no mesmo sentido das faixas */
+  const tLav=texCanvas(64,64,(g,w,h)=>{g.fillStyle="#7a6446";g.fillRect(0,0,w,h);g.fillStyle="#3f7a2e";g.fillRect(10,0,40,h);
+    g.fillStyle="#56963c";for(let y=0;y<h;y+=8)g.fillRect(16+((y*7)%12),y,14,5)});
+  tLav.wrapS=tLav.wrapT=THREE.RepeatWrapping;tLav.repeat.set((CAMPO.x1-CAMPO.x0)/.9,(CAMPO.z1-CAMPO.z0)/6);
+  const lav=new THREE.Mesh(new THREE.PlaneGeometry(CAMPO.x1-CAMPO.x0,CAMPO.z1-CAMPO.z0),new THREE.MeshLambertMaterial({map:tLav}));
+  lav.rotation.x=-Math.PI/2;lav.position.set((CAMPO.x0+CAMPO.x1)/2,.02,(CAMPO.z0+CAMPO.z1)/2);lav.receiveShadow=true;cena.add(lav);
+  /* árvores fora do talhão e longe da base */
+  const tronco=mat(0x5b4331),copa=mat(0x3d6b2f),copa2=mat(0x4f7d35);
+  for(let i=0;i<70;i++){
+    let x,z;do{x=(rnd()-.5)*520;z=40-rnd()*340}while((x>CAMPO.x0-14&&x<CAMPO.x1+14&&z>CAMPO.z0-14&&z<CAMPO.z1+14)||(Math.abs(x)<45&&z>-25&&z<35));
+    const a=new THREE.Group(),h=4+rnd()*5;
+    const t=cilindro(.18,.28,h*.45,tronco,6);t.position.y=h*.22;a.add(t);
+    const c=new THREE.Mesh(new THREE.SphereGeometry(h*.32,8,6),rnd()<.5?copa:copa2);c.position.y=h*.62;c.scale.y=.85;c.castShadow=true;a.add(c);
+    a.position.set(x,0,z);cena.add(a);
+  }
+})();
+
+/* base de apoio */
+const BASE={};
+(function(){
+  /* lona de pouso */
+  const tPad=texCanvas(256,256,(g,w,h)=>{g.fillStyle="#e8742a";g.fillRect(0,0,w,h);g.strokeStyle="#fff";g.lineWidth=12;
+    g.beginPath();g.arc(w/2,h/2,92,0,7);g.stroke();g.fillStyle="#fff";g.font="bold 120px Arial";g.textAlign="center";g.textBaseline="middle";g.fillText("H",w/2,h/2+6)});
+  const pad=new THREE.Mesh(new THREE.PlaneGeometry(3.2,3.2),new THREE.MeshLambertMaterial({map:tPad}));
+  pad.rotation.x=-Math.PI/2;pad.position.set(PAD.x,.03,PAD.z);pad.receiveShadow=true;cena.add(pad);
+
+  /* mesa + carregador com 2 vagas e LEDs */
+  const mesa=new THREE.Group();
+  mesa.add(caixa(2,.06,.8,mat(0x8a6a48),9,.78,3));
+  for(const [x,z] of [[8.1,2.7],[9.9,2.7],[8.1,3.3],[9.9,3.3]])mesa.add(caixa(.06,.76,.06,mat(0x3a3a3a),x,.38,z));
+  const carreg=caixa(1.7,.14,.5,mat(0x2b2f35),9,.88,3);mesa.add(carreg);
+  BASE.leds=[[],[]];
+  SLOTS.forEach((s,i)=>{for(let k=0;k<4;k++){const l=new THREE.Mesh(new THREE.BoxGeometry(.05,.03,.05),matB(0x333333));l.position.set(s.x-.12+k*.08,.96,2.78);mesa.add(l);BASE.leds[i].push(l)}});
+  cena.add(mesa);
+
+  /* gerador */
+  const ger=new THREE.Group();
+  ger.add(caixa(1,.62,.72,mat(0xf2b01e),0,.45,0));
+  ger.add(caixa(1.08,.08,.8,mat(0x222222),0,.8,0));
+  ger.add(caixa(.3,.2,.02,mat(0x222222),-.2,.5,.37));
+  const mostrador=new THREE.Mesh(new THREE.CircleGeometry(.1,20),matB(0xf4f4f4));mostrador.position.set(.25,.86,0);mostrador.rotation.x=-Math.PI/2;ger.add(mostrador);
+  const ponteiro=new THREE.Mesh(new THREE.BoxGeometry(.012,.01,.09),matB(0xd11));ponteiro.geometry.translate(0,0,-.04);ponteiro.position.set(.25,.87,0);ger.add(ponteiro);
+  ger.position.set(EST.gerador.x,0,EST.gerador.z);cena.add(ger);
+  BASE.ger=ger;BASE.ponteiro=ponteiro;
+
+  /* misturador com nível visível */
+  const mis=new THREE.Group();
+  const corpo=cilindro(.5,.5,1.1,new THREE.MeshLambertMaterial({color:0xd9e6f2,transparent:true,opacity:.55}),24);corpo.position.y=.95;mis.add(corpo);
+  const liq=cilindro(.46,.46,1,mat(0x4f8fd6),24);liq.geometry.translate(0,.5,0);liq.position.y=.42;mis.add(liq);
+  for(const [x,z] of [[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]])mis.add(caixa(.05,.4,.05,mat(0x444444),x,.2,z));
+  mis.add(caixa(.3,.25,.3,mat(0x2e3a48),0,1.62,0));
+  mis.position.set(EST.misturador.x,0,EST.misturador.z);cena.add(mis);
+  BASE.liq=liq;
+  /* mangueira no chão até a lona */
+  const pts=[];for(let i=0;i<=24;i++){const t=i/24;pts.push(new THREE.Vector3(THREE.MathUtils.lerp(EST.misturador.x-.4,PAD.x+1.8,t)+Math.sin(t*9)*.6,.04,THREE.MathUtils.lerp(EST.misturador.z-.3,PAD.z+1.6,t)))}
+  cena.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),60,.03,6),mat(0x2a6e3a)));
+
+  /* caminhonete */
+  const pick=new THREE.Group(),branco=mat(0xeceff2),vidro=mat(0x2a3440),pneu=mat(0x1c1c1c);
+  pick.add(caixa(5,.55,1.9,branco,0,.75,0));
+  pick.add(caixa(2,.75,1.8,branco,.9,1.35,0));
+  pick.add(caixa(1.2,.5,1.82,vidro,1.2,1.45,0));
+  pick.add(caixa(2.4,.5,.06,branco,-1.25,1.25,.92));pick.add(caixa(2.4,.5,.06,branco,-1.25,1.25,-.92));
+  for(const [x,z] of [[1.6,.95],[1.6,-.95],[-1.6,.95],[-1.6,-.95]]){const r=cilindro(.38,.38,.28,pneu,16);r.rotation.x=Math.PI/2;r.position.set(x,.38,z);pick.add(r)}
+  pick.position.set(13,0,10);cena.add(pick);
+
+  /* galão de gasolina (reaproveitado nas mãos) */
+  BASE.galao=new THREE.Group();
+  BASE.galao.add(caixa(.3,.38,.17,mat(0xc8261d),0,.19,0));BASE.galao.add(caixa(.06,.08,.06,mat(0x222222),.09,.42,0));
+  cena.add(BASE.galao);
+})();
+
+/* baterias */
+const COR_BAT={A:0xe5484d,B:0x3e8ef7,C:0xf5a524};
+const BAT3D={};
+for(const k of ["A","B","C"]){
+  const g=new THREE.Group();
+  g.add(caixa(.26,.2,.36,mat(0x2a2d31)));
+  g.add(caixa(.265,.05,.365,mat(COR_BAT[k]),0,.06,0));
+  g.add(caixa(.14,.05,.03,mat(0x111111),0,.13,0));
+  BAT3D[k]=g;cena.add(g);
+}
+
+/* aeronave */
+const DRONE=(function(){
+  const g=new THREE.Group(),escuro=mat(0x26292e),cinza=mat(0x55595f);
+  g.rotation.order="YXZ";
+  const corpo=caixa(.62,.3,.95,escuro,0,1.02,0);g.add(corpo);
+  const tq=new THREE.Mesh(new THREE.BoxGeometry(.62,.58,.62),new THREE.MeshLambertMaterial({color:0xf0f2f4,transparent:true,opacity:.45}));tq.position.y=.6;g.add(tq);
+  const liq=caixa(.56,.54,.56,mat(0x5a9be0),0,0,0);liq.geometry.translate(0,.27,0);liq.position.y=.33;liq.castShadow=false;g.add(liq);
+  const rotores=[],discos=[],luzes=[];
+  for(const [sx,sz] of [[1,1],[-1,1],[1,-1],[-1,-1]]){
+    const L=1.25,ang=Math.atan2(sx,sz);
+    const braco=cilindro(.045,.045,L,cinza,8);braco.rotation.z=Math.PI/2;
+    const piv=new THREE.Group();piv.position.set(0,1.05,0);piv.rotation.y=ang-Math.PI/2;braco.position.x=L/2;piv.add(braco);g.add(piv);
+    const tx=sx*L*Math.SQRT1_2,tz=sz*L*Math.SQRT1_2;
+    const mot=cilindro(.08,.08,.14,escuro,12);mot.position.set(tx,1.12,tz);g.add(mot);
+    const rot=new THREE.Group();rot.position.set(tx,1.21,tz);
+    rot.add(caixa(1.15,.015,.09,mat(0x1a1a1a)));g.add(rot);rotores.push(rot);
+    const disco=new THREE.Mesh(new THREE.CircleGeometry(.58,24),new THREE.MeshBasicMaterial({color:0x222222,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}));
+    disco.rotation.x=-Math.PI/2;disco.position.set(tx,1.215,tz);g.add(disco);discos.push(disco);
+    const luz=new THREE.Mesh(new THREE.SphereGeometry(.035,8,6),matB(sz>0?0x33ff66:0xff3322));luz.position.set(tx,1.03,tz);g.add(luz);luzes.push(luz);
+    const bico=new THREE.Mesh(new THREE.SphereGeometry(.04,8,6),mat(0x999999));bico.position.set(tx*.9,.98,tz*.9);g.add(bico);
+  }
+  for(const sx of [-.42,.42]){const s=cilindro(.025,.025,1.2,cinza,6);s.rotation.x=Math.PI/2;s.position.set(sx,.03,0);g.add(s);
+    for(const sz of [-.35,.35]){const p=cilindro(.022,.022,.95,cinza,6);p.position.set(sx*.8,.5,sz);p.rotation.z=sx>0?-.15:.15;g.add(p)}}
+  const encaixe=new THREE.Object3D();encaixe.position.set(0,1.27,-.15);g.add(encaixe);
+  cena.add(g);
+  return {g,liq,rotores,discos,luzes,encaixe};
+})();
+
+/* névoa de aplicação */
+const NEVOA=(function(){
+  const N=500,pos=new Float32Array(N*3),vel=new Float32Array(N*3),vida=new Float32Array(N);
+  const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  const pts=new THREE.Points(geo,new THREE.PointsMaterial({color:0xeef6ff,size:.16,transparent:true,opacity:.5,depthWrite:false}));
+  pts.frustumCulled=false;cena.add(pts);
+  for(let i=0;i<N;i++)pos[i*3+1]=-50;
+  let prox=0;
+  return {passo(dt,ligado,x,y,z,yaw){
+    if(ligado){for(let n=0;n<14;n++){const i=prox;prox=(prox+1)%N;const lado=n%2?1:-1;
+      const ox=Math.cos(yaw)*lado*.95,oz=-Math.sin(yaw)*lado*.95;
+      pos[i*3]=x+ox;pos[i*3+1]=y+.9;pos[i*3+2]=z+oz;
+      vel[i*3]=(Math.random()-.5)*2.4;vel[i*3+1]=-2.5-Math.random()*1.5;vel[i*3+2]=(Math.random()-.5)*2.4;vida[i]=.7}}
+    for(let i=0;i<N;i++){if(vida[i]<=0)continue;vida[i]-=dt;pos[i*3]+=vel[i*3]*dt;pos[i*3+1]+=vel[i*3+1]*dt;pos[i*3+2]+=vel[i*3+2]*dt;
+      if(vida[i]<=0||pos[i*3+1]<0)pos[i*3+1]=-50}
+    geo.attributes.position.needsUpdate=true;
+  }};
+})();
+
+/* cobertura: textura sobre o talhão + imagem do mapa do controle */
+const cobDados=new Uint8Array(NX*NZ*4);
+const cobTex=new THREE.DataTexture(cobDados,NX,NZ,THREE.RGBAFormat);
+cobTex.magFilter=THREE.LinearFilter;cobTex.needsUpdate=true;
+(function(){const m=new THREE.Mesh(new THREE.PlaneGeometry(CAMPO.x1-CAMPO.x0,CAMPO.z1-CAMPO.z0),
+  new THREE.MeshBasicMaterial({map:cobTex,transparent:true,depthWrite:false}));
+  m.rotation.x=-Math.PI/2;m.position.set((CAMPO.x0+CAMPO.x1)/2,.06,(CAMPO.z0+CAMPO.z1)/2);cena.add(m)})();
+const miniCob=document.createElement("canvas");miniCob.width=NX;miniCob.height=NZ;
+const miniCtx=miniCob.getContext("2d"),miniImg=miniCtx.createImageData(NX,NZ);
+let cobSujo=false;
+function pintarCelula(i,v){
+  const c=v===1?[70,190,255,120]:v===2?[245,165,36,140]:[0,0,0,0];
+  cobDados.set(c,i*4);
+  const l=Math.floor(i/NX),ix=i%NX,k=((NZ-1-l)*NX+ix)*4;
+  miniImg.data.set(v===1?[70,190,255,255]:v===2?[245,165,36,255]:[0,0,0,0],k);
+  cobSujo=true;
+}
+function limparCobertura(){cobDados.fill(0);miniImg.data.fill(0);cobSujo=true}
+function aplicarCobTudo(s){limparCobertura();for(let i=0;i<s.length&&i<NX*NZ;i++){const v=s.charCodeAt(i)-48;if(v)pintarCelula(i,v)}}
+
+/* pessoas */
+function criarPessoa(papel){
+  const g=new THREE.Group();
+  const aux=papel==="auxiliar";
+  const pele=mat(0xc9906c),calca=mat(aux?0xdfe3e6:0x34495e),camisa=mat(aux?0xdfe3e6:0x2f6fb3),bota=mat(0x222222);
+  const pernas=[],bracos=[];
+  for(const s of [-1,1]){
+    const p=new THREE.Group();p.position.set(s*.11,.92,0);
+    p.add(caixa(.15,.84,.17,calca,0,-.42,0));p.add(caixa(.17,.12,.26,bota,0,-.86,.04));
+    g.add(p);pernas.push(p);
+    const b=new THREE.Group();b.position.set(s*.3,1.5,0);
+    b.add(caixa(.12,.6,.13,camisa,0,-.28,0));b.add(caixa(.1,.1,.11,aux?mat(0x2a8f4a):pele,0,-.62,0));
+    g.add(b);bracos.push(b);
+  }
+  g.add(caixa(.46,.62,.27,camisa,0,1.23,0));
+  if(aux){ /* colete refletivo e máscara */
+    g.add(caixa(.475,.5,.285,mat(0xff7a1a),0,1.27,0));
+    g.add(caixa(.48,.05,.29,matB(0xf2f2f2),0,1.18,0));g.add(caixa(.48,.05,.29,matB(0xf2f2f2),0,1.36,0));
+  }
+  const cab=new THREE.Mesh(new THREE.SphereGeometry(.14,14,10),pele);cab.position.y=1.7;cab.castShadow=true;g.add(cab);
+  if(aux){g.add(caixa(.22,.09,.08,mat(0x444444),0,1.63,.12));g.add(caixa(.3,.07,.12,mat(0x88c4ff,{transparent:true,opacity:.7}),0,1.73,.1))}
+  const bone=cilindro(.15,.15,.09,mat(aux?0xf2f2f2:0x1f3f7a),14);bone.position.y=1.8;g.add(bone);
+  g.add(caixa(.2,.02,.14,mat(aux?0xf2f2f2:0x1f3f7a),0,1.77,.16));
+  const maos=new THREE.Object3D();maos.position.set(0,1.02,.34);g.add(maos);
+  let controle=null;
+  if(!aux){controle=caixa(.3,.05,.18,mat(0x22262b),0,1.04,.3);g.add(controle)}
+  cena.add(g);
+  return {g,pernas,bracos,maos,controle,fase:0,x:0,z:0,ry:0,anda:0};
+}
+const PESSOA={piloto:criarPessoa("piloto"),auxiliar:criarPessoa("auxiliar")};
+PESSOA.piloto.g.position.set(INICIO.piloto.x,0,INICIO.piloto.z);PESSOA.auxiliar.g.position.set(INICIO.auxiliar.x,0,INICIO.auxiliar.z);
+
+/* rótulos com nome e balão da chamada */
+const ROT={};
+for(const p of ["piloto","auxiliar"]){const d=document.createElement("div");d.className="rot";d.innerHTML=`<span class="bal" hidden></span><span class="nm ${p==="piloto"?"pil":"aux"}"></span>`;$("rotulos").appendChild(d);ROT[p]={el:d,bal:d.firstChild,nm:d.lastChild,ate:0}}
+
+/* ===================================================================
+   SOM (sintetizado — não precisa de arquivo)
+   =================================================================== */
+const SOM={ctx:null,
+  iniciar(){
+    if(this.ctx){if(this.ctx.state==="suspended")this.ctx.resume();return}
+    try{this.ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+    const c=this.ctx,ruido=c.createBuffer(1,c.sampleRate*2,c.sampleRate),dd=ruido.getChannelData(0);
+    for(let i=0;i<dd.length;i++)dd[i]=Math.random()*2-1;
+    this.ruido=ruido;
+    const fonte=()=>{const s=c.createBufferSource();s.buffer=ruido;s.loop=true;s.start();return s};
+    /* zumbido da aeronave */
+    const gD=c.createGain();gD.gain.value=0;gD.connect(c.destination);
+    const o=c.createOscillator();o.type="sawtooth";o.frequency.value=95;const lp=c.createBiquadFilter();lp.type="lowpass";lp.frequency.value=700;
+    o.connect(lp);lp.connect(gD);o.start();
+    const n=fonte(),bp=c.createBiquadFilter();bp.type="bandpass";bp.frequency.value=500;bp.Q.value=.6;n.connect(bp);bp.connect(gD);
+    this.dG=gD;this.dO=o;
+    /* gerador */
+    const gG=c.createGain();gG.gain.value=0;gG.connect(c.destination);
+    const o2=c.createOscillator();o2.type="square";o2.frequency.value=46;const lp2=c.createBiquadFilter();lp2.type="lowpass";lp2.frequency.value=260;
+    o2.connect(lp2);lp2.connect(gG);o2.start();this.gG=gG;
+  },
+  bip(f,dur,vol,atraso){const c=this.ctx;if(!c)return;const t=c.currentTime+(atraso||0),o=c.createOscillator(),g=c.createGain();
+    o.type="square";o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.02)},
+  chiado(dur,vol){const c=this.ctx;if(!c)return;const s=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;
+    s.buffer=this.ruido;bp.type="bandpass";bp.frequency.value=1900;bp.Q.value=.8;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    s.connect(bp);bp.connect(g);g.connect(c.destination);s.start(t);s.stop(t+dur+.02)},
+  radio(on){this.chiado(on?.08:.16,.12);this.bip(on?1500:950,.06,.05)},
+  chamada(){this.chiado(.07,.08);this.bip(880,.08,.07,.06);this.bip(1320,.1,.07,.16)},
+  erro(){this.bip(440,.12,.07);this.bip(330,.16,.07,.14)},
+  alarme(){for(let i=0;i<4;i++)this.bip(i%2?520:700,.16,.12,i*.18)},
+  ambiente(rot,distDrone,gerOn,distGer){
+    if(!this.ctx)return;const t=this.ctx.currentTime;
+    this.dG.gain.setTargetAtTime(rot*.14/(1+distDrone/10),t,.1);this.dO.frequency.setTargetAtTime(80+rot*70,t,.2);
+    this.gG.gain.setTargetAtTime(gerOn?.05/(1+distGer/4):0,t,.2);
+  }};
+
+/* ===================================================================
+   RÁDIO DE VOZ (aperte e segure)
+   =================================================================== */
+const VOZ={stream:null,el:null,falando:false};
+$("bMic").onclick=async()=>{
+  SOM.iniciar();
+  if(VOZ.stream){VOZ.stream.getTracks().forEach(t=>t.stop());VOZ.stream=null;$("bMic").textContent="Ligar microfone";$("micStatus").textContent="Rádio desligado. Dá para usar as chamadas rápidas.";atualizarRodape();return}
+  try{
+    VOZ.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    VOZ.stream.getAudioTracks().forEach(t=>t.enabled=false);
+    $("bMic").textContent="Desligar microfone";$("micStatus").textContent="Rádio pronto. Segure V para falar.";
+    if(APP.parceiro&&APP.rede&&APP.rede.ligarVoz)APP.rede.ligarVoz(VOZ.stream);
+  }catch(e){$("micStatus").textContent="O navegador bloqueou o microfone. Dá para usar as chamadas rápidas."}
+  atualizarRodape();
+};
+function receberVoz(stream){
+  SOM.iniciar();
+  if(VOZ.el){VOZ.el.pause();VOZ.el.srcObject=null}
+  const el=new Audio();el.srcObject=stream;el.autoplay=true;VOZ.el=el;
+  const c=SOM.ctx;
+  if(!c){el.play().catch(()=>{});return}
+  /* passa a voz por um filtro de rádio; o <audio> mudo mantém o fluxo vivo no Chrome */
+  el.muted=true;el.play().catch(()=>{});
+  const src=c.createMediaStreamSource(stream),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain();
+  hp.type="highpass";hp.frequency.value=320;lp.type="lowpass";lp.frequency.value=3400;g.gain.value=1.5;
+  src.connect(hp);hp.connect(lp);lp.connect(g);g.connect(c.destination);
+}
+function ptt(on){
+  if(!APP.jogo||VOZ.falando===on)return;
+  VOZ.falando=on;
+  if(VOZ.stream)VOZ.stream.getAudioTracks().forEach(t=>t.enabled=on);
+  SOM.radio(on);
+  if(APP.rede)APP.rede.enviar({t:"radio",on});
+  const b=$("bPtt");if(b)b.classList.toggle("on",on);
+}
+function radioParceiro(on){
+  const el=$("radioOn");
+  if(on){el.textContent=`${nomeDe(outroPapel())} está falando no rádio…`;el.hidden=false;SOM.radio(true)}
+  else if(!el.hidden){el.hidden=true;SOM.radio(false)}
+}
+
+/* ===================================================================
+   JOGO NO CLIENTE (os dois lados)
+   =================================================================== */
+const EU={x:0,z:0,ry:0,anda:0};
+const CAM={yaw:0,pitch:.3,dist:7.5,modo:"eu"};
+const TECLAS={};
+let ultPose=0,ultMapa=0,avisoAte=0;
+const VIS={d:{x:PAD.x,y:0,z:PAD.z,yaw:0,rot:0},outro:{x:0,z:0,ry:0,anda:0},fase:0};
+
+function entrarJogo(pose,zerarCobertura){
+  APP.jogo=true;SOM.iniciar();
+  if(zerarCobertura)limparCobertura();
+  Object.assign(EU,{x:pose.x,z:pose.z,ry:pose.ry,anda:0});
+  const o=INICIO[outroPapel()];Object.assign(VIS.outro,{x:o.x,z:o.z,ry:o.ry,anda:0});
+  Object.assign(VIS.d,{x:PAD.x,y:0,z:PAD.z,yaw:0,rot:0});
+  CAM.yaw=pose.ry+Math.PI;CAM.modo="eu";
+  $("lobby").hidden=true;$("fim").hidden=true;$("hud").hidden=false;
+  const pil=APP.meuPapel==="piloto",solo=APP.host&&!APP.parceiro;
+  $("bEncerrar").hidden=!APP.host;
+  $("hCod").textContent=APP.codigo;
+  $("pcTit").textContent=pil?`Você é o piloto, ${APP.nomes.piloto}`:`Você é o auxiliar, ${APP.nomes.auxiliar}`;
+  $("pcTxt").textContent=solo
+    ?`Você está sozinho na sala e faz os dois papéis: aperte Tab para ir de ${pil?"piloto para auxiliar":"auxiliar para piloto"} e voltar. Quem entrar com o código ${APP.codigo} fica com o papel que você não estiver usando.`
+    :pil
+    ?`Seu controle está à direita. Quem está na base é ${APP.nomes.auxiliar}. O controle não enxerga gente perto da aeronave: antes de decolar, confirme pelo rádio que a aeronave está pronta e a área está livre.`
+    :`A base é sua: calda, baterias, gerador e a segurança em volta da aeronave. Quem está no controle é ${APP.nomes.piloto}. O piloto só fica sabendo do que você contar, e você só sabe do voo pelo que ele disser.`;
+  $("papelCard").hidden=false;$("ajudaTec").hidden=true;
+  $("feed").innerHTML="";esconderBanner();$("ctMsg").textContent="";
+  aplicarPapelHud();
+}
+function aplicarPapelHud(){
+  const pil=APP.meuPapel==="piloto";
+  $("controle").hidden=!pil;$("maos").hidden=pil;
+  pararSegurar();OPS=null;$("prompt").hidden=true;$("prompt").dataset.k="";
+  for(const p in ROT)ROT[p].nm.textContent=APP.nomes[p]+(p===APP.meuPapel?" (você)":"");
+  atualizarRodape();
+  if(!$("ajudaTec").hidden){$("ajudaTec").hidden=true;alternarAjuda()}
+}
+/* sozinho na sala: o anfitrião pula de um boneco para o outro */
+function trocarPapel(){
+  if(!APP.jogo||!APP.host||APP.parceiro||!S||S.fim)return;
+  const velho=APP.meuPapel,novo=outroPapel(),j=S.j[novo];
+  Object.assign(S.j[velho],{x:EU.x,z:EU.z,ry:EU.ry,anda:0});
+  Object.assign(VIS.outro,{x:EU.x,z:EU.z,ry:EU.ry,anda:0});
+  APP.meuPapel=novo;
+  Object.assign(EU,{x:j.x,z:j.z,ry:j.ry,anda:0});
+  CAM.yaw=j.ry+Math.PI;CAM.modo="eu";
+  $("papelCard").hidden=true;
+  aplicarPapelHud();
+  feed("sis",`Agora você é o ${novo}.`);
+}
+function sairDoJogo(){
+  APP.jogo=false;APP.R=null;ptt(false);
+  $("hud").hidden=true;$("fim").hidden=true;$("lobby").hidden=false;
+  $("telaEntrada").hidden=true;$("telaSala").hidden=false;
+  if(SOM.ctx)SOM.ambiente(0,99,false,99);
+  renderSala();
+}
+$("pcOk").onclick=()=>{$("papelCard").hidden=true};
+$("bEncerrar").onclick=()=>{if(APP.host&&S&&!S.fim&&confirm("Encerrar a rodada agora e ver o boletim?"))terminar("Rodada encerrada antes de terminar a rota.")};
+
+function atualizarRodape(){
+  const r=$("rodape");if(!APP.meuPapel){r.innerHTML="";return}
+  const solo=APP.host&&!APP.parceiro;
+  r.innerHTML=(solo?`<button class="btn" id="bTrocar"><kbd>Tab</kbd>Virar ${outroPapel()}</button>`
+      :CHAMADAS[APP.meuPapel].map((t,i)=>`<button class="btn" data-i="${i}"><kbd>${i+1}</kbd>${esc(t)}</button>`).join(""))
+    +(!solo&&APP.modo==="internet"&&VOZ.stream?`<button class="btn" id="bPtt"><kbd>V</kbd>Segure para falar</button>`:"")
+    +`<button class="btn" id="bAjuda" aria-expanded="false"><kbd>?</kbd>Teclas</button>`;
+  r.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>chamar(+b.dataset.i));
+  if($("bTrocar"))$("bTrocar").onclick=trocarPapel;
+  const bp=$("bPtt");if(bp){bp.onpointerdown=e=>{e.preventDefault();ptt(true)};bp.onpointerup=bp.onpointerleave=()=>ptt(false)}
+  $("bAjuda").onclick=alternarAjuda;
+}
+function alternarAjuda(){
+  const a=$("ajudaTec");a.hidden=!a.hidden;$("bAjuda")?.setAttribute("aria-expanded",!a.hidden);
+  const pil=APP.meuPapel==="piloto";
+  a.innerHTML=`<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> andar · <kbd>Shift</kbd> correr<br>arrastar o mouse gira a câmera · roda aproxima<br><kbd>C</kbd> olhar para a aeronave<br>`
+    +(pil?`<kbd>T</kbd> decolar · <kbd>P</kbd> pausar/retomar · <kbd>H</kbd> voltar para casa<br>`:`segure <kbd>E</kbd> <kbd>R</kbd> <kbd>F</kbd> para as ações perto das coisas<br>`)
+    +(APP.host&&!APP.parceiro?`<kbd>Tab</kbd> trocar de papel`:`<kbd>1</kbd>–<kbd>5</kbd> chamadas rápidas`+(VOZ.stream?` · segure <kbd>V</kbd> para falar`:""));
+}
+function chamar(i){
+  const txt=CHAMADAS[APP.meuPapel][i];if(!txt||!APP.jogo||!APP.parceiro)return;
+  if(APP.rede)APP.rede.enviar({t:"chamada",txt});
+  mostrarChamada(APP.meuPapel,txt,true);
+}
+function mostrarChamada(papel,txt,minha){
+  feed(papel==="piloto"?"pil":"aux",`<b>${esc(minha?"Você":APP.nomes[papel]||papel)}:</b> ${esc(txt)}`,true);
+  const r=ROT[papel];r.bal.textContent=txt;r.bal.hidden=false;r.ate=performance.now()+3500;
+  if(!minha)SOM.chamada();
+}
+function feed(cls,html,ehHtml){
+  const f=$("feed"),d=document.createElement("div");d.className=cls;
+  if(ehHtml)d.innerHTML=html;else d.textContent=html;
+  f.appendChild(d);while(f.children.length>4)f.firstChild.remove();
+  setTimeout(()=>{d.style.opacity="0";setTimeout(()=>d.remove(),700)},7000);
+}
+function mostrarAviso(txt,tipo){
+  if(APP.meuPapel==="piloto"){const m=$("ctMsg");m.textContent=txt;m.className=tipo||"info";avisoAte=performance.now()+6000}
+  else feed("sis",txt);
+  if(tipo==="erro")SOM.erro();else SOM.bip(1100,.06,.05);
+}
+function eventoLocal(ev){
+  if(ev.k==="grave"){banner(ev.txt,true);SOM.alarme();setTimeout(esconderBanner,5000)}
+}
+function banner(txt,grave){const b=$("banner");b.textContent=txt;b.classList.toggle("grave",!!grave);b.hidden=false}
+function esconderBanner(){$("banner").hidden=true}
+
+function enviarAcao(a){if(APP.host)acao(APP.meuPapel,a);else if(APP.rede)APP.rede.enviar({t:"acao",a})}
+$("bDecolar").onclick=()=>enviarAcao({tipo:"decolar"});
+$("bPausar").onclick=()=>{const R=APP.R;if(!R)return;enviarAcao({tipo:R.d.st==="pausado"?"retomar":"pausar"})};
+$("bCasa").onclick=()=>enviarAcao({tipo:"casa"});
+
+/* ---------- entrada de teclado e mouse ---------- */
+addEventListener("keydown",e=>{
+  if(!APP.jogo||e.target.tagName==="INPUT")return;
+  const k=e.key.toLowerCase();
+  TECLAS[k]=true;
+  if(e.repeat)return;
+  if(k==="tab"){e.preventDefault();trocarPapel();return}
+  if(k>="1"&&k<="5")chamar(+k-1);
+  else if(k==="v")ptt(true);
+  else if(k==="c")CAM.modo=CAM.modo==="drone"?"eu":"drone";
+  else if(k==="?"||k==="/")alternarAjuda();
+  else if(APP.meuPapel==="piloto"){
+    if(k==="t")$("bDecolar").click();else if(k==="p")$("bPausar").click();else if(k==="h")$("bCasa").click();
+  }else if(k==="e"||k==="r"||k==="f")comecarSegurar(["e","r","f"].indexOf(k),k);
+  if([" ","arrowup","arrowdown","arrowleft","arrowright"].includes(k))e.preventDefault();
+});
+addEventListener("keyup",e=>{
+  const k=e.key.toLowerCase();TECLAS[k]=false;
+  if(k==="v")ptt(false);
+  if(SEG.tecla===k)pararSegurar();
+});
+addEventListener("blur",()=>{for(const k in TECLAS)TECLAS[k]=false;ptt(false);pararSegurar()});
+let arrasto=null;
+$("c3d").addEventListener("pointerdown",e=>{arrasto={x:e.clientX,y:e.clientY};$("c3d").setPointerCapture(e.pointerId)});
+$("c3d").addEventListener("pointermove",e=>{if(!arrasto)return;const dx=e.clientX-arrasto.x,dy=e.clientY-arrasto.y;arrasto={x:e.clientX,y:e.clientY};
+  if(CAM.modo==="drone")CAM.modo="eu";CAM.yaw-=dx*.006;CAM.pitch=clamp(CAM.pitch+dy*.004,.05,1.3)});
+$("c3d").addEventListener("pointerup",()=>{arrasto=null});
+addEventListener("pointerup",()=>{if(SEG.tecla==="mouse")pararSegurar()});
+$("c3d").addEventListener("wheel",e=>{CAM.dist=clamp(CAM.dist*(e.deltaY>0?1.1:.9),2.5,60);e.preventDefault()},{passive:false});
+
+/* ---------- ações do auxiliar: segurar a tecla ---------- */
+const SEG={op:null,tecla:null,t:0,acum:0,chave:null};
+let OPS=null;
+function comecarSegurar(i,tecla){if(!OPS||!OPS.ops[i]||SEG.op)return;Object.assign(SEG,{op:OPS.ops[i],tecla,t:0,acum:0,chave:OPS.ops[i].txt})}
+function pararSegurar(){SEG.op=null;SEG.tecla=null}
+function opcoesPerto(R){
+  if(APP.meuPapel!=="auxiliar"||!R)return null;
+  const mao=R.j.auxiliar.mao,d=R.d,dist=p=>Math.hypot(EU.x-p.x,EU.z-p.z);
+  const c=[["s0",dist(SLOTS[0]),1.35],["s1",dist(SLOTS[1]),1.35],["gerador",dist(EST.gerador),2.3],["misturador",dist(EST.misturador),2.3],["galao",dist(EST.galao),1.9]];
+  if(d.y<.3)c.push(["drone",dist(d),2.6]);
+  const alvo=c.filter(x=>x[1]<=x[2]).sort((a,b)=>a[1]-b[1])[0];
+  if(!alvo)return null;
+  const ops=[];let tit="",inf="";
+  const batNa=loc=>Object.keys(R.b).find(k=>R.b[k].loc===loc);
+  const carga=k=>{const b=R.b[k];if(b.def)return "LED vermelho piscando";const n=Math.ceil(b.c/25);return "▮".repeat(n)+"▯".repeat(4-n)};
+  const minhaBat=mao&&mao.startsWith("bat:")?mao.slice(4):null;
+  switch(alvo[0]){
+    case "s0":case "s1":{
+      const s=+alvo[0][1],k=batNa(alvo[0]);
+      tit=`Carregador · vaga ${s+1}`;
+      inf=k?`Bateria ${k}: ${carga(k)}`:"Vaga vazia";
+      if(k&&!mao)ops.push({txt:`Pegar bateria ${k}`,t:.6,a:{tipo:"pegarBat",slot:s}});
+      if(!k&&minhaBat)ops.push({txt:`Colocar bateria ${minhaBat} para carregar`,t:.8,a:{tipo:"porBat",slot:s}});
+      if(k&&minhaBat)ops.push({txt:`Deixar a ${minhaBat} carregando e pegar a ${k}`,t:1,a:{tipo:"trocarBat",slot:s}});
+      break;}
+    case "gerador":{
+      tit="Gerador";const n=Math.round(R.g.comb/20);inf=`${R.g.on?"Ligado":"Desligado"} · combustível ${"▮".repeat(n)}${"▯".repeat(5-n)}`;
+      if(mao==="galao")ops.push({txt:"Abastecer o gerador",cont:{tipo:"combustivel",campo:"p",taxa:12}});
+      if(!mao)ops.push({txt:R.g.on?"Desligar o gerador":"Dar partida no gerador",t:R.g.on?.6:1.4,a:{tipo:"gerador"}});
+      break;}
+    case "misturador":
+      tit="Misturador";inf=`Calda pronta: ${Math.round(R.m.calda)} L`;
+      if(!mao)ops.push({txt:"Preparar uma batelada de 40 L",t:6,a:{tipo:"calda"}});
+      break;
+    case "galao":
+      tit="Caminhonete";inf=R.gal==="caminhao"?"Galão de gasolina na caçamba":"";
+      if(!mao&&R.gal==="caminhao")ops.push({txt:"Pegar o galão",t:.6,a:{tipo:"pegarGalao"}});
+      if(mao==="galao")ops.push({txt:"Guardar o galão",t:.6,a:{tipo:"porGalao"}});
+      break;
+    case "drone":
+      tit="Aeronave";inf=`Tanque ${Math.round(R.d.tq)} L · ${d.bat?"bateria "+d.bat+" encaixada":"sem bateria"}`;
+      if(d.bat&&!mao)ops.push({txt:`Retirar a bateria ${d.bat}`,t:1.2,a:{tipo:"tirarBatDrone"}});
+      if(!d.bat&&minhaBat)ops.push({txt:`Encaixar a bateria ${minhaBat}`,t:1.5,a:{tipo:"porBatDrone"}});
+      if(!mao&&R.d.tq<AERO.tanque-.1&&R.m.calda>0)ops.push({txt:"Abastecer com a mangueira",cont:{tipo:"abastecer",campo:"l",taxa:8}});
+      if(!mao)ops.push({txt:"Verificar os bicos",t:3,a:{tipo:"bicos"}});
+      break;
+  }
+  return {tit,inf,ops:ops.slice(0,3)};
+}
+function passoSegurar(dt){
+  if(!SEG.op)return;
+  const atual=OPS&&OPS.ops.find(o=>o.txt===SEG.chave);
+  if(!atual){pararSegurar();return}
+  if(SEG.op.t){SEG.t+=dt;if(SEG.t>=SEG.op.t){enviarAcao(SEG.op.a);SOM.bip(1250,.05,.04);pararSegurar()}}
+  else{SEG.acum+=dt;SEG.t+=dt;if(SEG.acum>=.25){SEG.acum-=.25;const a={tipo:SEG.op.cont.tipo};a[SEG.op.cont.campo]=SEG.op.cont.taxa*.25;enviarAcao(a)}}
+}
+function desenharPrompt(){
+  const el=$("prompt");
+  if(!OPS||(!OPS.ops.length&&!OPS.inf)){el.hidden=true;el.dataset.k="";return}
+  const chave=OPS.tit+"|"+OPS.inf+"|"+OPS.ops.map(o=>o.txt).join("|");
+  if(el.dataset.k!==chave){
+    el.dataset.k=chave;
+    el.innerHTML=`<div class="tit">${esc(OPS.tit)}</div><div class="inf">${esc(OPS.inf)}</div>`+
+      OPS.ops.map((o,i)=>`<button class="op" data-i="${i}"><kbd>${"ERF"[i]}</kbd>Segure: ${esc(o.txt)}<i></i></button>`).join("");
+    el.querySelectorAll(".op").forEach(b=>{const i=+b.dataset.i;
+      b.onpointerdown=e=>{e.preventDefault();comecarSegurar(i,"mouse")};b.onpointerup=b.onpointerleave=()=>{if(SEG.tecla==="mouse")pararSegurar()}});
+  }
+  el.hidden=false;
+  el.querySelectorAll(".op").forEach((b,i)=>{const o=OPS.ops[i],bar=b.querySelector("i");
+    const ativo=SEG.op&&SEG.chave===o.txt;
+    bar.style.width=ativo?(o.t?Math.min(100,SEG.t/o.t*100):(SEG.t*60%100))+"%":"0"});
+}
+
+/* ---------- movimento de quem está jogando aqui ---------- */
+function colidir(x,z,R){
+  const raio=.32;
+  for(const c of CAIXAS){
+    const px=clamp(x,c.x0,c.x1),pz=clamp(z,c.z0,c.z1),dx=x-px,dz=z-pz,d=Math.hypot(dx,dz);
+    if(d<raio){
+      if(d>1e-4){x=px+dx/d*raio;z=pz+dz/d*raio}
+      else{const esq=x-c.x0,dir=c.x1-x,fre=z-c.z0,tra=c.z1-z,m=Math.min(esq,dir,fre,tra);
+        if(m===esq)x=c.x0-raio;else if(m===dir)x=c.x1+raio;else if(m===fre)z=c.z0-raio;else z=c.z1+raio}
+    }
+  }
+  if(R&&R.d.y<1){const dx=x-VIS.d.x,dz=z-VIS.d.z,d=Math.hypot(dx,dz),rr=.9;if(d<rr&&d>1e-4){x=VIS.d.x+dx/d*rr;z=VIS.d.z+dz/d*rr}}
+  return [x,z];
+}
+function moverEu(dt,R){
+  let f=0,s=0;
+  if(TECLAS.w||TECLAS.arrowup)f+=1;if(TECLAS.s||TECLAS.arrowdown)f-=1;
+  if(TECLAS.d||TECLAS.arrowright)s+=1;if(TECLAS.a||TECLAS.arrowleft)s-=1;
+  const sy=Math.sin(CAM.yaw),cy=Math.cos(CAM.yaw);
+  let mx=-sy*f+cy*s,mz=-cy*f-sy*s;const L=Math.hypot(mx,mz);
+  const vel=TECLAS.shift?5.4:2.8;
+  if(L>0){mx/=L;mz/=L;[EU.x,EU.z]=colidir(EU.x+mx*vel*dt,EU.z+mz*vel*dt,R);EU.ry=angLerp(EU.ry,Math.atan2(mx,mz),Math.min(1,dt*10));EU.anda=vel}
+  else EU.anda=0;
+  EU.x=clamp(EU.x,-300,300);EU.z=clamp(EU.z,-320,120);
+}
+
+/* ---------- desenho do estado ---------- */
+const tmpV=new THREE.Vector3();
+function posicionarPessoa(P,x,z,ry,anda,mao,dt,papel){
+  P.g.position.set(x,0,z);P.g.rotation.y=ry;
+  P.fase+=dt*anda*2.2;
+  const amp=anda>0?Math.min(.7,.25+anda*.08):0;
+  P.pernas[0].rotation.x=Math.sin(P.fase)*amp;P.pernas[1].rotation.x=-Math.sin(P.fase)*amp;
+  const carregando=!!mao,pil=papel==="piloto";
+  const braco=carregando?-1.05:pil?-.75:0;
+  P.bracos[0].rotation.x=braco?braco:-Math.sin(P.fase)*amp*.8;
+  P.bracos[1].rotation.x=braco?braco:Math.sin(P.fase)*amp*.8;
+}
+function colocarEm(obj,pai,x,y,z,ry){if(obj.parent!==pai)pai.add(obj);obj.position.set(x,y,z);obj.rotation.set(0,ry||0,0)}
+function desenharEstado(R,dt){
+  const k=1-Math.exp(-dt*12);
+  /* aeronave */
+  const d=VIS.d;
+  if(APP.host){Object.assign(d,{x:R.d.x,y:R.d.y,z:R.d.z,yaw:R.d.yaw,rot:R.d.rot})}
+  else{d.x+=(R.d.x-d.x)*k;d.y+=(R.d.y-d.y)*k;d.z+=(R.d.z-d.z)*k;d.yaw=angLerp(d.yaw,R.d.yaw,k);d.rot+=(R.d.rot-d.rot)*k}
+  if(Math.hypot(R.d.x-d.x,R.d.z-d.z)>15){d.x=R.d.x;d.z=R.d.z;d.y=R.d.y}
+  DRONE.g.position.set(d.x,d.y,d.z);DRONE.g.rotation.y=d.yaw;
+  const vel=R.d.vel||0;DRONE.g.rotation.x=d.y>.1?Math.min(.25,vel*.025):0;
+  VIS.fase+=dt*d.rot*45;
+  DRONE.rotores.forEach((r,i)=>{r.rotation.y=VIS.fase*(i%2?1:-1)+i});
+  DRONE.discos.forEach(c=>c.material.opacity=Math.max(0,d.rot-.3)*.35);
+  const pisca=R.d.st!=="solo"&&Math.floor(performance.now()/350)%2===0;
+  DRONE.luzes.forEach(l=>l.visible=R.d.st==="solo"?false:pisca||d.y>.2);
+  DRONE.liq.scale.y=Math.max(.001,R.d.tq/AERO.tanque);DRONE.liq.visible=R.d.tq>.05;
+  NEVOA.passo(dt,R.d.sp,d.x,d.y,d.z,d.yaw);
+
+  /* pessoas */
+  const outro=outroPapel(),po=R.j[outro],vo=VIS.outro;
+  vo.x+=(po.x-vo.x)*k;vo.z+=(po.z-vo.z)*k;vo.ry=angLerp(vo.ry,po.ry,k);vo.anda=po.anda;
+  posicionarPessoa(PESSOA[APP.meuPapel],EU.x,EU.z,EU.ry,EU.anda,R.j[APP.meuPapel].mao,dt,APP.meuPapel);
+  posicionarPessoa(PESSOA[outro],vo.x,vo.z,vo.ry,vo.anda,po.mao,dt,outro);
+
+  /* baterias, galão, base */
+  const maoAux=PESSOA.auxiliar.maos;
+  for(const kb in R.b){
+    const b=R.b[kb],o=BAT3D[kb];
+    if(b.loc==="drone")colocarEm(o,DRONE.encaixe,0,0,0);
+    else if(b.loc==="mao")colocarEm(o,maoAux,0,0,0);
+    else{const s=SLOTS[+b.loc[1]];colocarEm(o,cena,s.x,1.05,s.z)}
+  }
+  if(R.gal==="mao")colocarEm(BASE.galao,maoAux,0,-.2,0);else colocarEm(BASE.galao,cena,EST.galao.x,0,EST.galao.z,.4);
+  const t=performance.now()/1000;
+  SLOTS.forEach((s,i)=>{
+    const kb=Object.keys(R.b).find(x=>R.b[x].loc==="s"+i),b=kb&&R.b[kb];
+    BASE.leds[i].forEach((l,n)=>{
+      let cor=0x333333;
+      if(b){if(b.def)cor=Math.floor(t*3)%2?0xff2a2a:0x331111;
+        else{const cheios=Math.floor(b.c/25);if(n<cheios)cor=0x33e07a;else if(n===cheios&&b.c<100&&R.g.on)cor=Math.floor(t*2)%2?0x33e07a:0x224433}}
+      l.material.color.setHex(cor);
+    });
+  });
+  BASE.ponteiro.rotation.y=THREE.MathUtils.lerp(1.3,-1.3,R.g.comb/100);
+  BASE.ger.position.y=R.g.on?Math.sin(t*90)*.004:0;
+  BASE.liq.scale.y=Math.max(.001,R.m.calda/80);BASE.liq.visible=R.m.calda>.1;
+
+  /* rótulos */
+  const agora=performance.now();
+  for(const p of ["piloto","auxiliar"]){
+    const P=PESSOA[p],r=ROT[p];
+    tmpV.set(P.g.position.x,2.05,P.g.position.z).project(cam);
+    const vis=tmpV.z<1&&Math.abs(tmpV.x)<1.1&&Math.abs(tmpV.y)<1.1;
+    r.el.style.display=vis?"":"none";
+    if(vis)r.el.style.transform=`translate(${(tmpV.x*.5+.5)*innerWidth}px,${(-tmpV.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;
+    if(r.ate&&agora>r.ate){r.bal.hidden=true;r.ate=0}
+  }
+  if(cobSujo){cobTex.needsUpdate=true;miniCtx.putImageData(miniImg,0,0);cobSujo=false}
+}
+
+function hud(R){
+  $("hParc").innerHTML=APP.host&&!APP.parceiro?"sozinho na sala":`<i class="dot${APP.parceiro?"":" fora"}"></i>${esc(APP.nomes[outroPapel()]||"")}`;
+  $("hPing").textContent=APP.modo==="internet"&&APP.ping!=null?APP.ping+" ms":"";
+  $("hRel").textContent=mmss(R.tm)+(APP.ritmo>1?` · ${APP.ritmo}×`:"");
+  if(APP.meuPapel==="piloto"){
+    const d=R.d,[tit,sub]=NOME_EST[d.st]||[d.st,""];
+    $("ctEstado").textContent=tit;$("ctSub").textContent=R.pausado?"sala pausada":sub;
+    const b=d.bat&&R.b[d.bat];
+    const eb=$("cBat");eb.textContent=b?`${d.bat} · ${Math.round(b.c)}%`:"sem bateria";eb.className="mono"+(!b?" cr":b.c<=25?" cr":b.c<=40?" al":"");
+    const et=$("cTq");et.textContent=`${d.tq.toFixed(1)} L`;et.className="mono"+(d.tq<2?" al":"");
+    $("cAlt").textContent=`${d.y.toFixed(1)} m · ${(d.vel||0).toFixed(1)} m/s`;
+    $("cVaz").textContent=`${d.sp?d.vaz.toFixed(1):"–"} / ${VAZAO_PLAN.toFixed(1)} L/min`;
+    $("cPct").textContent=`${R.pct.toFixed(1)}%`;
+    const noAr=NO_AR.includes(d.st);
+    $("bDecolar").disabled=d.st!=="solo";
+    $("bDecolar").textContent=d.ret?"Decolar e retomar":"Decolar e iniciar";
+    $("bPausar").disabled=!(d.st==="pausado"||["subindo","indo","baixando","aplicando"].includes(d.st));
+    $("bPausar").textContent=d.st==="pausado"?"Retomar":"Pausar";
+    $("bCasa").disabled=!noAr;
+    if(avisoAte&&performance.now()>avisoAte){$("ctMsg").textContent="";avisoAte=0}
+    if(performance.now()-ultMapa>100){ultMapa=performance.now();desenharMapa(R)}
+  }else{
+    const m=R.j.auxiliar.mao;
+    $("maos").innerHTML=`<span>Nas mãos:</span> ${m?(m==="galao"?"galão de gasolina":"bateria "+m.slice(4)):"nada"}`;
+    OPS=opcoesPerto(R);desenharPrompt();
+  }
+}
+
+function desenharMapa(R){
+  const c=$("ctMapa"),g=c.getContext("2d"),W=c.width,H=c.height;
+  const X0=-112,X1=112,Z0=-186,Z1=24,e=Math.min(W/(X1-X0),H/(Z1-Z0));
+  const ox=(W-(X1-X0)*e)/2,oy=(H-(Z1-Z0)*e)/2;
+  const px=x=>ox+(x-X0)*e,py=z=>oy+(z-Z0)*e;
+  g.fillStyle="#1d2a1c";g.fillRect(0,0,W,H);
+  g.fillStyle="#3b5a2c";g.fillRect(px(CAMPO.x0),py(CAMPO.z0),(CAMPO.x1-CAMPO.x0)*e,(CAMPO.z1-CAMPO.z0)*e);
+  g.imageSmoothingEnabled=false;g.drawImage(miniCob,px(CAMPO.x0),py(CAMPO.z0),(CAMPO.x1-CAMPO.x0)*e,(CAMPO.z1-CAMPO.z0)*e);
+  g.strokeStyle="#fff";g.lineWidth=2;g.strokeRect(px(CAMPO.x0),py(CAMPO.z0),(CAMPO.x1-CAMPO.x0)*e,(CAMPO.z1-CAMPO.z0)*e);
+  g.strokeStyle="rgba(255,255,255,.16)";g.lineWidth=1;g.beginPath();
+  ROTA.forEach((p,i)=>i?g.lineTo(px(p.x),py(p.z)):g.moveTo(px(p.x),py(p.z)));g.stroke();
+  g.fillStyle="#e8742a";g.fillRect(px(PAD.x)-5,py(PAD.z)-5,10,10);
+  if(R.d.ret){g.fillStyle="#F5A524";g.beginPath();const x=px(R.d.ret.x),y=py(R.d.ret.z);g.moveTo(x,y-7);g.lineTo(x+7,y);g.lineTo(x,y+7);g.lineTo(x-7,y);g.fill()}
+  for(const [p,cor] of [["piloto","#4A94F5"],["auxiliar","#F08A24"]]){
+    const P=PESSOA[p].g.position;g.fillStyle=cor;g.beginPath();g.arc(px(P.x),py(P.z),5,0,7);g.fill();
+  }
+  const d=VIS.d,x=px(d.x),y=py(d.z),a=d.yaw;
+  g.save();g.translate(x,y);g.rotate(-a);g.fillStyle="#fff";g.strokeStyle="#000";g.lineWidth=2;
+  g.beginPath();g.moveTo(0,13);g.lineTo(8,-8);g.lineTo(0,-3);g.lineTo(-8,-8);g.closePath();g.stroke();g.fill();g.restore();
+}
+
+function atualizarCamera(dt){
+  const alvoY=1.55;
+  if(CAM.modo==="drone"){
+    const dx=VIS.d.x-EU.x,dz=VIS.d.z-EU.z,L=Math.hypot(dx,dz)||1;
+    tmpV.set(EU.x-dx/L*2.6-dz/L*.7,2.25,EU.z-dz/L*2.6+dx/L*.7);
+    cam.position.lerp(tmpV,1-Math.exp(-dt*8));
+    cam.lookAt(VIS.d.x,VIS.d.y+.9,VIS.d.z);
+    CAM.yaw=Math.atan2(-dx,-dz);
+  }else{
+    const cp=Math.cos(CAM.pitch);
+    cam.position.set(EU.x+Math.sin(CAM.yaw)*cp*CAM.dist,Math.max(.4,alvoY+Math.sin(CAM.pitch)*CAM.dist),EU.z+Math.cos(CAM.yaw)*cp*CAM.dist);
+    cam.lookAt(EU.x,alvoY,EU.z);
+  }
+  sol.target.position.set(EU.x,0,EU.z);sol.position.set(EU.x+30,60,EU.z+22);
+}
+
+/* ---------- boletim ---------- */
+function mostrarFim(bol){
+  ptt(false);
+  $("fTit").textContent=bol.aprovado?"Dupla aprovada":"Dupla reprovada";
+  $("fSub").textContent=`${bol.nomes.piloto} (piloto) e ${bol.nomes.auxiliar} (auxiliar)`+(bol.motivo?` · ${bol.motivo}`:"");
+  $("fNota").textContent=bol.nota;$("fNota").style.color=bol.aprovado?"var(--ok)":"var(--perigo)";
+  const cel=(r,v)=>`<div><span>${r}</span><b class="mono">${v}</b></div>`;
+  $("fGrade").innerHTML=cel("Tempo",mmss(bol.tempo))+cel("Área aplicada",bol.cob+"%")+cel("Subdosada",bol.fal+"%")
+    +cel("Voos",bol.voos)+cel("Trocas de bateria",bol.trocas)+cel("Calda aplicada",bol.caldaAplic+" L")
+    +cel("Calda preparada",bol.caldaPrep+" L")+cel("Carregador parado",bol.secoSeg+" s");
+  $("fFalha").textContent=bol.falha;
+  $("fInc").innerHTML=bol.inc.length?bol.inc.map(i=>`<li class="${i.g}"><small class="mono">${i.tm}</small>${esc(i.txt)}</li>`).join(""):"<li>Nenhuma ocorrência.</li>";
+  $("fSala").textContent=APP.host?"Voltar para a sala":"Voltar para a sala";
+  $("fim").hidden=false;
+}
+$("fSala").onclick=()=>{if(APP.host)voltarSala();else if(APP.rede)APP.rede.enviar({t:"voltarSala"})};
+
+/* ===================================================================
+   LAÇO PRINCIPAL
+   =================================================================== */
+function redimensionar(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+addEventListener("resize",redimensionar);redimensionar();
+let antes=performance.now(),giro=0;
+function quadro(agora){
+  requestAnimationFrame(quadro);
+  const dt=Math.min(.05,(agora-antes)/1000);antes=agora;
+  if(APP.jogo){
+    const R=APP.host&&S?instantaneo():APP.R;
+    if(APP.host&&S)APP.R=R;
+    if(R){
+      moverEu(dt,R);
+      if(APP.host&&S)Object.assign(S.j[APP.meuPapel],{x:EU.x,z:EU.z,ry:EU.ry,anda:EU.anda});
+      else if(agora-ultPose>66&&APP.parceiro){ultPose=agora;APP.rede.enviar({t:"pose",x:r2(EU.x),z:r2(EU.z),ry:r2(EU.ry),anda:r1(EU.anda)})}
+      desenharEstado(R,dt);
+      passoSegurar(dt);
+      hud(R);
+      atualizarCamera(dt);
+      SOM.ambiente(VIS.d.rot,Math.hypot(VIS.d.x-EU.x,VIS.d.y,VIS.d.z-EU.z),R.g.on,Math.hypot(EST.gerador.x-EU.x,EST.gerador.z-EU.z));
+    }
+  }else{
+    /* fundo da sala: câmera girando devagar sobre a base */
+    giro+=dt*.05;
+    cam.position.set(Math.sin(giro)*26,11,Math.cos(giro)*26-4);cam.lookAt(2,1,-2);
+    sol.target.position.set(0,0,0);sol.position.set(30,60,22);
+    for(const p in ROT)ROT[p].el.style.display="none";
+    BAT3D.A.parent!==DRONE.encaixe&&colocarEm(BAT3D.A,DRONE.encaixe,0,0,0);
+    colocarEm(BAT3D.B,cena,SLOTS[0].x,1.05,SLOTS[0].z);colocarEm(BAT3D.C,cena,SLOTS[1].x,1.05,SLOTS[1].z);
+    colocarEm(BASE.galao,cena,EST.galao.x,0,EST.galao.z,.4);
+    DRONE.g.position.set(PAD.x,0,PAD.z);DRONE.liq.visible=false;
+  }
+  renderer.render(cena,cam);
+}
+requestAnimationFrame(quadro);
+</script>
+</body>
+</html>
