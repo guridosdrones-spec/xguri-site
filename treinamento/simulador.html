@@ -371,6 +371,11 @@ button{font:inherit; color:inherit}
 .bula-alerta{background:#FDF0EE; border:1.5px solid #B93A22; border-radius:3px; padding:10px 12px; font-size:13.5px}
 .bula-alerta b{color:#B93A22}
 
+/* modo embutido (dentro do jogo 3D) */
+html.embutido .trilha, html.embutido #btnReiniciar, html.embutido .rodape, html.embutido #cartaoQuiz{display:none!important}
+.pedido-piloto{margin:12px 0 0; padding:10px 14px; border-left:4px solid var(--amarelo); background:var(--surface-2); font-size:15px}
+.pedido-piloto b{font-family:"IBM Plex Mono",monospace}
+
 /* boletim */
 .boletim{max-width:560px; margin:0 auto 24px; text-align:left; border:1px solid var(--line); background:var(--surface-2)}
 .boletim-topo{display:flex; align-items:center; gap:16px; padding:14px 18px; border-bottom:1px solid var(--line)}
@@ -693,6 +698,9 @@ html.travado body > *:not(#portaria){display:none!important}
   };
   var LEMBRAR = "xguri_acesso_v1";
   var raiz = document.documentElement;
+  if(window.parent !== window && /[?&]embutido=1/.test(location.search)){
+    var pe = document.getElementById("portaria"); if(pe) pe.remove(); return;
+  }
   raiz.classList.add("travado");
 
   function liberar(nome){
@@ -1067,7 +1075,7 @@ html.travado body > *:not(#portaria){display:none!important}
     </div>
   </section>
 
-  <div class="cartao" style="margin-top:22px; padding:16px 18px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; border-left:4px solid var(--verde)">
+  <div class="cartao" id="cartaoQuiz" style="margin-top:22px; padding:16px 18px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; border-left:4px solid var(--verde)">
     <div style="flex:1; min-width:240px">
       <p class="eyebrow" style="margin-bottom:2px">Para dar aula</p>
       <b style="font-family:'Barlow Condensed',sans-serif; font-size:21px; display:block; line-height:1.05">Tira-dúvida ao vivo, turma inteira junto</b>
@@ -1270,7 +1278,7 @@ const MODELOS = [
     ]
   }
 ];
-const CAP = 200;            // capacidade do misturador (L)
+let CAP = 200;            // capacidade do misturador (L)
 const COPO_MAX = 2000;      // mL
 const BAL_MAX = 3000;       // g
 
@@ -1804,7 +1812,8 @@ function confirmarArea(){
   const v = parseBR($('#inArea').value);
   const linha = $('#inArea').closest('.linha');
   const dica = $('#dicaArea');
-  const minimo = Math.round(R.areaRec * 0.9 * 10)/10;
+  const minimo = Math.floor(R.areaRec * 0.9 * 100)/100;
+  const cas = R.areaRec < 1 ? 2 : 1;
   const errar = msg => {
     linha.classList.remove('ok'); linha.classList.add('err');
     linha.querySelector('.sinal').textContent = '✗';
@@ -1814,7 +1823,7 @@ function confirmarArea(){
   if(!S) return;
   if(!isFinite(v) || v <= 0) return errar('Digite a área em hectares, por exemplo ' + fmt(R.areaRec,1).replace(/,\d$/, ',0') + '.');
   if(v > R.areaRec) return errar(`O receituário autoriza ${fmt(R.areaRec,1)} ha. Não se prepara calda para mais área do que a receita cobre — informe ${fmt(R.areaRec,1)} ha ou menos.`);
-  if(v < minimo) return errar(`${fmt(v,1)} ha está longe demais do receituário. O piloto informa a área que vai voar de verdade: entre ${fmt(minimo,1)} e ${fmt(R.areaRec,1)} ha.`);
+  if(v < minimo) return errar(`${fmt(v,cas)} ha está longe demais do receituário. O piloto informa a área que vai voar de verdade: entre ${fmt(minimo,cas)} e ${fmt(R.areaRec,cas)} ha.`);
 
   S.area = v; S.exp = esperados(v);
   if(S.exp.total > CAP) return errar(`${fmt(v,1)} ha dá ${fmt(S.exp.total,1)} L de calda e o misturador é de ${CAP} L. Reduza a área.`);
@@ -2254,6 +2263,7 @@ function avancar(){
 }
 
 function concluir(){
+  if(EMBUTIDO) setTimeout(prepararRetornoJogo, 0);
   clearInterval(cronoT);
   pose(null);
   $('#preparo').hidden = true; $('#fim').hidden = false;
@@ -2701,6 +2711,10 @@ function tickCarga(){
 setInterval(tickCarga, 700);
 
 $('#btnIrCaldaEst').addEventListener('click', () => {
+  if(EMBUTIDO && EMB.get('etapa') === 'estrutura'){
+    enviarAoJogo({tipo:'estrutura-pronta', erros:S ? S.erros : 0});
+    return;
+  }
   $('#estrutura').hidden = true; $('#epi').hidden = false;
   $('#trE').classList.remove('on'); $('#trE').classList.add('feito');
   $('#trP').classList.add('on');
@@ -3030,6 +3044,62 @@ $('#btnIrCaldaEpi').addEventListener('click', () => {
   window.scrollTo({top:0, behavior:'smooth'});
 });
 
+/* ============ modo embutido (dentro do jogo 3D) ============ */
+const EMB = new URLSearchParams(location.search);
+const EMBUTIDO = EMB.get('embutido') === '1' && window.parent !== window;
+
+function enviarAoJogo(msg){
+  try{ window.parent.postMessage(Object.assign({origem:'bancada'}, msg), location.origin); }catch(e){}
+}
+
+function iniciarEmbutido(){
+  document.documentElement.classList.add('embutido');
+  const area = Math.max(.05, parseFloat(EMB.get('area')) || 4);
+  const taxa = Math.max(1, Math.round(parseFloat(EMB.get('taxa')) || 15));
+  /* o receituário passa a cobrir exatamente o talhão do voo */
+  R.taxa = taxa;
+  R.areaRec = Math.max(.05, Math.ceil(area * 100) / 100);
+  CAP = Math.max(200, Math.ceil(R.areaRec * R.taxa / 50) * 50);
+  renderReceita();
+  $('#inNome').value = EMB.get('nome') || 'Ajudante';
+
+  const b = document.querySelector('#calculos .briefing');
+  if(b){
+    const ped = document.createElement('p');
+    ped.className = 'pedido-piloto';
+    ped.innerHTML = `Pedido do piloto: <b>${fmt(area,2)} ha</b> a <b>${taxa} L/ha</b>. ` +
+      (EMB.get('lote') === 'reposicao'
+        ? 'É calda de reposição: o misturador esvaziou e ainda falta essa área do talhão.'
+        : 'É a calda para a área inteira que ele mapeou.');
+    b.appendChild(ped);
+  }
+
+  const etapa = EMB.get('etapa');
+  if(etapa === 'estrutura'){
+    irPara('estrutura');
+  } else if(etapa === 'epi'){
+    irPara('epi');
+  } else {
+    irPara('calculos');
+    fala(`Tanque do drone quase vazio e o misturador acabou. O piloto pede <b>${fmt(area,2)} ha</b> a <b>${taxa} L/ha</b> — você já está paramentado, então é direto para a conta.`);
+  }
+}
+
+function prepararRetornoJogo(){
+  const antigo = $('#btnNovo');
+  const novo = antigo.cloneNode(true);
+  novo.textContent = 'Levar a calda para o drone';
+  antigo.replaceWith(novo);
+  novo.addEventListener('click', () => enviarAoJogo({
+    tipo:'calda-pronta',
+    litros: S.exp.total,
+    area: S.area,
+    taxa: R.taxa,
+    erros: S.erros,
+    nota: MODO_PROVA ? S.nota : null
+  }));
+}
+
 /* ============ navegacao direta entre etapas ============ */
 const FASES = [
   {id:'vespera',  sec:'#vespera',  pill:'#tr0'},
@@ -3125,7 +3195,8 @@ try{ $('#inNome').value = sessionStorage.getItem('nomeCalda') || ''; }catch(e){}
 aplicarProva();
 R = gerarReceita();
 renderReceita();
-atualizaTanque();
+if(EMBUTIDO) iniciarEmbutido();
+try{ atualizaTanque(); }catch(e){}
 </script>
 </body>
 </html>
