@@ -96,16 +96,16 @@ window.XGURI = {
   portaoPortatil: {
     ativo: true,
     iter: 200000,
-    sal: "44c7b6e749beeb87524fa3019e03b642",
-    iv: "625290fc34f5d7e48afb41b7",
-    link: "+ArMhsO5dfalyy23epPMuP/zR1JZkgeiuwbl5j/RHxGI664Nz7jsuoDavZgH8jsW3ogIyI2G8yXPUJXecgcLv47ykJuhWHKRodR31UIQqnvm0Q4Xt/kG1W7rNY9PkbZqfTR+21p3PfGpJgURb6iec2pW3SBfoLwvruo/oKdsY94Y67g=",
+    sal: "754babb5b58a5824eb32acc360504997",
+    iv: "3c50e4b29a980aa6300fbb82",
+    link: "klETYWfsZp2U1fcjncPwsct/gnAFRt11rzD7lhLXpUm9OuVgbrGwvk5S6IUoJ3CFcziuBkDmLJRFPjFzu6ZUhuCGncjtrnW7rqyvxE3g15rsaJEQ83Bp2kObjsoWvRUf2Dyg/cWvhVU3AQX9D6hFqeEKDVMpGImltDPZzsl7iJSr1vw=",
 
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "0.2.0",
+  portatilVersao: "0.2.1",
   portatilTamanho: "86 MB",
-  portatilSha256: "b87a3e18b36b7817f622d42b5d9816f116a2af0660b5f8cf19e31689837643e1",
+  portatilSha256: "25e58810b220b9bfd706381b99dc785eace5ecfcc17380f7b8a5215981acb364",
 
   // Dias que a versao de teste dura antes de se remover sozinha. Tem que
   // bater com "horas" em edicao_teste.json, no projeto do XGuri
