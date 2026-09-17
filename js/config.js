@@ -15,7 +15,7 @@ window.XGURI = {
 
   // Versao que esta no ar e a data em que voce publicou.
   versao: "1.0.3",
-  lancamento: "2026-09-16",
+  lancamento: "2026-09-17",
 
   // Tamanho aproximado do instalador, do jeito que o cliente le.
   tamanho: "578 MB",
@@ -116,7 +116,7 @@ window.XGURI = {
   // baixou o arquivo original. Para descobrir, no PowerShell:
   //   Get-FileHash .\installer_output\XGuri_Setup_1.0.0.exe -Algorithm SHA256
   // Vazio = o site nao mostra essa linha.
-  sha256: "72c1d883f5eb667ee55bd35096c24da0988d28200a97cee295d5d8bf49ee5d88",
+  sha256: "24bfa5037b16db24eecb90392ca818d71524e5d5f0c5514b7ea84396a939abfc",
 
   /* ------------------------------------------------------------- contato */
 
