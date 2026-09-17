@@ -96,16 +96,41 @@ window.XGURI = {
   portaoPortatil: {
     ativo: true,
     iter: 200000,
-    sal: "3b2bb3b31f6234263cb7d91b43615d72",
-    iv: "ae3f18d3a9debfdd9ac94ef6",
-    link: "ZZ7azOcr1yN4w6vyxef/DWBT74apuRn4UwKL/viLf/JQNNq4Y4auIT+F4U7xPo7VOqdWD1oShPCHdBdRms2gKFM2ZTV18eRbEEau+KgLT3nuqxh4WUIz3Ld9bd4BZ2GmZtIB32/mFe0rA0NEohRkxYUOxHS/e0PHTWd0CzhGesLczRw=",
+    sal: "e0eb25937a947610af168a43a19452bf",
+    iv: "08b9b3b8b4c4d954697c4d65",
+    link: "2ksjfGAFoIxGmU4TRx1tsFifT58tKk5SjhfCGs3oX07KGzLYEMK6PSB+b9swHIFXfj9i2WOlN2zz9oUc/5XnOzXrEg9W5pdPV0e2PVqSf5m4A+8CnlK6n4ynR93ZQkxgEmKt9ba1QrRU1aw1YbT3TTbwK03ogIgYjHxJkeCqbzUE5LI=",
 
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "0.2.3",
+  portatilVersao: "0.2.4",
   portatilTamanho: "86 MB",
-  portatilSha256: "1adf4a671750cc2d5c701bdd321854d4c5177b920ac2e7c24d2023c689bc6222",
+  portatilSha256: "88df21a44b165876426e6dd166ff0e63a3f00d4482969fce577c349e0792c490",
+
+  // -------------------------------------------------------------------
+  // DGURI PORTATIL (dguri-portatil.html) - app Android para DJI
+  //
+  // Mesmo esquema do XGuri Portatil, com senha propria. O APK mora nas
+  // Releases de guridosdrones-spec/dguri-portatil-atualizacoes, o mesmo lugar
+  // de onde o app busca as atualizacoes sozinho.
+  //
+  // Enquanto `ativo` for false a pagina nao mostra link nenhum: diz que o
+  // download esta fechado e manda chamar no WhatsApp. Para abrir, gere o
+  // bloco na _ferramenta-senha.html escolhendo "DGuri Portatil" e cole aqui.
+  // -------------------------------------------------------------------
+  portaoDguriPortatil: {
+    ativo: false,
+    iter: 200000,
+    sal: "",
+    iv: "",
+    link: "",
+
+    dica: "Peça a senha no WhatsApp.",
+  },
+
+  dguriPortatilVersao: "0.1.0",
+  dguriPortatilTamanho: "86 MB",
+  dguriPortatilSha256: "c27fbee3624ce67837c99b32e4b2fc197034bf848b988ab08a8891d3c41e4e12",
 
   // Dias que a versao de teste dura antes de se remover sozinha. Tem que
   // bater com "horas" em edicao_teste.json, no projeto do XGuri
