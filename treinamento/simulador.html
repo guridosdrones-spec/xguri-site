@@ -335,6 +335,42 @@ button{font:inherit; color:inherit}
 .ordem-lista li.agora{color:var(--ink); font-weight:600}
 .ordem-lista li.agora b{color:var(--vermelho)}
 
+/* bula do produto */
+.btn-bula{background:none; border:1px solid currentColor; border-radius:2px; padding:1px 6px; margin-left:6px;
+  font-family:"Barlow Condensed",sans-serif; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.08em;
+  cursor:pointer; opacity:.75; vertical-align:2px; color:inherit}
+.btn-bula:hover{opacity:1}
+.fundo-bula{position:fixed; inset:0; z-index:500; background:rgba(12,16,10,.55); display:grid; place-items:center; padding:16px}
+.bula{background:#FBFBF6; color:#1E2A22; width:100%; max-width:560px; max-height:88vh; overflow:auto;
+  border-radius:3px; box-shadow:0 20px 50px -12px rgba(0,0,0,.6); border-top:8px solid #1E2A22}
+.bula-topo{padding:18px 22px 12px; border-bottom:2px solid #1E2A22; display:flex; gap:12px; align-items:flex-start}
+.bula-topo div{flex:1}
+.bula-topo small{display:block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:#5A6A5E}
+.bula-topo h3{margin:3px 0 0; font-size:26px; line-height:1; text-transform:uppercase; letter-spacing:.02em}
+.bula-topo .fechar{background:none; border:1.5px solid #1E2A22; border-radius:2px; width:32px; height:32px; font-size:18px; cursor:pointer; color:#1E2A22}
+.bula-corpo{padding:14px 22px 20px; display:grid; gap:14px; font-size:14px}
+.bula h4{margin:0 0 6px; font-family:"Barlow Condensed",sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.12em;
+  border-bottom:1px solid #C9CFBF; padding-bottom:3px}
+.bula dl{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0}
+.bula dt{color:#5A6A5E}
+.bula dd{margin:0; font-weight:600}
+.modos{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.modo{border:1.5px solid #C9CFBF; border-radius:3px; padding:9px 11px; display:flex; gap:9px; align-items:center}
+.modo .sinal-bula{width:24px; height:24px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; flex:none}
+.modo.sim{border-color:#4F7A3C} .modo.sim .sinal-bula{background:#4F7A3C}
+.modo.nao{border-color:#B93A22} .modo.nao .sinal-bula{background:#B93A22}
+.modo b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:.04em; line-height:1}
+.modo span{font-size:12px; color:#5A6A5E}
+.tab-bula{width:100%; border-collapse:collapse; font-size:13.5px}
+.tab-bula th{text-align:left; font-family:"Barlow Condensed",sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.1em;
+  border-bottom:1.5px solid #1E2A22; padding:4px 6px}
+.tab-bula td{padding:6px; border-bottom:1px dotted #B9C0AE; font-family:"IBM Plex Mono",monospace; font-size:13px}
+.tab-bula td:first-child{font-family:"Barlow",sans-serif}
+.tab-bula tr.alvo-receita td{background:#EEF3E4; font-weight:600}
+.bula-nota{font-size:12.5px; color:#5A6A5E; border-left:3px solid #C9CFBF; padding-left:10px}
+.bula-alerta{background:#FDF0EE; border:1.5px solid #B93A22; border-radius:3px; padding:10px 12px; font-size:13.5px}
+.bula-alerta b{color:#B93A22}
+
 /* boletim */
 .boletim{max-width:560px; margin:0 auto 24px; text-align:left; border:1px solid var(--line); background:var(--surface-2)}
 .boletim-topo{display:flex; align-items:center; gap:16px; padding:14px 18px; border-bottom:1px solid var(--line)}
@@ -737,6 +773,10 @@ html.travado body > *:not(#portaria){display:none!important}
   <div class="operador" id="operador">
     <div class="op-corpo op-mesa" id="opMesa"></div>
     <div class="balao"><span class="quem">Paula Veiga · instrutora</span><p id="fala">Bom dia, sou a Paula Veiga, sua instrutora. Chegou receituário novo — vamos conferir juntos antes de o auxiliar encostar em qualquer produto.</p></div>
+  </div>
+
+  <div class="fundo-bula" id="fundoBula" hidden>
+    <article class="bula" role="dialog" aria-modal="true" aria-labelledby="bulaTitulo" id="bula"></article>
   </div>
 
   <!-- ====================== TELA INICIAL ====================== -->
@@ -1504,7 +1544,7 @@ function renderBarracao(){
     const maxT = tam[tam.length-1];
     const dose = it.base === 'vol' ? `${fmt(it.dose,1)} % v/v` : `${fmt(it.dose,2)} ${it.un}`;
     return `<article class="cartao item-barracao" data-i="${i}">
-      <header><b>${it.cat} ${it.form}</b><i>${dose} · ${fmt(R.areaRec,1)} ha${it.densidade ? ' · d ' + fmt(it.densidade,2) : ''}</i></header>
+      <header><b>${it.cat} ${it.form}<button class="btn-bula" data-bula="${i}" title="Abrir a bula deste produto">Bula</button></b><i>${dose} · ${fmt(R.areaRec,1)} ha${it.densidade ? ' · d ' + fmt(it.densidade,2) : ''}</i></header>
       <div class="preciso">
         <label for="bq${i}">Preciso retirar</label>
         <input id="bq${i}" inputmode="decimal" placeholder="0" autocomplete="off"><span class="un">${nec.un}</span>
@@ -1612,12 +1652,92 @@ $('#btnIrCalda').addEventListener('click', () => {
   window.scrollTo({top:0, behavior:'smooth'});
 });
 
+
+/* ============ bula do produto ============ */
+const arred = (v, c) => Math.round(v * Math.pow(10, c)) / Math.pow(10, c);
+
+function bulaDoItem(i){
+  const it = R.itens[i];
+  const casas = it.base === 'vol' ? 2 : 2;
+  const faixa = it.base === 'vol'
+    ? {min:.25, max:1}
+    : {min:arred(it.dose * .6, casas), max:arred(it.dose * 1.5, casas)};
+  const volMin = Math.min(8, R.taxa), volMax = Math.max(20, R.taxa);
+  const culturas = [
+    {nome:R.cultura, alvo:R.alvo, faixa},
+    {nome:R.cultura === 'Soja' ? 'Milho' : 'Soja', alvo:'Conforme recomendação agronômica',
+     faixa:{min:arred(faixa.min * 1.1, casas), max:arred(faixa.max * 1.1, casas)}}
+  ];
+  return {it, faixa, volMin, volMax, culturas};
+}
+
+function textoDose(f, it){
+  return it.base === 'vol'
+    ? `${fmt(f.min,2)} a ${fmt(f.max,2)} % v/v`
+    : `${fmt(f.min,2)} a ${fmt(f.max,2)} ${it.un}`;
+}
+
+function abrirBula(i){
+  const b = bulaDoItem(i), it = b.it;
+  const doseReceita = it.base === 'vol' ? `${fmt(it.dose,1)} % v/v` : `${fmt(it.dose,2)} ${it.un}`;
+  const dentro = it.dose >= b.faixa.min && it.dose <= b.faixa.max;
+  const volOk = R.taxa >= b.volMin && R.taxa <= b.volMax;
+  $('#bula').innerHTML = `
+    <div class="bula-topo">
+      <div>
+        <small>Bula · produto fictício de treinamento</small>
+        <h3 id="bulaTitulo">${it.cat} ${it.form}</h3>
+        <small style="margin-top:4px">${it.formNome}${it.densidade ? ' · densidade ' + fmt(it.densidade,2) + ' g/mL' : ''}</small>
+      </div>
+      <button class="fechar" id="fecharBula" aria-label="Fechar a bula">×</button>
+    </div>
+    <div class="bula-corpo">
+      <section>
+        <h4>Modalidade de aplicação</h4>
+        <div class="modos">
+          <div class="modo sim"><span class="sinal-bula">✓</span><div><b>Terrestre</b><span>Pulverizador tratorizado e costal</span></div></div>
+          <div class="modo sim"><span class="sinal-bula">✓</span><div><b>Aérea</b><span>Avião agrícola e aeronave remotamente pilotada (drone)</span></div></div>
+        </div>
+      </section>
+      <section>
+        <h4>Doses recomendadas</h4>
+        <table class="tab-bula">
+          <thead><tr><th>Cultura</th><th>Alvo</th><th>Dose do produto</th></tr></thead>
+          <tbody>${b.culturas.map((c,k) => `
+            <tr class="${k === 0 ? 'alvo-receita' : ''}"><td>${c.nome}</td><td style="font-family:Barlow,sans-serif">${c.alvo}</td><td>${textoDose(c.faixa, it)}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h4>Aplicação aérea</h4>
+        <dl>
+          <dt>Volume de calda</dt><dd>${b.volMin} a ${b.volMax} L/ha</dd>
+          <dt>Receituário pede</dt><dd>${doseReceita} · ${R.taxa} L/ha de calda</dd>
+        </dl>
+      </section>
+      ${dentro && volOk
+        ? `<p class="bula-nota">A dose e o volume de calda do receituário estão dentro do que a bula permite para aplicação aérea em ${R.cultura.toLowerCase()}.</p>`
+        : `<div class="bula-alerta"><b>Fora da bula.</b> ${!dentro ? 'A dose do receituário está fora da faixa recomendada. ' : ''}${!volOk ? 'O volume de calda está fora do permitido para aplicação aérea. ' : ''}Não prepare: fale com o responsável técnico.</div>`}
+      <p class="bula-nota">Antes de toda aplicação com drone, confira na bula se a <b>modalidade aérea</b> está autorizada e se a dose do receituário cabe na faixa da cultura. Produto sem registro para aplicação aérea não pode ir no drone, mesmo que o receituário peça.</p>
+    </div>`;
+  $('#fundoBula').hidden = false;
+  $('#fecharBula').focus();
+}
+function fecharBula(){ $('#fundoBula').hidden = true; }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-bula]');
+  if(b){ e.preventDefault(); e.stopPropagation(); abrirBula(+b.dataset.bula); return; }
+  if(e.target.id === 'fecharBula' || e.target.id === 'fundoBula') fecharBula();
+}, true);
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('#fundoBula').hidden) fecharBula(); });
+
 /* ============ render do receituário ============ */
 function renderReceita(sel){
   const linhas = R.itens.map(it => `
     <tr>
       <td class="ord">${it.ordem}</td>
-      <td><span class="cat">${it.cat}</span><span class="form">${it.form} · ${it.formNome}</span></td>
+      <td><span class="cat">${it.cat}</span><button class="btn-bula" data-bula="${it.ordem-1}" title="Abrir a bula deste produto">Bula</button><span class="form">${it.form} · ${it.formNome}</span></td>
       <td class="dose">${it.base === 'vol' ? fmt(it.dose,1) + ' %' : fmt(it.dose,2)}<span class="form" style="text-align:right">${it.base === 'vol' ? 'v/v da calda' : it.un}</span></td>
       <td class="dens">${it.densidade ? fmt(it.densidade,2) + '<span class="form" style="text-align:right">g/mL</span>' : '<span style="opacity:.45">—</span>'}</td>
     </tr>`).join('');
