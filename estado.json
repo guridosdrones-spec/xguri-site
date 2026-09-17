@@ -1,0 +1,22 @@
+{
+  "formato": 1,
+  "serie": 3,
+  "publicado": "2026-09-16",
+  "bloqueado": false,
+  "mensagem": "teste de atualização",
+  "versao_minima": "",
+  "canais": [
+    "producao",
+    "teste"
+  ],
+  "funcoes": [
+    "xag_one",
+    "orthomosaico",
+    "mapa_hd",
+    "mapa_aplicacao",
+    "taxa_variavel",
+    "rota_personalizada",
+    "aplicacao_localizada"
+  ],
+  "assinatura": "555fa44ad1957435dac24eadbe8b0cf85ffbaf3d79cb369650cb70f42a8a3022413029fa6b1a7670dfd362854c4827840a9c76a7e6d4d94e595c983197f4dd08"
+}
