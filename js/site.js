@@ -147,7 +147,8 @@
   var LEMBRAR_DOWNLOAD = {
     portao: "xguri_download_v1",
     portaoTeste: "xguri_download_teste_v1",
-    portaoPortatil: "xguri_download_portatil_v1",
+    // Com a versão no nome: link guardado de versão velha não vale mais.
+    portaoPortatil: "xguri_download_portatil_" + (C.portatilVersao || "v1"),
   };
 
   function portaoAtivo(nome) {
