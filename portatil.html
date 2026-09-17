@@ -77,11 +77,27 @@
         </p>
       </form>
 
+      <!-- navegador de dentro do WhatsApp/Instagram/Facebook nao baixa arquivo -->
+      <div class="aviso aviso--marca oculto" id="aviso-navegador-app">
+        <strong>Abra esta página no Chrome.</strong>
+        O navegador de dentro do WhatsApp, Instagram ou Facebook não baixa arquivos.
+        Toque nos três pontinhos e escolha <strong>Abrir no Chrome</strong>, ou use o botão abaixo.
+        <div class="botoes" style="margin-top:10px;">
+          <a class="botao botao--linha" id="abrir-no-chrome" href="#">Abrir no Chrome</a>
+        </div>
+      </div>
+
       <div class="botoes">
         <a class="botao botao--acento oculto" data-download="portaoPortatil" data-portao-liberado href="#">
           Baixar o app (<span data-cfg="portatilTamanho">86 MB</span>)
         </a>
       </div>
+
+      <p class="sub oculto" data-portao-liberado style="font-size:.9rem;">
+        O download aparece na barra de notificações e leva alguns minutos no 4G. Se o Chrome
+        perguntar se quer manter o arquivo, toque em <strong>Baixar mesmo assim</strong>.
+        Se nada acontecer, toque e segure o botão e escolha <strong>Baixar link</strong>.
+      </p>
 
       <div class="aviso oculto" data-sem-portao>
         <strong>O download do app está fechado no momento.</strong>
@@ -98,7 +114,7 @@
         <p class="sub" style="font-size:.9rem; margin-bottom:4px;">
           Conferência do arquivo (SHA-256):
         </p>
-        <div class="codigo-maquina" style="font-size:.78rem; letter-spacing:0; word-break:break-all;" data-cfg="portatilSha256"></div>
+        <div class="codigo-maquina" style="font-size:.78rem; letter-spacing:0; white-space:normal; overflow-wrap:anywhere; word-break:break-all;" data-cfg="portatilSha256"></div>
       </div>
     </div>
 
@@ -232,5 +248,17 @@
 
 <script src="js/config.js"></script>
 <script src="js/site.js"></script>
+<script>
+  (function () {
+    var ua = navigator.userAgent || "";
+    var dentroDeApp = /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|; wv\)/i.test(ua);
+    if (!dentroDeApp || !/Android/i.test(ua)) return;
+    var aviso = document.getElementById("aviso-navegador-app");
+    var botao = document.getElementById("abrir-no-chrome");
+    botao.href = "intent://" + location.host + location.pathname +
+      "#Intent;scheme=https;package=com.android.chrome;end";
+    aviso.classList.remove("oculto");
+  })();
+</script>
 </body>
 </html>
