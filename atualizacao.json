@@ -1,0 +1,22 @@
+{
+  "formato": 1,
+  "canais": {
+    "producao": {
+      "versao": "1.0.5",
+      "notas": "Corrige o erro 'DLL load failed while importing pydense' que interrompia o processamento das fotos.",
+      "obrigatoria": true,
+      "completo": {
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.5/XGuri_Setup_1.0.5.exe",
+        "tamanho": 607884307,
+        "sha256": "1112eea549b7b52a07d24a785768e208b5e919aee238e15d1643a74fff9fb908"
+      },
+      "atualizacao": {
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.5/XGuri_Atualizacao_1.0.5.exe",
+        "tamanho": 367723215,
+        "sha256": "8e4ef9569cdc7fcdde5d202a736ea16edc62504c016c1ce333df88330fcd7ea7"
+      }
+    }
+  },
+  "publicado": "2026-09-18",
+  "assinatura": "2fc749f5d8aa1c932454b9b17c62ed3f4247b3e115a25f0212507bfac3eabde80cf34ef94aa5b55adc6048d0c896f8931f70cab86a82df333bd9cb9883040f05"
+}
