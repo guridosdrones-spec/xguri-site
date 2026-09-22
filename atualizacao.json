@@ -1,0 +1,22 @@
+{
+  "formato": 1,
+  "canais": {
+    "producao": {
+      "versao": "1.0.7",
+      "notas": "O processamento não para mais no meio: se o computador não aguentar, o XGuri tenta de novo mais leve sozinho. Mensagens de erro mais simples, com relatório salvo.",
+      "obrigatoria": false,
+      "completo": {
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.7/XGuri_Setup_1.0.7.exe",
+        "tamanho": 607873976,
+        "sha256": "ca182edea67c76d528fa57a0ebe1703e9f210369dcd6591e4c3c5245fdcb2df8"
+      },
+      "atualizacao": {
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.7/XGuri_Atualizacao_1.0.7.exe",
+        "tamanho": 367738699,
+        "sha256": "c46ad62657f6b9fe87ac92e86b891cb41d67dc35ea29d4ca18efa63a857f53d7"
+      }
+    }
+  },
+  "publicado": "2026-09-22",
+  "assinatura": "48ecc912b057c4ce3c5d9fbf123649528dfe5d679c1321e5c76dfeae0c9dd8b00a8e22ceb23798673f291e91131f77c994bedbbed815aead97be67b9c6b38f00"
+}
