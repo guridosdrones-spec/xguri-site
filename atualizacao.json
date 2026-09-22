@@ -2,21 +2,21 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.0.7",
-      "notas": "O processamento não para mais no meio: se o computador não aguentar, o XGuri tenta de novo mais leve sozinho. Mensagens de erro mais simples, com relatório salvo.",
+      "versao": "1.0.8",
+      "notas": "O XGuri agora se adapta ao computador: se ele não aguentar, o processamento continua mais leve em vez de parar, e as qualidades que não cabem nem aparecem. Várias correções no processamento e no Mapa HD.",
       "obrigatoria": false,
       "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.7/XGuri_Setup_1.0.7.exe",
-        "tamanho": 607873976,
-        "sha256": "ca182edea67c76d528fa57a0ebe1703e9f210369dcd6591e4c3c5245fdcb2df8"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.8/XGuri_Setup_1.0.8.exe",
+        "tamanho": 607898061,
+        "sha256": "4c6bee360d20f2932f362d1383041d8022fc4f65eca5edc308d6ca0f55d907c8"
       },
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.7/XGuri_Atualizacao_1.0.7.exe",
-        "tamanho": 367738699,
-        "sha256": "c46ad62657f6b9fe87ac92e86b891cb41d67dc35ea29d4ca18efa63a857f53d7"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.8/XGuri_Atualizacao_1.0.8.exe",
+        "tamanho": 367750897,
+        "sha256": "74216d9ca72890a767f01044450e0503922c6b386f747fc43b937c7a7601fba2"
       }
     }
   },
   "publicado": "2026-09-22",
-  "assinatura": "48ecc912b057c4ce3c5d9fbf123649528dfe5d679c1321e5c76dfeae0c9dd8b00a8e22ceb23798673f291e91131f77c994bedbbed815aead97be67b9c6b38f00"
+  "assinatura": "5db53c0be7c68f83c55ef3f7cb870f4d06e94da520abbd97cefcb8b07c7d9f2ba25c3837d8c34e8d695500ac62e5c0fabc2d04c8470329fa54033272921d2a09"
 }
