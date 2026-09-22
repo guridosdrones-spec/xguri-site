@@ -96,16 +96,16 @@ window.XGURI = {
   portaoPortatil: {
     ativo: true,
     iter: 200000,
-    sal: "cb6fe842734a6343bb5692f090dd9581",
-    iv: "8f06d3bb50769c7f18d907f3",
-    link: "lGaH4xpWAYuqrkCAWKSB1AF0izmUHAqvYZ+Tso1N7TvvZQtfMGu2QnLNO7idqVQyIovzzXZUc66ozq+ouDgppmUnoY1xDElLdyyHpOiNTrK+e+dJfzmJq8B/TUfHezhJrGe7GZ0UGI2US8gFDcVk4Yi0dRE02yEWk3EC3Gfh1+waQtg=",
+    sal: "244c2fb65eb7c1dbdf6b3e18ed02ebd5",
+    iv: "a29918f021eeed0cc3a36e4c",
+    link: "bJWl0Jw+2VPkSD6nJ80Ic3P6qwbhQq0byQ7OAj+RGCQKHZrIQ3KIHCfAW2a82wdA0o26GpIM5OxqV5SCm6byFfGg0Jad4Du1LDD+P8YzGP0NNteqLOxemg/HhuvvjSrtBvBS0CCA4HwiPkisYz/hlKxmEC2YSOaHpO8WNJE2wwbFc3A=",
 
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "0.2.8",
+  portatilVersao: "0.2.9",
   portatilTamanho: "86 MB",
-  portatilSha256: "02729eb210a13d1cc1aafc160ca2c45310519f9dee759960ec8ff58f624ba11a",
+  portatilSha256: "8adaa7ae783fb3d6ca231ac9a05cd21765adcefdb36b2ccc95b1ae21354c101d",
 
   // -------------------------------------------------------------------
   // DGURI PORTATIL (dguri-portatil.html) - app Android para DJI
