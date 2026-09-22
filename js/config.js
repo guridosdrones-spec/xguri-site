@@ -96,16 +96,16 @@ window.XGURI = {
   portaoPortatil: {
     ativo: true,
     iter: 200000,
-    sal: "e0eb25937a947610af168a43a19452bf",
-    iv: "08b9b3b8b4c4d954697c4d65",
-    link: "2ksjfGAFoIxGmU4TRx1tsFifT58tKk5SjhfCGs3oX07KGzLYEMK6PSB+b9swHIFXfj9i2WOlN2zz9oUc/5XnOzXrEg9W5pdPV0e2PVqSf5m4A+8CnlK6n4ynR93ZQkxgEmKt9ba1QrRU1aw1YbT3TTbwK03ogIgYjHxJkeCqbzUE5LI=",
+    sal: "cb6fe842734a6343bb5692f090dd9581",
+    iv: "8f06d3bb50769c7f18d907f3",
+    link: "lGaH4xpWAYuqrkCAWKSB1AF0izmUHAqvYZ+Tso1N7TvvZQtfMGu2QnLNO7idqVQyIovzzXZUc66ozq+ouDgppmUnoY1xDElLdyyHpOiNTrK+e+dJfzmJq8B/TUfHezhJrGe7GZ0UGI2US8gFDcVk4Yi0dRE02yEWk3EC3Gfh1+waQtg=",
 
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "0.2.4",
+  portatilVersao: "0.2.8",
   portatilTamanho: "86 MB",
-  portatilSha256: "88df21a44b165876426e6dd166ff0e63a3f00d4482969fce577c349e0792c490",
+  portatilSha256: "02729eb210a13d1cc1aafc160ca2c45310519f9dee759960ec8ff58f624ba11a",
 
   // -------------------------------------------------------------------
   // DGURI PORTATIL (dguri-portatil.html) - app Android para DJI
@@ -128,9 +128,9 @@ window.XGURI = {
     dica: "Peça a senha no WhatsApp.",
   },
 
-  dguriPortatilVersao: "0.1.0",
+  dguriPortatilVersao: "0.1.1",
   dguriPortatilTamanho: "86 MB",
-  dguriPortatilSha256: "c27fbee3624ce67837c99b32e4b2fc197034bf848b988ab08a8891d3c41e4e12",
+  dguriPortatilSha256: "07dd0bea006f7c867726b57b230602240928b1cca8c840e97f214e986feac9b5",
 
   // Dias que a versao de teste dura antes de se remover sozinha. Tem que
   // bater com "horas" em edicao_teste.json, no projeto do XGuri
