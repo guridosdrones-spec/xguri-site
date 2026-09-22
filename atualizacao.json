@@ -2,21 +2,21 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.0.9",
-      "notas": "O XGuri agora abre muito mais rápido e a atualização ficou menor. Some o aviso da pasta temporária que atrapalhava a instalação. A Prévia Rápida passa a ser a opção padrão ao processar as fotos.",
+      "versao": "1.1.0",
+      "notas": "Corrige o erro de certificado que impedia o download da atualização em alguns computadores. Se acontecer de novo, o XGuri oferece baixar pelo navegador.",
       "obrigatoria": false,
       "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.9/XGuri_Setup_1.0.9.exe",
-        "tamanho": 491271395,
-        "sha256": "a6ca87747eb3c0701400efa5a4e9352d3ca7ab5f3e23a88a410a11a511bddbfc"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.0/XGuri_Setup_1.1.0.exe",
+        "tamanho": 491217320,
+        "sha256": "5c606b5168c306e7583ee1fbbda914a81b56d061525386f1131fe7391f75de73"
       },
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.0.9/XGuri_Atualizacao_1.0.9.exe",
-        "tamanho": 251150730,
-        "sha256": "6481b79f199fa0c9a9237d373ee541430bb4c73d163a3a1110bd982d7e22c768"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.0/XGuri_Atualizacao_1.1.0.exe",
+        "tamanho": 251109185,
+        "sha256": "3127e98b4cfb0794606a18edf84dd7d8461c042f1f626450e87b626b66ea1ae8"
       }
     }
   },
   "publicado": "2026-09-22",
-  "assinatura": "f3f260ff9b1b398f80d5270119c0932f3650866f4d236fef92951b6b45dd6cd006210222b75d8cc3217dd81d01addc2dc9534664e0674c6212d19b6f35dbf904"
+  "assinatura": "414e7ac918843842d0a78b0a4d6b182d0eb44a9f8726bc76dc55697f1cd85d4823014751ef261c82cece96eb7d1c7c9091f860350c2391408ba6d2a3e18d5f07"
 }
