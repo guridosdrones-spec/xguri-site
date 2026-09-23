@@ -2,21 +2,21 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.1.0",
-      "notas": "Corrige o erro de certificado que impedia o download da atualização em alguns computadores. Se acontecer de novo, o XGuri oferece baixar pelo navegador.",
+      "versao": "1.1.1",
+      "notas": "Mapa HD muito mais rapido: o empacotamento de um voo inteiro passou de dezenas de minutos para cerca de 1 minuto. A nuvem de pontos agora sai no formato que o app da XAG aceita, sem travar e com os pontos do tamanho certo. E o XGuri passou a fazer uma coisa de cada vez: se voce mandar criar um ortomosaico enquanto um Mapa HD esta sendo montado, ele oferece deixar na fila em vez de dar erro.",
       "obrigatoria": false,
       "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.0/XGuri_Setup_1.1.0.exe",
-        "tamanho": 491217320,
-        "sha256": "5c606b5168c306e7583ee1fbbda914a81b56d061525386f1131fe7391f75de73"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.1/XGuri_Setup_1.1.1.exe",
+        "tamanho": 491305705,
+        "sha256": "cdd58306866a7df85c5ef3358860d2a2f828cb57200ccc1fc900713d7e0dc495"
       },
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.0/XGuri_Atualizacao_1.1.0.exe",
-        "tamanho": 251109185,
-        "sha256": "3127e98b4cfb0794606a18edf84dd7d8461c042f1f626450e87b626b66ea1ae8"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.1/XGuri_Atualizacao_1.1.1.exe",
+        "tamanho": 251177441,
+        "sha256": "4629ea3c62c7cb49416acfcbcf74d8e36bb2c03689b6160a00e50205ea2cd4ae"
       }
     }
   },
-  "publicado": "2026-09-22",
-  "assinatura": "414e7ac918843842d0a78b0a4d6b182d0eb44a9f8726bc76dc55697f1cd85d4823014751ef261c82cece96eb7d1c7c9091f860350c2391408ba6d2a3e18d5f07"
+  "publicado": "2026-09-23",
+  "assinatura": "8082fe7ef847538bd91c3ae2557de6adaf916c76e396b0aab8186ac2ded05990d82e3b4ec5d41363f1f067172bcc694d3f312ee347ac75858668cf7d3e2b4002"
 }
