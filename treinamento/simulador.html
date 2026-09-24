@@ -762,13 +762,14 @@ html.travado body > *:not(#portaria){display:none!important}
   <div class="topo-in">
     <div class="marca"><span>XGuri · Treinamento de campo</span><b>Bancada da Calda</b></div>
     <nav class="trilha" aria-label="Etapas">
-      <b id="tr0" data-fase="vespera" role="button" tabindex="0" title="Ir para a véspera"><i>01</i>Véspera</b>
-      <b id="trB" data-fase="barracao" role="button" tabindex="0" title="Ir para o barracão"><i>02</i>Barracão</b>
-      <b id="trE" data-fase="estrutura" role="button" tabindex="0" title="Ir para a montagem"><i>03</i>Estrutura</b>
-      <b id="trP" data-fase="epi" role="button" tabindex="0" title="Ir para a paramentação"><i>04</i>EPI</b>
-      <b id="tr1" data-fase="calculos" role="button" tabindex="0" title="Ir para a calda"><i>05</i>Calda</b>
-      <b id="tr2" data-fase="preparo" role="button" tabindex="0" title="Ir para o preparo"><i>06</i>Preparo</b>
-      <b id="tr3" data-fase="fim" role="button" tabindex="0" title="Ir para a conclusão"><i>07</i>Conclusão</b>
+      <!-- véspera e estrutura ficaram fora do roteiro; os marcadores seguem no DOM, ocultos, porque o modo embutido no jogo ainda abre essas telas -->
+      <b id="tr0" data-fase="vespera" role="button" tabindex="0" title="Ir para a véspera" hidden style="display:none"><i>00</i>Véspera</b>
+      <b id="trB" data-fase="barracao" role="button" tabindex="0" title="Ir para o barracão"><i>01</i>Barracão</b>
+      <b id="trE" data-fase="estrutura" role="button" tabindex="0" title="Ir para a montagem" hidden style="display:none"><i>00</i>Estrutura</b>
+      <b id="trP" data-fase="epi" role="button" tabindex="0" title="Ir para a paramentação"><i>02</i>EPI</b>
+      <b id="tr1" data-fase="calculos" role="button" tabindex="0" title="Ir para a calda"><i>03</i>Calda</b>
+      <b id="tr2" data-fase="preparo" role="button" tabindex="0" title="Ir para o preparo"><i>04</i>Preparo</b>
+      <b id="tr3" data-fase="fim" role="button" tabindex="0" title="Ir para a conclusão"><i>05</i>Conclusão</b>
     </nav>
     <div class="chip-prova" id="chipProva" hidden><span>Prova</span><b id="chipNota">100 pts</b><b id="chipTempo">00:00</b></div>
     <button class="tema" id="btnReiniciar" title="Recomeçar do início" aria-label="Recomeçar do início">↺</button>
@@ -799,7 +800,7 @@ html.travado body > *:not(#portaria){display:none!important}
       </div>
       <div class="cat-bloco">
         <h3>Acompanhamento de operações com drone pulverizador</h3>
-        <p>Planejamento da véspera, água, combustível e apoio ao piloto em campo.</p>
+        <p>Retirada no barracão, conta por hectare e apoio ao piloto em campo.</p>
         <div class="niveis" id="catGeral" role="group" aria-label="Conhecimento em operações com drone">
           <button class="niv on" data-n="iniciante"><b>Iniciante</b><small>O sistema mostra as fórmulas e explica cada conta</small></button>
           <button class="niv" data-n="intermediario"><b>Intermediário</b><small>Fórmulas na mão, o sistema só aponta a linha errada</small></button>
@@ -866,7 +867,7 @@ html.travado body > *:not(#portaria){display:none!important}
     </div>
     <div class="grade-barracao" id="gradeBarracao"></div>
     <div class="cartao ficha" id="fichaRetirada"></div>
-    <div style="margin-top:18px"><button class="btn grande verde" id="btnIrCalda" hidden>Seguir para o pátio de operação →</button></div>
+    <div style="margin-top:18px"><button class="btn grande verde" id="btnIrCalda" hidden>Seguir para a paramentação →</button></div>
   </section>
 
   <!-- ====================== ESTRUTURA ====================== -->
@@ -1653,10 +1654,10 @@ function confirmarRetirada(i){
 }
 
 $('#btnIrCalda').addEventListener('click', () => {
-  $('#barracao').hidden = true; $('#estrutura').hidden = false;
+  $('#barracao').hidden = true; $('#epi').hidden = false;
   $('#trB').classList.remove('on'); $('#trB').classList.add('feito');
-  $('#trE').classList.add('on');
-  iniciarEstrutura();
+  $('#trP').classList.add('on');
+  iniciarEpi();
   window.scrollTo({top:0, behavior:'smooth'});
 });
 
@@ -2370,15 +2371,15 @@ $('#btnComecar').addEventListener('click', () => {
   S = {erros:0, inicio:Date.now(), nota:100, descontos:[], penalizados:new Set()};
   if(MODO_PROVA) iniciarCronometro();
   renderReceita('#receitaFoto');
-  renderVespera();
-  iniciarGuiaPlano();
+  renderBarracao();
   $('#inicio').hidden = true;
-  $('#vespera').hidden = false;
-  $('#slotCalcVespera').appendChild($('#calculadora'));
-  $('#tr0').classList.add('on');
+  $('#barracao').hidden = false;
+  $('#trB').classList.add('on');
   const trat = primeiro.charAt(0) + primeiro.slice(1).toLowerCase();
-  fala(`Prazer, ${trat}. A operação é amanhã, mas o trabalho começa hoje: o produtor mandou a foto do receituário e o piloto passou os rendimentos. Feche as contas de água e combustível antes de carregar o caminhão.`);
-  $('#pl_calda').focus();
+  fala(guiada()
+    ? `Prazer, ${trat}. O produtor abriu o barracão e está esperando ao lado. Comece pelo <b>${R.itens[0].cat} ${R.itens[0].form}</b>, o primeiro da lista: calcule quanto ele consome nos ${fmt(R.areaRec,1)} ha do receituário, escreva no campo e só então escolha as embalagens — sempre o menor volume que cobre a conta.`
+    : `Prazer, ${trat}. O receituário do produtor está em mãos e o barracão está aberto — retire o produto pelos hectares do receituário, que o piloto ainda está mapeando.`);
+  window.scrollTo({top:0, behavior:'smooth'});
 });
 
 
