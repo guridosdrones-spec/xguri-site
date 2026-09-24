@@ -371,6 +371,31 @@ button{font:inherit; color:inherit}
 .bula-alerta{background:#FDF0EE; border:1.5px solid #B93A22; border-radius:3px; padding:10px 12px; font-size:13.5px}
 .bula-alerta b{color:#B93A22}
 
+/* conferencia do receituario */
+.conf-lista{list-style:none; margin:0; padding:0}
+.conf-l{display:flex; flex-wrap:wrap; gap:8px 10px; align-items:flex-start; padding:9px 0; border-bottom:1px dashed var(--line)}
+.conf-l:last-child{border-bottom:0}
+.conf-rot{flex:1 1 168px; min-width:0}
+.conf-rot b{display:block; font-size:14px; font-weight:600; line-height:1.2}
+.conf-rot i{font-style:normal; display:block; font-size:11.5px; color:var(--ink-3); line-height:1.3; margin-top:2px}
+.conf-bts{display:flex; gap:5px; flex:none; margin-left:auto}
+.conf-b{background:var(--surface-2); border:1.5px solid var(--line); border-radius:2px; padding:4px 9px; cursor:pointer;
+  font-family:"Barlow Condensed",sans-serif; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3)}
+.conf-b:hover{border-color:var(--ink-2); color:var(--ink)}
+.conf-l.m-ok .conf-b[data-m="ok"]{background:var(--verde); border-color:var(--verde); color:#fff}
+.conf-l.m-erro .conf-b[data-m="erro"]{background:var(--vermelho); border-color:var(--vermelho); color:#fff}
+.conf-l.errou{box-shadow:inset 3px 0 0 var(--vermelho)}
+
+/* aviso ao piloto, no barracao */
+.aviso-pil{display:grid; gap:6px}
+.aviso-pil .btn{font-size:13px; padding:6px 11px; justify-self:start}
+.aviso-pil .opcoes{display:grid; gap:5px; padding:9px 10px; border:1.5px dashed var(--line-forte); border-radius:3px; background:var(--surface-2)}
+.aviso-pil .opcoes p{margin:0 0 2px; font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); font-weight:600;
+  font-family:"Barlow Condensed",sans-serif}
+.aviso-pil .opcoes button{text-align:left; font-size:13px; padding:6px 10px; width:100%}
+.aviso-pil .resposta{font-size:13px; color:var(--ink-2); border-left:3px solid var(--verde); padding-left:9px}
+.item-barracao.impedido{border-color:var(--amarelo); box-shadow:inset 3px 0 0 var(--amarelo), var(--sombra)}
+
 /* modo embutido (dentro do jogo 3D) */
 html.embutido .trilha, html.embutido #btnReiniciar, html.embutido .rodape, html.embutido #cartaoQuiz{display:none!important}
 .pedido-piloto{margin:12px 0 0; padding:10px 14px; border-left:4px solid var(--amarelo); background:var(--surface-2); font-size:15px}
@@ -393,7 +418,7 @@ html.embutido .trilha, html.embutido #btnReiniciar, html.embutido .rodape, html.
 
 .mesa{display:grid; grid-template-columns:minmax(300px,1.05fr) minmax(296px,1fr) 238px; gap:18px; align-items:start}
 .coluna-dir{display:grid; gap:18px; align-content:start}
-#slotCalcCalda,#slotCalcVespera{align-self:stretch}
+#slotCalcCalda,#slotCalcVespera,#slotCalcRec{align-self:stretch}
 
 /* ---------- receituário ---------- */
 .receita{
@@ -764,12 +789,13 @@ html.travado body > *:not(#portaria){display:none!important}
     <nav class="trilha" aria-label="Etapas">
       <!-- véspera e estrutura ficaram fora do roteiro; os marcadores seguem no DOM, ocultos, porque o modo embutido no jogo ainda abre essas telas -->
       <b id="tr0" data-fase="vespera" role="button" tabindex="0" title="Ir para a véspera" hidden style="display:none"><i>00</i>Véspera</b>
-      <b id="trB" data-fase="barracao" role="button" tabindex="0" title="Ir para o barracão"><i>01</i>Barracão</b>
+      <b id="trR" data-fase="receituario" role="button" tabindex="0" title="Ir para o receituário"><i>01</i>Receituário</b>
+      <b id="trB" data-fase="barracao" role="button" tabindex="0" title="Ir para o barracão"><i>02</i>Barracão</b>
       <b id="trE" data-fase="estrutura" role="button" tabindex="0" title="Ir para a montagem" hidden style="display:none"><i>00</i>Estrutura</b>
-      <b id="trP" data-fase="epi" role="button" tabindex="0" title="Ir para a paramentação"><i>02</i>EPI</b>
-      <b id="tr1" data-fase="calculos" role="button" tabindex="0" title="Ir para a calda"><i>03</i>Calda</b>
-      <b id="tr2" data-fase="preparo" role="button" tabindex="0" title="Ir para o preparo"><i>04</i>Preparo</b>
-      <b id="tr3" data-fase="fim" role="button" tabindex="0" title="Ir para a conclusão"><i>05</i>Conclusão</b>
+      <b id="trP" data-fase="epi" role="button" tabindex="0" title="Ir para a paramentação"><i>03</i>EPI</b>
+      <b id="tr1" data-fase="calculos" role="button" tabindex="0" title="Ir para a calda"><i>04</i>Calda</b>
+      <b id="tr2" data-fase="preparo" role="button" tabindex="0" title="Ir para o preparo"><i>05</i>Preparo</b>
+      <b id="tr3" data-fase="fim" role="button" tabindex="0" title="Ir para a conclusão"><i>06</i>Conclusão</b>
     </nav>
     <div class="chip-prova" id="chipProva" hidden><span>Prova</span><b id="chipNota">100 pts</b><b id="chipTempo">00:00</b></div>
     <button class="tema" id="btnReiniciar" title="Recomeçar do início" aria-label="Recomeçar do início">↺</button>
@@ -800,7 +826,7 @@ html.travado body > *:not(#portaria){display:none!important}
       </div>
       <div class="cat-bloco">
         <h3>Acompanhamento de operações com drone pulverizador</h3>
-        <p>Retirada no barracão, conta por hectare e apoio ao piloto em campo.</p>
+        <p>Leitura do receituário, bula do produto, conta por hectare e apoio ao piloto em campo.</p>
         <div class="niveis" id="catGeral" role="group" aria-label="Conhecimento em operações com drone">
           <button class="niv on" data-n="iniciante"><b>Iniciante</b><small>O sistema mostra as fórmulas e explica cada conta</small></button>
           <button class="niv" data-n="intermediario"><b>Intermediário</b><small>Fórmulas na mão, o sistema só aponta a linha errada</small></button>
@@ -858,12 +884,41 @@ html.travado body > *:not(#portaria){display:none!important}
     </div>
   </section>
 
+  <!-- ====================== RECEITUÁRIO ====================== -->
+  <section id="receituario" hidden>
+    <div class="cartao briefing">
+      <p class="eyebrow">Dia da operação · antes de abrir o barracão</p>
+      <h1>Conferir o receituário e fechar as contas</h1>
+      <p>O produtor entregou a receita agronômica. Antes de retirar qualquer produto o serviço é conferir: se a receita ainda vale, se é dessa lavoura e se cada produto pode ir no drone — a bula de cada um está a um clique, ao lado do nome. Só depois é que se calcula o que vai sair do barracão.</p>
+    </div>
+    <div class="mesa">
+      <article class="receita" id="receitaRec"></article>
+      <div class="coluna-dir">
+        <article class="cartao" style="padding:14px 16px">
+          <p class="eyebrow">Conferência antes de aceitar o serviço</p>
+          <ul class="conf-lista" id="listaConf"></ul>
+          <p class="aviso-linha" id="avConf" hidden></p>
+          <div style="margin-top:12px"><button class="btn" id="btnFecharConf">Fechar a conferência</button></div>
+        </article>
+        <article class="bloco" id="blocoPre" hidden>
+          <div class="bloco-topo"><h2>Pré-cálculo da retirada</h2><span>pela área da receita</span></div>
+          <div class="bloco-corpo"><div id="linhasPre"></div><p class="dica" id="dicaPre" hidden></p></div>
+          <div class="acoes">
+            <button class="btn" id="btnConferirPre">Conferir os números</button>
+            <button class="btn verde" id="btnIrBarracao" hidden>Ir ao barracão →</button>
+          </div>
+        </article>
+      </div>
+      <div id="slotCalcRec"></div>
+    </div>
+  </section>
+
   <!-- ====================== BARRACÃO ====================== -->
   <section id="barracao" hidden>
     <div class="cartao briefing">
       <p class="eyebrow">Dia da operação · barracão do produtor</p>
       <h1>Retirar os produtos com o produtor</h1>
-      <p>O produtor abriu o barracão e está esperando ao lado. Retire o que a operação vai consumir na área do receituário — o piloto ainda está mapeando, então a conta aqui é pelos hectares autorizados, não pela área do voo. Embalagem grande aberta à toa vira sobra sem destino: leve o menor volume que cobre a necessidade.</p>
+      <p>O produtor abriu o barracão e está esperando ao lado. As quantidades você já calculou na receita — aqui o serviço é escolher as embalagens: embalagem grande aberta à toa vira sobra sem destino, então leve o menor volume que cobre a necessidade. E agora, com o produto na mão, a bula vale outra olhada: o que não puder entrar na calda, o piloto precisa saber antes de decolar.</p>
     </div>
     <div class="grade-barracao" id="gradeBarracao"></div>
     <div class="cartao ficha" id="fichaRetirada"></div>
@@ -1285,19 +1340,45 @@ const BAL_MAX = 3000;       // g
 
 let R = null, S = null;
 
+const DIA_MS = 864e5;
+const VALIDADE_DIAS = 30;
+const dataBR = d => new Date(d).toLocaleDateString('pt-BR');
+const novoNumero = () => '2026/' + String(300 + Math.floor(Math.random()*690));
+function validadeRec(){ return new Date(R.emissao.getTime() + VALIDADE_DIAS*DIA_MS); }
+
+/* impedimento da receita: sorteado a cada rodada, um de cada vez, para nao virar decoreba */
+const IMPEDIMENTOS = [null, null, 'validade', 'aerea', 'dose', 'volume'];
+
 function gerarReceita(){
   const m = sorteio(MODELOS);
   const dificil = NIV.area === 'quebrada';
-  const taxa = dificil ? sorteio([9, 11, 12]) : sorteio([8, 10, 12]);
+  const problema = sorteio(IMPEDIMENTOS);
+  const taxa = problema === 'volume' ? sorteio([5, 6])
+    : (dificil ? sorteio([9, 11, 12]) : sorteio([8, 10, 12]));
   const areaRec = sorteio([12, 14, 15]) + (dificil ? .5 : 0);
   const usados = NIV.produtos >= 5 ? m.itens : m.itens.filter((_, i) => i !== m.extraIdx);
-  const itens = usados.map((it, i) => ({
-    ...it, ordem:i+1,
-    dose: passo(it.min, it.max, it.p),
-    densidade: it.dens ? Math.round((it.dens[0] + Math.random()*(it.dens[1]-it.dens[0]))*100)/100 : null
-  }));
+  const itens = usados.map((it, i) => {
+    const dose = passo(it.min, it.max, it.p);
+    return {
+      ...it, ordem:i+1, dose, doseRef:dose, aerea:true, incompat:null,
+      densidade: it.dens ? Math.round((it.dens[0] + Math.random()*(it.dens[1]-it.dens[0]))*100)/100 : null
+    };
+  });
+  const candidatos = itens.map((it, i) => i).filter(i => problema !== 'dose' || itens[i].base !== 'vol');
+  const idxProb = (problema === 'aerea' || problema === 'dose') ? sorteio(candidatos) : -1;
+  if(problema === 'aerea') itens[idxProb].aerea = false;
+  if(problema === 'dose')  itens[idxProb].dose = Math.round(itens[idxProb].doseRef * sorteio([1.9, 2.3]) * 100)/100;
+  /* incompatibilidade de mistura: nao aparece na receita, so na bula dos dois produtos */
+  const liq = itens.map((it, i) => i).filter(i => itens[i].base !== 'vol');
+  if(liq.length >= 2 && sorteio([true, false, false])){
+    const a = sorteio(liq), b = sorteio(liq.filter(i => i !== a));
+    itens[a].incompat = b; itens[b].incompat = a;
+  }
+  const diasEmissao = problema === 'validade' ? sorteio([34, 41, 53]) : sorteio([2, 4, 6]);
   return {
-    numero: '2026/' + String(300 + Math.floor(Math.random()*690)),
+    numero: novoNumero(),
+    emissao: new Date(Date.now() - diasEmissao*DIA_MS),
+    problema, idxProb,
     cultura:m.cultura, estadio:m.estadio, alvo:m.alvo, taxa, areaRec, itens,
     piloto:{
       consumo: sorteio([1.2, 1.5, 1.8]),     // L/h do gerador
@@ -1509,6 +1590,213 @@ $('#linhasPlano').addEventListener('focusout', e => {
   if(!conferirPasso()) erroPasso();
 });
 
+/* ============ receituario: conferencia e pre-calculo ============ */
+const ITENS_CONF = [
+  {id:'validade', rot:'Receituário dentro da validade',
+   onde:'Emissão e validade estão no cabeçalho da receita.',
+   erro:'Receituário vencido. Receita fora da validade não cobre a aplicação de hoje — o produtor precisa de outra, assinada pelo responsável técnico.'},
+  {id:'cultura', rot:'Cultura, estádio e alvo batem com a lavoura',
+   onde:'Cabeçalho da receita, junto com a área tratada.',
+   erro:'A receita é de outra cultura ou de outro alvo.'},
+  {id:'aerea', rot:'Todo produto liberado para aplicação aérea',
+   onde:'Abra a bula de cada produto e veja a modalidade de aplicação.',
+   erro:'Tem produto sem registro para aplicação aérea. Na bula dele a modalidade aérea não está autorizada — no drone esse produto não entra, nem com receituário pedindo.'},
+  {id:'dose', rot:'Doses dentro da faixa da bula',
+   onde:'Na bula, a tabela de doses por cultura.',
+   erro:'Tem dose acima da faixa que a bula recomenda para essa cultura.'},
+  {id:'volume', rot:'Volume de calda dentro do permitido no drone',
+   onde:'Na bula, em aplicação aérea, está a faixa de L/ha.',
+   erro:'O volume de calda da receita está fora da faixa que a bula permite na aplicação aérea.'}
+];
+const IMP_CURTO = {
+  validade:'receituário vencido', cultura:'cultura fora da receita',
+  aerea:'produto sem registro para aplicação aérea', dose:'dose acima da bula',
+  volume:'volume de calda fora da faixa aérea'
+};
+
+let CONF = null, PRE = null;
+
+function verdadeConf(){
+  const v = {validade:true, cultura:true, aerea:true, dose:true, volume:true};
+  if(R.problema) v[R.problema] = false;
+  return v;
+}
+
+function iniciarReceituario(){
+  renderReceita('#receitaRec');
+  if(!CONF) CONF = {marcas:{}, fechado:false};
+  renderConf();
+  if(CONF.fechado){
+    $('#btnFecharConf').disabled = true;
+    $('#blocoPre').hidden = false;
+    if(!$('#linhasPre').innerHTML) renderPre();
+  }
+  fala(guiada()
+    ? 'Receituário na mão. Antes de qualquer conta, passe o olho item por item: data de emissão, cultura e — o que mais gente esquece — a <b>bula de cada produto</b>, que é onde diz se ele pode ir no drone. Marque cada linha da conferência de um lado ou do outro.'
+    : 'Confira a receita antes de aceitar o serviço. Depois é que vêm as contas.');
+}
+
+function renderConf(){
+  $('#listaConf').innerHTML = ITENS_CONF.map(c => {
+    const m = CONF.marcas[c.id];
+    return `<li class="conf-l ${m ? 'm-' + m : ''}" data-c="${c.id}">
+      <span class="conf-rot"><b>${c.rot}</b>${NIVG.formulas ? `<i>${c.onde}</i>` : ''}</span>
+      <span class="conf-bts">
+        <button class="conf-b" data-m="ok">confere</button>
+        <button class="conf-b" data-m="erro">impedimento</button>
+      </span>
+    </li>`;
+  }).join('');
+}
+
+$('#listaConf').addEventListener('click', e => {
+  const b = e.target.closest('.conf-b'); if(!b || CONF.fechado) return;
+  const li = b.closest('.conf-l');
+  CONF.marcas[li.dataset.c] = b.dataset.m;
+  li.classList.remove('m-ok', 'm-erro', 'errou');
+  li.classList.add('m-' + b.dataset.m);
+  $('#avConf').hidden = true;
+});
+
+$('#btnFecharConf').addEventListener('click', () => {
+  const av = $('#avConf');
+  const faltam = ITENS_CONF.filter(c => !CONF.marcas[c.id]);
+  if(faltam.length){
+    av.hidden = false;
+    av.textContent = `${faltam.length === 1 ? 'Falta uma linha' : 'Faltam ' + faltam.length + ' linhas'} para marcar. Cada uma precisa de um lado: confere ou impedimento.`;
+    return;
+  }
+  const v = verdadeConf();
+  const errados = ITENS_CONF.filter(c => (CONF.marcas[c.id] === 'erro') !== !v[c.id]);
+  const passouBatido = !!R.problema && CONF.marcas[R.problema] !== 'erro';
+  if(!errados.length){ av.hidden = true; fecharConferencia(true); return; }
+
+  errados.forEach(c => penalizarPlano('Conferência — ' + c.rot));
+  if(NIVG.diag === 'nenhum'){
+    /* prova: ninguém avisa. Se passou impedimento, a calda sai errada e o boletim cobra. */
+    if(passouBatido){
+      S.liberouErrado = R.problema;
+      penalizar('Liberou receituário com impedimento — ' + IMP_CURTO[R.problema], 15, 'liberou');
+    }
+    av.hidden = true;
+    fecharConferencia(false);
+    return;
+  }
+  document.querySelectorAll('#listaConf .conf-l').forEach(li =>
+    li.classList.toggle('errou', errados.some(c => c.id === li.dataset.c)));
+  const c = errados[0];
+  av.hidden = false;
+  if(NIVG.diag === 'completo')
+    av.innerHTML = passouBatido ? `<b>${c.rot}</b> — ${c.erro}`
+      : `<b>${c.rot}</b> — nessa linha não tem impedimento nenhum. Travar serviço que está em ordem é lavoura parada à toa.`;
+  else if(NIVG.diag === 'curto')
+    av.textContent = `Revise a linha “${c.rot}”.`;
+  else
+    av.textContent = `${errados.length === 1 ? 'Uma linha está marcada' : errados.length + ' linhas estão marcadas'} errado.`;
+  fala(passouBatido
+    ? 'Passou batido. Isso vira aplicação irregular — e quem está com o produto na mão é você.'
+    : 'Não é bem assim. Olhe de novo antes de travar o serviço.', 'erro');
+});
+
+function fecharConferencia(acertou){
+  const p = R.problema, it = R.idxProb >= 0 ? R.itens[R.idxProb] : null;
+  document.querySelectorAll('#listaConf .conf-l').forEach(li => li.classList.remove('errou'));
+  CONF.fechado = true;
+  $('#btnFecharConf').disabled = true;
+  if(p && acertou){
+    corrigirReceituario();
+    renderConf();
+    fala(`Achou: <b>${IMP_CURTO[p]}</b>${it ? ' — ' + it.cat + ' ' + it.form : ''}. Parei o serviço e falei com o responsável técnico: ele mandou a receita corrigida, e é essa que vale agora. Pode ir para as contas.`, 'ok');
+  } else if(!p){
+    fala('Receita em ordem: dentro da validade, produtos com registro aéreo e doses na faixa da bula. Agora a conta do que sai do barracão.', 'ok');
+  }
+  $('#blocoPre').hidden = false;
+  renderPre();
+}
+
+function corrigirReceituario(){
+  const p = R.problema, i = R.idxProb;
+  if(p === 'validade') R.emissao = new Date(Date.now() - sorteio([1, 2, 3])*DIA_MS);
+  if(p === 'volume')   R.taxa = sorteio([8, 10, 12]);
+  if(p === 'dose' && i >= 0)  R.itens[i].dose = R.itens[i].doseRef;
+  if(p === 'aerea' && i >= 0) R.itens[i].aerea = true;
+  R.numero = novoNumero();
+  R.problema = null; R.idxProb = -1;
+  renderReceita('#receitaRec');
+  renderReceita();
+}
+
+function pistaProduto(it){
+  if(it.base === 'vol')  return 'percentual sobre a calda prevista';
+  if(it.estado === 'po') return 'dose × área da receita, em gramas';
+  if(it.un === 'kg/ha')  return 'dose × área ÷ densidade, em mL';
+  return 'dose × área da receita, em mL';
+}
+
+function linhasPre(){
+  const l = [{id:'calda', rot:'Calda prevista para a área da receita',
+              pista:'área da receita × volume de calda por ha',
+              un:'L', alvo:R.areaRec * R.taxa, tolAbs:.5, cor:'var(--calda)'}];
+  R.itens.forEach((it, i) => {
+    const nec = necessidade(i);
+    l.push({id:'p'+i, rot:`${it.ordem}. ${it.cat} ${it.form}`, pista:pistaProduto(it),
+            un:nec.un, alvo:nec.v, tolAbs:8, cor:it.cor});
+  });
+  return l;
+}
+
+function renderPre(){
+  $('#linhasPre').innerHTML = linhasPre().map(l => `
+    <div class="linha" data-campo="${l.id}">
+      <span class="marca-cor" style="background:${l.cor}"></span>
+      <label class="rot" for="pc_${l.id}"><b>${l.rot}</b>${NIVG.formulas ? `<i>${l.pista}</i>` : ''}</label>
+      <input id="pc_${l.id}" inputmode="decimal" placeholder="0" autocomplete="off"><span class="un">${l.un}</span><span class="sinal"></span>
+    </div>`).join('');
+}
+
+$('#btnConferirPre').addEventListener('click', () => {
+  const ruins = [];
+  linhasPre().forEach(l => {
+    const el = $('#pc_' + l.id); if(!el) return;
+    const linha = el.closest('.linha');
+    const v = parseBR(el.value), tol = Math.max(l.alvo * NIVG.tolCalc, l.tolAbs);
+    const ok = isFinite(v) && Math.abs(v - l.alvo) <= tol;
+    const mostra = ok || NIVG.diag !== 'nenhum';
+    linha.classList.toggle('ok', ok); linha.classList.toggle('err', !ok && mostra);
+    linha.querySelector('.sinal').textContent = ok ? '✓' : (mostra ? '✗' : '');
+    if(!ok) ruins.push({l, v});
+  });
+  const dica = $('#dicaPre');
+  if(!ruins.length){
+    PRE = true;
+    dica.hidden = true;
+    $('#btnConferirPre').disabled = true;
+    $('#btnIrBarracao').hidden = false;
+    fala('Contas fechadas. Com esses números no bloco dá para entrar no barracão e pedir o produto certo, na embalagem certa.', 'ok');
+    return;
+  }
+  ruins.forEach(r => penalizarPlano('Pré-cálculo — ' + r.l.rot));
+  const r = ruins[0], n = ruins.length;
+  const plural = n === 1 ? 'linha não fecha' : 'linhas não fecham';
+  if(NIVG.diag === 'completo')    dica.innerHTML = `${n} ${plural}. Comece por <b>“${r.l.rot}”</b>: ${r.l.pista} — o número está ${!isFinite(r.v) ? 'em branco' : (r.v > r.l.alvo ? 'alto' : 'baixo')}.`;
+  else if(NIVG.diag === 'curto')  dica.innerHTML = `${n} ${plural}. Revise <b>“${r.l.rot}”</b>.`;
+  else if(NIVG.diag === 'minimo') dica.innerHTML = `${n} ${plural} — estão marcadas com <b>✗</b>.`;
+  else                            dica.innerHTML = `${n} ${plural}. Refaça as contas.`;
+  dica.hidden = false;
+  fala('Ainda não fecha. Produto a menos é voltar ao barracão no meio da operação; a mais é embalagem aberta à toa.', 'erro');
+});
+
+$('#btnIrBarracao').addEventListener('click', () => {
+  $('#receituario').hidden = true; $('#barracao').hidden = false;
+  $('#trR').classList.remove('on'); $('#trR').classList.add('feito');
+  $('#trB').classList.add('on');
+  renderBarracao();
+  fala(guiada()
+    ? 'O produtor abriu o barracão. As quantidades já estão no seu bloco — aqui o serviço é escolher as embalagens (sempre o menor volume que cobre a conta) e, com o produto na mão, conferir a bula de novo: o que travar a aplicação você avisa ao piloto antes de sair daqui.'
+    : 'Barracão aberto. Escolha as embalagens pelo que está no seu bloco — e o que não puder ir na calda, avise o piloto.');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
 /* ============ barracao: retirada de produtos ============ */
 const EMB_LIQ = [1000, 5000, 10000, 20000];   // mL
 const EMB_PO  = [100, 1000, 15000];           // g
@@ -1555,8 +1843,8 @@ function renderBarracao(){
     return `<article class="cartao item-barracao" data-i="${i}">
       <header><b>${it.cat} ${it.form}<button class="btn-bula" data-bula="${i}" title="Abrir a bula deste produto">Bula</button></b><i>${dose} · ${fmt(R.areaRec,1)} ha${it.densidade ? ' · d ' + fmt(it.densidade,2) : ''}</i></header>
       <div class="preciso">
-        <label for="bq${i}">Preciso retirar</label>
-        <input id="bq${i}" inputmode="decimal" placeholder="0" autocomplete="off"><span class="un">${nec.un}</span>
+        <label for="bq${i}">${PRE ? 'Do seu bloco' : 'Preciso retirar'}</label>
+        <input id="bq${i}" inputmode="decimal" placeholder="0" autocomplete="off"${PRE ? ` value="${Math.round(nec.v)}" disabled` : ''}><span class="un">${nec.un}</span>
       </div>
       <div class="embalagens">
         ${tam.map((t,k) => `<button class="emb" data-k="${k}" title="Pegar ${rotuloEmb(t, nec.un)}">${svgEmb(t, nec.un, maxT)}<b>${rotuloEmb(t, nec.un)}</b><span class="conta" hidden>0</span></button>`).join('')}
@@ -1564,9 +1852,72 @@ function renderBarracao(){
       <div class="carrinho" id="car${i}"><span>Nada retirado ainda.</span></div>
       <button class="btn" data-conf="${i}">Confirmar retirada</button>
       <p class="aviso-linha" id="av${i}" hidden></p>
+      <div class="aviso-pil" id="ap${i}"></div>
     </article>`;
   }).join('');
+  R.itens.forEach((it, i) => renderAvisoPil(i));
   atualizaFicha();
+}
+
+/* ---- aviso ao piloto: produto que não pode ir na calda ---- */
+const MOTIVOS_AVISO = [
+  {id:'aerea',    rot:'Sem registro para aplicação aérea'},
+  {id:'incompat', rot:'Incompatível com outro produto da receita'}
+];
+let AVISO = {};
+
+function travaDoItem(i){
+  const it = R.itens[i];
+  if(!it.aerea) return 'aerea';
+  if(it.incompat != null) return 'incompat';
+  return null;
+}
+function pendenciasBarracao(){
+  return R.itens.map((it, i) => i).filter(i => travaDoItem(i));
+}
+
+function renderAvisoPil(i){
+  const cx = document.getElementById('ap' + i); if(!cx) return;
+  const card = document.querySelector('.item-barracao[data-i="' + i + '"]');
+  if(card) card.classList.toggle('impedido', !!AVISO[i]);
+  if(AVISO[i]){
+    cx.innerHTML = `<p class="resposta">${AVISO[i]}</p>`;
+    return;
+  }
+  if(AVISO['abrir'] === i){
+    cx.innerHTML = `<div class="opcoes">
+      <p>Falar com o piloto sobre este produto</p>
+      ${MOTIVOS_AVISO.map(m => `<button class="btn sec" data-motivo="${m.id}" data-mi="${i}">${m.rot}</button>`).join('')}
+      <button class="btn sec" data-fechar-aviso="${i}" style="border-style:dashed">Deixar como está</button>
+    </div>`;
+    return;
+  }
+  cx.innerHTML = `<button class="btn sec" data-avisar="${i}">Avisar o piloto</button>`;
+}
+
+function avisarPiloto(i, motivo){
+  const it = R.itens[i], trava = travaDoItem(i);
+  AVISO['abrir'] = null;
+  if(trava !== motivo){
+    penalizarPlano('Aviso ao piloto sem motivo — ' + it.cat + ' ' + it.form);
+    fala(NIVG.diag === 'nenhum' || NIVG.diag === 'minimo'
+      ? 'O piloto atendeu e não era nada.'
+      : `O piloto desceu do drone para te atender e a bula do <b>${it.cat} ${it.form}</b> não trava isso. Parar a operação por engano também custa hora de voo — leia a bula antes de chamar.`, 'erro');
+    R.itens.forEach((_, k) => renderAvisoPil(k));
+    return;
+  }
+  if(motivo === 'aerea'){
+    it.aerea = true;
+    AVISO[i] = `Você avisou o piloto: este produto não tem registro para aplicação aérea. Ele falou com o responsável técnico, que mandou trocar por um equivalente com registro para drone — mesma categoria, mesma dose.`;
+    fala(`Aviso certo: <b>${it.cat} ${it.form}</b> sem registro aéreo. O piloto parou a decolagem e o RT trocou o produto. Sem esse telefonema, a aplicação inteira sairia irregular.`, 'ok');
+  } else {
+    const j = it.incompat, outro = R.itens[j];
+    it.incompat = null; if(outro) outro.incompat = null;
+    AVISO[i] = `Você avisou o piloto: este produto não pode entrar na mesma calda que o ${outro ? outro.cat + ' ' + outro.form : 'outro produto'}. O RT trocou por um compatível — mesma categoria, mesma dose.`;
+    if(outro) AVISO[j] = `O piloto já sabe da incompatibilidade com o ${it.cat} ${it.form}. Produto trocado pelo RT.`;
+    fala(`Achou a incompatibilidade: <b>${it.cat} ${it.form}</b> com <b>${outro ? outro.cat + ' ' + outro.form : 'outro produto'}</b>. Misturados no mesmo tanque, empedravam a calda e entupiam o bico no meio da lavoura.`, 'ok');
+  }
+  R.itens.forEach((_, k) => renderAvisoPil(k));
 }
 
 function totalCarrinho(i){
@@ -1598,6 +1949,12 @@ function atualizaFicha(){
 }
 
 $('#gradeBarracao').addEventListener('click', e => {
+  const abrir = e.target.closest('[data-avisar]');
+  if(abrir){ AVISO['abrir'] = +abrir.dataset.avisar; R.itens.forEach((_, k) => renderAvisoPil(k)); return; }
+  const fechar = e.target.closest('[data-fechar-aviso]');
+  if(fechar){ AVISO['abrir'] = null; R.itens.forEach((_, k) => renderAvisoPil(k)); return; }
+  const mot = e.target.closest('[data-motivo]');
+  if(mot){ avisarPiloto(+mot.dataset.mi, mot.dataset.motivo); return; }
   const zerar = e.target.closest('[data-zerar]');
   if(zerar){ const i = +zerar.dataset.zerar; RET[i].cart.fill(0); atualizaCarrinho(i); return; }
   const conf = e.target.closest('[data-conf]');
@@ -1654,6 +2011,20 @@ function confirmarRetirada(i){
 }
 
 $('#btnIrCalda').addEventListener('click', () => {
+  const pend = pendenciasBarracao();
+  if(pend.length){
+    if(NIVG.diag === 'nenhum'){
+      /* prova: sai do barracão com o produto impedido e o boletim cobra no fim */
+      S.passouImpedimento = pend.map(i => `${R.itens[i].cat} ${R.itens[i].form} (${travaDoItem(i) === 'aerea' ? 'sem registro aéreo' : 'incompatibilidade de mistura'})`).join('; ');
+      penalizar('Saiu do barracão com produto impedido', 15, 'impedido');
+    } else {
+      penalizarPlano('Produto impedido levado do barracão');
+      fala(NIVG.diag === 'completo'
+        ? 'Espera. Tem produto nesse carrinho que não pode entrar nessa calda — a bula dele diz o porquê, na modalidade de aplicação ou na compatibilidade de mistura. Confira as bulas e avise o piloto antes de sair do barracão.'
+        : 'Tem produto aí que não devia sair do barracão.', 'erro');
+      return;
+    }
+  }
   $('#barracao').hidden = true; $('#epi').hidden = false;
   $('#trB').classList.remove('on'); $('#trB').classList.add('feito');
   $('#trP').classList.add('on');
@@ -1667,11 +2038,14 @@ const arred = (v, c) => Math.round(v * Math.pow(10, c)) / Math.pow(10, c);
 
 function bulaDoItem(i){
   const it = R.itens[i];
-  const casas = it.base === 'vol' ? 2 : 2;
+  const casas = 2;
+  /* a faixa da bula sai da dose de referência do produto, nao do que a receita pediu:
+     e isso que deixa aparecer receita com dose fora da bula */
+  const ref = it.doseRef != null ? it.doseRef : it.dose;
   const faixa = it.base === 'vol'
     ? {min:.25, max:1}
-    : {min:arred(it.dose * .6, casas), max:arred(it.dose * 1.5, casas)};
-  const volMin = Math.min(8, R.taxa), volMax = Math.max(20, R.taxa);
+    : {min:arred(ref * .6, casas), max:arred(ref * 1.5, casas)};
+  const volMin = 8, volMax = 20;
   const culturas = [
     {nome:R.cultura, alvo:R.alvo, faixa},
     {nome:R.cultura === 'Soja' ? 'Milho' : 'Soja', alvo:'Conforme recomendação agronômica',
@@ -1705,7 +2079,7 @@ function abrirBula(i){
         <h4>Modalidade de aplicação</h4>
         <div class="modos">
           <div class="modo sim"><span class="sinal-bula">✓</span><div><b>Terrestre</b><span>Pulverizador tratorizado e costal</span></div></div>
-          <div class="modo sim"><span class="sinal-bula">✓</span><div><b>Aérea</b><span>Avião agrícola e aeronave remotamente pilotada (drone)</span></div></div>
+          <div class="modo ${it.aerea ? 'sim' : 'nao'}"><span class="sinal-bula">${it.aerea ? '✓' : '✕'}</span><div><b>Aérea</b><span>${it.aerea ? 'Avião agrícola e aeronave remotamente pilotada (drone)' : 'Produto sem registro para aplicação aérea'}</span></div></div>
         </div>
       </section>
       <section>
@@ -1724,9 +2098,15 @@ function abrirBula(i){
           <dt>Receituário pede</dt><dd>${doseReceita} · ${R.taxa} L/ha de calda</dd>
         </dl>
       </section>
-      ${dentro && volOk
+      <section>
+        <h4>Compatibilidade em mistura</h4>
+        ${it.incompat != null
+          ? `<div class="bula-alerta"><b>Não misturar</b> na mesma calda com produtos do tipo <b>${R.itens[it.incompat].cat} ${R.itens[it.incompat].form}</b> (${R.itens[it.incompat].formNome.toLowerCase()}): a mistura quebra a emulsão e empedra o tanque. Aplicar em caldas separadas ou trocar um dos dois.</div>`
+          : `<p class="bula-nota">Sem restrição conhecida de mistura para os produtos desta receita. Ainda assim, teste de jarra antes da primeira calda.</p>`}
+      </section>
+      ${dentro && volOk && it.aerea
         ? `<p class="bula-nota">A dose e o volume de calda do receituário estão dentro do que a bula permite para aplicação aérea em ${R.cultura.toLowerCase()}.</p>`
-        : `<div class="bula-alerta"><b>Fora da bula.</b> ${!dentro ? 'A dose do receituário está fora da faixa recomendada. ' : ''}${!volOk ? 'O volume de calda está fora do permitido para aplicação aérea. ' : ''}Não prepare: fale com o responsável técnico.</div>`}
+        : `<div class="bula-alerta"><b>Fora da bula.</b> ${!it.aerea ? 'Este produto não tem registro para aplicação aérea — no drone ele não pode ir. ' : ''}${!dentro ? 'A dose do receituário está fora da faixa recomendada. ' : ''}${!volOk ? 'O volume de calda está fora do permitido para aplicação aérea. ' : ''}Não prepare: fale com o responsável técnico.</div>`}
       <p class="bula-nota">Antes de toda aplicação com drone, confira na bula se a <b>modalidade aérea</b> está autorizada e se a dose do receituário cabe na faixa da cultura. Produto sem registro para aplicação aérea não pode ir no drone, mesmo que o receituário peça.</p>
     </div>`;
   $('#fundoBula').hidden = false;
@@ -1762,6 +2142,8 @@ function renderReceita(sel){
       <div><span>Área tratada</span><strong>${fmt(R.areaRec,1)} ha</strong></div>
       <div><span>Volume de calda</span><strong>${R.taxa} L/ha</strong></div>
       <div><span>Equipamento</span><strong>Drone pulverizador</strong></div>
+      <div><span>Emissão</span><strong>${dataBR(R.emissao)}</strong></div>
+      <div><span>Válido até</span><strong>${dataBR(validadeRec())}</strong></div>
     </div>
     <table class="tab-rec">
       <thead><tr><th>Ord.</th><th>Produto</th><th style="text-align:right">Dose</th><th style="text-align:right">Densidade</th></tr></thead>
@@ -2315,6 +2697,8 @@ function renderBoletim(){
       ${linhas || '<li><span>Nenhum desconto — preparo sem erro</span><b>0</b></li>'}
       <li><span><b>Nota final</b></span><b>${S.nota}</b></li>
     </ul>
+    ${S.liberouErrado ? `<p class="roda" style="color:var(--vermelho)">A calda saiu com a receita que tinha impedimento: ${IMP_CURTO[S.liberouErrado]}. Em campo isso é aplicação irregular — para o serviço no talhão e responsabiliza quem aplicou.</p>` : ''}
+    ${S.passouImpedimento ? `<p class="roda" style="color:var(--vermelho)">Saiu do barracão com produto que não podia entrar na calda: ${S.passouImpedimento}. O piloto precisava saber disso antes de decolar.</p>` : ''}
     ${S.pulou ? '<p class="roda" style="color:var(--vermelho)">Etapas foram puladas pela navegação do topo — a nota é apenas indicativa.</p>' : ''}
     <p class="roda">Boletim de simulador de treinamento. Não tem valor de certificação oficial nem substitui capacitação em uso de defensivos agrícolas.</p>`;
 }
@@ -2371,14 +2755,15 @@ $('#btnComecar').addEventListener('click', () => {
   S = {erros:0, inicio:Date.now(), nota:100, descontos:[], penalizados:new Set()};
   if(MODO_PROVA) iniciarCronometro();
   renderReceita('#receitaFoto');
-  renderBarracao();
+  iniciarReceituario();
   $('#inicio').hidden = true;
-  $('#barracao').hidden = false;
-  $('#trB').classList.add('on');
+  $('#receituario').hidden = false;
+  $('#slotCalcRec').appendChild($('#calculadora'));
+  $('#trR').classList.add('on');
   const trat = primeiro.charAt(0) + primeiro.slice(1).toLowerCase();
   fala(guiada()
-    ? `Prazer, ${trat}. O produtor abriu o barracão e está esperando ao lado. Comece pelo <b>${R.itens[0].cat} ${R.itens[0].form}</b>, o primeiro da lista: calcule quanto ele consome nos ${fmt(R.areaRec,1)} ha do receituário, escreva no campo e só então escolha as embalagens — sempre o menor volume que cobre a conta.`
-    : `Prazer, ${trat}. O receituário do produtor está em mãos e o barracão está aberto — retire o produto pelos hectares do receituário, que o piloto ainda está mapeando.`);
+    ? `Prazer, ${trat}. O produtor acabou de entregar a receita agronômica. Antes de abrir o barracão o serviço é conferir: validade, cultura e a <b>bula de cada produto</b> — é lá que diz se ele tem registro para aplicação aérea. Marque as cinco linhas da conferência e depois feche as contas.`
+    : `Prazer, ${trat}. A receita agronômica está em mãos. Confira antes de aceitar o serviço e feche as contas da retirada.`);
   window.scrollTo({top:0, behavior:'smooth'});
 });
 
@@ -3055,6 +3440,9 @@ function enviarAoJogo(msg){
 
 function iniciarEmbutido(){
   document.documentElement.classList.add('embutido');
+  /* dentro do jogo não se passa pela conferência: a receita entra sempre em ordem */
+  if(R.problema) corrigirReceituario();
+  R.itens.forEach(it => { it.aerea = true; it.incompat = null; });
   const area = Math.max(.05, parseFloat(EMB.get('area')) || 4);
   const taxa = Math.max(1, Math.round(parseFloat(EMB.get('taxa')) || 15));
   /* o receituário passa a cobrir exatamente o talhão do voo */
@@ -3103,6 +3491,7 @@ function prepararRetornoJogo(){
 
 /* ============ navegacao direta entre etapas ============ */
 const FASES = [
+  {id:'receituario', sec:'#receituario', pill:'#trR'},
   {id:'vespera',  sec:'#vespera',  pill:'#tr0'},
   {id:'barracao', sec:'#barracao', pill:'#trB'},
   {id:'estrutura', sec:'#estrutura', pill:'#trE'},
@@ -3156,6 +3545,7 @@ function irPara(fase){
     renderVespera(); iniciarGuiaPlano();
     $('#slotCalcVespera').appendChild($('#calculadora'));
   }
+  if(fase === 'receituario'){ iniciarReceituario(); $('#slotCalcRec').appendChild($('#calculadora')); }
   if(fase === 'barracao'){ if(!RET) renderBarracao(); }
   if(fase === 'estrutura'){ iniciarEstrutura(); }
   if(fase === 'epi'){ iniciarEpi(); }
