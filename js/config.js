@@ -94,7 +94,8 @@ window.XGURI = {
   // mexer no bloco a cada versao (so se mudar o nome do arquivo).
   // -------------------------------------------------------------------
   portaoPortatil: {
-    ativo: true,
+    // Desligado na fase de teste com amigos: sem senha, o botao usa `portatilDownload`.
+    ativo: false,
     iter: 200000,
     sal: "4543c31c1798d08601ca0f17cbc7e2f3",
     iv: "8eb90033d2aca5f8952161d8",
@@ -103,9 +104,13 @@ window.XGURI = {
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "0.3.1",
-  portatilTamanho: "86 MB",
-  portatilSha256: "d81c6e8b22af60cfb4c3c8a233391bf140cab47bcf1aa99afd1504f3c8bc9702",
+  portatilVersao: "1.0",
+  portatilTamanho: "97 MB",
+  portatilSha256: "2a5ef31c52d242dab1bf6188635342c2e661ccb6cf85226600f6c7b5671c05d7",
+
+  // Link direto (sem senha) da versao mais recente: o arquivo "xguri-portatil.apk" e uma copia
+  // com nome fixo que cada release publica, entao este endereco nao precisa mudar a cada versao.
+  portatilDownload: "https://github.com/guridosdrones-spec/xguri-portatil-atualizacoes/releases/latest/download/xguri-portatil.apk",
 
   // -------------------------------------------------------------------
   // DGURI PORTATIL (dguri-portatil.html) - app Android para DJI

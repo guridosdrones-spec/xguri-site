@@ -322,6 +322,12 @@
       // botao sai direto do campo `download`. Na pagina de teste nao
       // existe esse atalho - sem a senha configurada nao ha link, e o
       // botao sai da frente em vez de ficar ali sem funcionar.
+      // Portatil sem senha (fase de teste): o link direto vem do config.
+      if (nome === "portaoPortatil" && texto(C.portatilDownload)) {
+        liberarDownload(texto(C.portatilDownload), nome, false);
+        return;
+      }
+
       if (nome === "portao") {
         todos("[data-portao-liberado]").forEach(function (el) {
           el.classList.remove("oculto");
