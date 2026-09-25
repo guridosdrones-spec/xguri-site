@@ -104,9 +104,9 @@ window.XGURI = {
     dica: "Peça a senha no WhatsApp.",
   },
 
-  portatilVersao: "1.0",
+  portatilVersao: "1.1",
   portatilTamanho: "97 MB",
-  portatilSha256: "2a5ef31c52d242dab1bf6188635342c2e661ccb6cf85226600f6c7b5671c05d7",
+  portatilSha256: "4434e1e71229a4326dfa18f5061efefa6f08fa9ba9a94a99c96fcb5d49cc3579",
 
   // Link direto (sem senha) da versao mais recente: o arquivo "xguri-portatil.apk" e uma copia
   // com nome fixo que cada release publica, entao este endereco nao precisa mudar a cada versao.
