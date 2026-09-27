@@ -2,21 +2,21 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.1.1",
-      "notas": "Mapa HD muito mais rapido: o empacotamento de um voo inteiro passou de dezenas de minutos para cerca de 1 minuto. A nuvem de pontos agora sai no formato que o app da XAG aceita, sem travar e com os pontos do tamanho certo. E o XGuri passou a fazer uma coisa de cada vez: se voce mandar criar um ortomosaico enquanto um Mapa HD esta sendo montado, ele oferece deixar na fila em vez de dar erro.",
+      "versao": "1.1.2",
+      "notas": "Deteccao automatica de obstaculos: o XGuri compara o DSM com o terreno e marca sozinho arvores, postes e construcoes no mapa de aplicacao. Mapas de taxa variavel: quando a analise de solo pede mais de tres taxas, o XGuri avisa e gera um arquivo por trio, em vez de juntar taxas diferentes em silencio.",
       "obrigatoria": false,
       "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.1/XGuri_Setup_1.1.1.exe",
-        "tamanho": 491305705,
-        "sha256": "cdd58306866a7df85c5ef3358860d2a2f828cb57200ccc1fc900713d7e0dc495"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.2/XGuri_Setup_1.1.2.exe",
+        "tamanho": 491348051,
+        "sha256": "2ec623816c41e70ca013881118b52a8cbec5dcb0e11974ce373b959e54107aa2"
       },
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.1/XGuri_Atualizacao_1.1.1.exe",
-        "tamanho": 251177441,
-        "sha256": "4629ea3c62c7cb49416acfcbcf74d8e36bb2c03689b6160a00e50205ea2cd4ae"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.2/XGuri_Atualizacao_1.1.2.exe",
+        "tamanho": 251229131,
+        "sha256": "efe0d7a0ec1a57335d2b1965211c0c627562daf97a9cd3f98614b3eb2b394ed4"
       }
     }
   },
-  "publicado": "2026-09-23",
-  "assinatura": "8082fe7ef847538bd91c3ae2557de6adaf916c76e396b0aab8186ac2ded05990d82e3b4ec5d41363f1f067172bcc694d3f312ee347ac75858668cf7d3e2b4002"
+  "publicado": "2026-09-27",
+  "assinatura": "afed544d5347ae0cdee581f31a59e1cdc8a2ae70d6df6b8b87ba22d4929aeba7c22f428774785e1aad22084ebf5d09dafa3745ffbecdf8aa8b3e010739131f08"
 }
