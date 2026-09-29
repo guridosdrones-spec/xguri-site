@@ -2,21 +2,21 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.1.2",
-      "notas": "Deteccao automatica de obstaculos: o XGuri compara o DSM com o terreno e marca sozinho arvores, postes e construcoes no mapa de aplicacao. Mapas de taxa variavel: quando a analise de solo pede mais de tres taxas, o XGuri avisa e gera um arquivo por trio, em vez de juntar taxas diferentes em silencio.",
+      "versao": "1.1.4",
+      "notas": "Identificação por cores, borracha de amostras, revisão da aplicação, campos numerados e Central e suporte em Configurações.",
       "obrigatoria": false,
       "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.2/XGuri_Setup_1.1.2.exe",
-        "tamanho": 491348051,
-        "sha256": "2ec623816c41e70ca013881118b52a8cbec5dcb0e11974ce373b959e54107aa2"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.4/XGuri_Setup_1.1.4.exe",
+        "tamanho": 489861280,
+        "sha256": "5a97788734ea3ec2ab25413b9d955cb35f81e27ef1a7124e9f1d6a677742a66b"
       },
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.2/XGuri_Atualizacao_1.1.2.exe",
-        "tamanho": 251229131,
-        "sha256": "efe0d7a0ec1a57335d2b1965211c0c627562daf97a9cd3f98614b3eb2b394ed4"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.4/XGuri_Atualizacao_1.1.4.exe",
+        "tamanho": 249728813,
+        "sha256": "b1e821e48b65aea309c83cfd76abff12ff3672f90a3313b6b0fc501789e6977d"
       }
     }
   },
-  "publicado": "2026-09-27",
-  "assinatura": "afed544d5347ae0cdee581f31a59e1cdc8a2ae70d6df6b8b87ba22d4929aeba7c22f428774785e1aad22084ebf5d09dafa3745ffbecdf8aa8b3e010739131f08"
+  "publicado": "2026-09-28",
+  "assinatura": "531db79ada5328c625a221bdc4e35d6b7e12921f9657a4e4d898f7fd44dd1209426c5fa6e9a4d5204df9f252a7781e84a9f47ffdf8b234648eddee14502f9a0d"
 }
