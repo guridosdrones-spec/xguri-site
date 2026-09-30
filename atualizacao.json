@@ -2,21 +2,16 @@
   "formato": 1,
   "canais": {
     "producao": {
-      "versao": "1.1.4",
-      "notas": "Identificação por cores, borracha de amostras, revisão da aplicação, campos numerados e Central e suporte em Configurações.",
+      "versao": "1.1.5",
       "obrigatoria": false,
-      "completo": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.4/XGuri_Setup_1.1.4.exe",
-        "tamanho": 489861280,
-        "sha256": "5a97788734ea3ec2ab25413b9d955cb35f81e27ef1a7124e9f1d6a677742a66b"
-      },
+      "notas": "Correção do download: novas tentativas, retomada após interrupção e opção de baixar pelo navegador. Ajustes de aplicação localizada.",
       "atualizacao": {
-        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.4/XGuri_Atualizacao_1.1.4.exe",
-        "tamanho": 249728813,
-        "sha256": "b1e821e48b65aea309c83cfd76abff12ff3672f90a3313b6b0fc501789e6977d"
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.5/XGuri_Atualizacao_1.1.5.exe",
+        "tamanho": 249792721,
+        "sha256": "dd6c69654f8c8322a2aab80eef034eb73b51f1f30ea95079ff004fde73a05838"
       }
     }
   },
-  "publicado": "2026-09-28",
-  "assinatura": "531db79ada5328c625a221bdc4e35d6b7e12921f9657a4e4d898f7fd44dd1209426c5fa6e9a4d5204df9f252a7781e84a9f47ffdf8b234648eddee14502f9a0d"
+  "publicado": "2026-09-30",
+  "assinatura": "5a913f6e1a95c18ef307b850aae855249e8f297e1a85c3cf1514b7e833d9335a606122ccf03fd0ade4741614a44999665f7478b17927bafa8443f5ea064d0c06"
 }
