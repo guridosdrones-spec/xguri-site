@@ -3,8 +3,13 @@
   "canais": {
     "producao": {
       "versao": "1.1.5",
+      "notas": "Atualizador com novas tentativas automáticas, retomada após interrupções e opção de baixar pelo navegador. Ajustes de aplicação localizada e nome da prescrição antes do envio ao XAG One.",
       "obrigatoria": false,
-      "notas": "Correção do download: novas tentativas, retomada após interrupção e opção de baixar pelo navegador. Ajustes de aplicação localizada.",
+      "completo": {
+        "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.5/XGuri_Setup_1.1.5.exe",
+        "tamanho": 489907050,
+        "sha256": "0078674f3c9eda1f25d0c6c6d6c20c035b03e66f01bcb1072875b298c2ad59cf"
+      },
       "atualizacao": {
         "url": "https://github.com/guridosdrones-spec/xguri-site/releases/download/v1.1.5/XGuri_Atualizacao_1.1.5.exe",
         "tamanho": 249792721,
@@ -13,5 +18,5 @@
     }
   },
   "publicado": "2026-09-30",
-  "assinatura": "5a913f6e1a95c18ef307b850aae855249e8f297e1a85c3cf1514b7e833d9335a606122ccf03fd0ade4741614a44999665f7478b17927bafa8443f5ea064d0c06"
+  "assinatura": "5bb83c0ecd56e50555a2dca7e544f250f7d8e2e7a94257ce30e1d3633dadf912d69cb1073311c34a2b555af72e8e90b88e981602f86d0f44e71db59cf60d6d0e"
 }
